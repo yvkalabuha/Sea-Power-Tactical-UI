@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-314 (ADR-0121): own BepInEx loader of the UI mod for the Workshop install. Only BepInEx + UnityEngine.CoreModule:
+       no reference to the mod or to other loaders. Output goes to out-loader/ (not seen by package.sh ui / install.sh ui). -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>SeaPowerTacticalUI.Loader</AssemblyName>
+    <RootNamespace>SeaPowerTacticalUI.Loader</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GameDir Condition="'$(GameDir)' == ''">/home/user/drive/SteamLibrary/steamapps/common/Sea Power</GameDir>
+    <OutputPath>$(MSBuildThisFileDirectory)../out-loader/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(GameDir)/BepInEx/core/BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- type-forwarding facade: BepInEx.dll references MonoBehaviour through it -->
+    <Reference Include="UnityEngine">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="obj/**" />
+  </ItemGroup>
+</Project>

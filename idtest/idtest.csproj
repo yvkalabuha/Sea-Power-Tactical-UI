@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-111: light stand for the pure identify-status code (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="IdentifyTests.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRadarAuto.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />   <!-- T-122 -->
+    <Compile Include="../SeaPowerTacticalUI/SarSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.cs" />   <!-- T-176 -->
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Course.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Plan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/IdentifyStatus.cs" />
+    <Compile Include="../SeaPowerTacticalUI/MessageColorMath.cs" />   <!-- T-329: IdentifyClassify strips colour tags -->
+    <Compile Include="../SeaPowerTacticalUI/IdentifySave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/IdentifyKeeper.cs" />
+  </ItemGroup>
+</Project>

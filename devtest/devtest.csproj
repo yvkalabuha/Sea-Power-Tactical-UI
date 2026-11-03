@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-139 D: offline stand of the dev channel (SeaPowerTacticalUI.Dev BCL files). No game, no Unity, no BepInEx. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge.Dev</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="FakeGame.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevInfo.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevJson.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevProtocol.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevSlots.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevLogRing.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevSession.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevFire.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevExecutor.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevPump.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevServer.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevStartGate.cs" />
+    <Compile Include="../SeaPowerTacticalUI/DiagHost.cs" />
+    <Compile Include="../SeaPowerTacticalUI/GameMember.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AttackHostility.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevGameApiShim.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevAirReadySpecs.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevAirReady.cs" />
+    <Compile Include="FakeAirDeck.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevGfx.cs" />
+    <Compile Include="FakeGfx.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ProcThreads.cs;../SeaPowerTacticalUI/ModThreads.cs;../SeaPowerTacticalUI/ModShutdown.cs" />   <!-- T-212 -->
+  </ItemGroup>
+</Project>

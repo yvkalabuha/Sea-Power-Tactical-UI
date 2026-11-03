@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-256: light stand for the pure evasion-memory save code (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../Common/ControlMemory.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />
+    <Compile Include="../SeaPowerTacticalUI/EvasionSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ControlMemory.Save.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ShipMobility.cs" />
+  </ItemGroup>
+</Project>

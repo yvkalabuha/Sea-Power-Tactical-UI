@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-136 A: light stand for the contact_info module (ContactInfoMath, model, later the controller on a fake game). No game, no Unity. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoverageMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HotkeyBinding.cs" />
+    <!-- stream C adds the controller and its fake-game cases; HotkeyBinding.cs / Stub.cs are added then, when the controller needs them -->
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoController.cs" Condition="Exists('../SeaPowerTacticalUI/ContactInfoController.cs')" />
+    <Compile Include="ControllerCases.cs" Condition="Exists('ControllerCases.cs')" />
+  </ItemGroup>
+</Project>

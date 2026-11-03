@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-175 / ADR-0075 stream L: light stand for the loss tracker, the toast stack model and the card bodies (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="AirLossTests.cs" />
+    <Compile Include="ToastIdsTests.cs" />   <!-- T-291 (UiUndoCard.cs comes from ../Directory.Build.targets) -->
+    <Compile Include="../SeaPowerTacticalUI/SubDatumCard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiToastCards.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirGuardMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirGuardShared.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirLossMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirLossTracker.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiToastStackModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirThreatToastBody.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirLossToastBody.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFrameMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RadialMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiOrderTypes.cs" />
+    <Compile Include="../puretest/RecordPainter.cs" />
+  </ItemGroup>
+</Project>

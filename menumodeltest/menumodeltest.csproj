@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-103 M: stand for MenuModel.SelfTest, RadialText.SelfTest and RadialGlyphs (T-140; also the PNG glyph sheet, no game). Common/Actions.cs is compiled without its GameApi part (cut by the Exec below). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Stub.cs" />
+    <Compile Include="../SeaPowerTacticalUI/MenuModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RingGroups.cs" />   <!-- T-328 -->
+    <Compile Include="../SeaPowerTacticalUI/RadialText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/NtdsIcons.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RadialGlyphs.cs" />
+    <Compile Include="../SeaPowerTacticalUI/FormationMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/WorldGeo.cs" />   <!-- T-354 -->
+    <Compile Include="$(MSBuildThisFileDirectory)obj/FormationFactsOnly.cs" />
+    <Compile Include="PngSheet.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../Common/ComboRunner.cs" />
+    <Compile Include="../Common/ActionJournal.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)obj/ActionsRegistryOnly.cs" />
+    <EmbeddedResource Include="../Common/actions.json" LogicalName="VoiceBotBridge.actions.json" />
+  </ItemGroup>
+  <Target Name="CutActions" BeforeTargets="CoreCompile">
+    <MakeDir Directories="$(MSBuildThisFileDirectory)obj" />
+    <Exec Command="awk '/internal sealed partial class GameApi/ { exit } { print }' &quot;$(MSBuildThisFileDirectory)../Common/Actions.cs&quot; &gt; &quot;$(MSBuildThisFileDirectory)obj/ActionsRegistryOnly.cs&quot; &amp;&amp; echo '}' &gt;&gt; &quot;$(MSBuildThisFileDirectory)obj/ActionsRegistryOnly.cs&quot;" />
+    <!-- T-243: FormationFacts only (FormationGame.cs up to its GameApi part), the same cut as above -->
+    <Exec Command="awk '/internal sealed partial class GameApi/ { exit } { print }' &quot;$(MSBuildThisFileDirectory)../SeaPowerTacticalUI/FormationGame.cs&quot; &gt; &quot;$(MSBuildThisFileDirectory)obj/FormationFactsOnly.cs&quot; &amp;&amp; echo '}' &gt;&gt; &quot;$(MSBuildThisFileDirectory)obj/FormationFactsOnly.cs&quot;" />
+  </Target>
+</Project>

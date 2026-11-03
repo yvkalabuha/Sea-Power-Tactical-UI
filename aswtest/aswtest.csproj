@@ -1,0 +1,170 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-095: light stand for the pure ASW code (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <!-- T-109 wave 2 (stream H): the SAR files are still under #if SAR_WIP until step I1 -->
+    <DefineConstants>$(DefineConstants);SAR_WIP</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="AswLaunchLinkTests.cs" />
+    <Compile Include="AswT181Tests.cs" />
+    <Compile Include="AswT186Tests.cs" />   <!-- T-186 -->
+    <Compile Include="AswT188Tests.cs" />   <!-- T-188 -->
+    <Compile Include="AswT188Ctl.cs" />
+    <Compile Include="AswT191Tests.cs" />   <!-- T-191 -->
+    <Compile Include="AswT192Tests.cs" />   <!-- T-192 -->
+    <Compile Include="AswT192Retreat.cs" />
+    <Compile Include="AswT196Tests.cs" />   <!-- T-196 -->
+    <Compile Include="AswT211Tests.cs" />   <!-- T-211 -->
+    <Compile Include="AswT198Tests.cs" />   <!-- T-198 -->
+    <Compile Include="AswT213Tests.cs" />   <!-- T-213 -->
+    <Compile Include="AswT226Tests.cs" />   <!-- T-226 -->
+    <Compile Include="AswT214Tests.cs" />   <!-- T-214 -->
+    <Compile Include="AswT222Tests.cs" />   <!-- T-222 -->
+    <Compile Include="AswT231Tests.cs" />   <!-- T-231 -->
+    <Compile Include="AswT231SarTests.cs" />   <!-- T-231 -->
+    <Compile Include="AswT213Ctl.cs" />
+    <Compile Include="AswT192Rafts.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswRouteGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswGroupNames.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />   <!-- T-122 -->
+    <Compile Include="../SeaPowerTacticalUI/AswView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRelief.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Commands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Tactics.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Contacts.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.View.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswDrawPlan.cs" />   <!-- T-174 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.Save.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Radar.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.Adopt.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswStrikeMath.cs" />   <!-- T-173 -->
+    <Compile Include="../SeaPowerTacticalUI/AswLaneMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswLocalizeMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Attack.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Strike.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.cs" />   <!-- T-176 -->
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Course.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Plan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Patterns.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Corridor.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Barrier.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.DipChain.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.DeckDown.cs" />   <!-- T-231 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.PlanView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Localize.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Lanes.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarAirOrder.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsOwnership.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirDeckBroker.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarRouteMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarShipPanel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../sartest/SarFakeGame.cs" />
+    <Compile Include="AswFakeGame.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AttackHostility.cs" />   <!-- 0.27.10 -->
+    <Compile Include="AswControllerTests.cs" />
+    <Compile Include="AswSarTests.cs" />
+    <Compile Include="AswAdoptTests.cs" />
+    <Compile Include="AswDeckTests.cs" />
+    <Compile Include="AswFakeDeck.cs" />
+    <Compile Include="AswDeck2Tests.cs" />
+    <Compile Include="AswRouteTests.cs" />
+    <Compile Include="AswT142Tests.cs" />
+    <Compile Include="AswLifecycleTests.cs" />   <!-- T-130 -->
+    <Compile Include="AswNameTests.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswDipTasks.cs" />   <!-- T-159 -->
+    <Compile Include="AswDipTaskTests.cs" />
+    <Compile Include="AswSpacingTests.cs" />   <!-- ADR-0063 -->
+    <Compile Include="AswT172RoutesTests.cs" />   <!-- T-172 -->
+    <Compile Include="AswT172BuoysTests.cs" />
+    <Compile Include="AswT172ContactsTests.cs" />
+    <Compile Include="AswT174Tests.cs" />   <!-- T-174 -->
+    <Compile Include="../SeaPowerTacticalUI/AirGuardMath.cs" />   <!-- T-175 -->
+    <Compile Include="../SeaPowerTacticalUI/AirGuardShared.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRetreatSteer.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.AirGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapMath.cs" />
+    <Compile Include="AswT175Tests.cs" />
+    <Compile Include="AswT180Retreat.cs" />   <!-- T-180 -->
+    <Compile Include="AswT176Tests.cs" />   <!-- T-176 -->
+    <Compile Include="AswT322Tests.cs" />   <!-- T-322 -->
+    <Compile Include="AswT328Tests.cs" />   <!-- T-328 -->
+    <Compile Include="AswT334Tests.cs" />   <!-- T-334 -->
+    <Compile Include="AswT334Excl.cs" />   <!-- T-334 -->
+    <Compile Include="AswT339Tests.cs" />   <!-- T-339 -->
+    <Compile Include="AswT343Elig.cs" />   <!-- T-343 -->
+    <Compile Include="AswT343Tests.cs" />   <!-- T-343 -->
+    <Compile Include="AswT344Tests.cs;AswT344Deck.cs" />   <!-- T-344 -->
+    <Compile Include="AswT346Tests.cs" />   <!-- T-346 -->
+    <Compile Include="AswT331Tests.cs;AswT331RetreatTests.cs" />   <!-- T-331 -->
+    <Compile Include="../SeaPowerTacticalUI/AswHoldMath.cs" />   <!-- T-331 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.Membership.cs" />   <!-- T-328 -->
+    <Compile Include="../SeaPowerTacticalUI/RingGroups.cs" />   <!-- T-328 -->
+    <Compile Include="AswT176Migrate.cs" />
+    <Compile Include="AswT176Anchor.cs" />
+    <Compile Include="AswT176Filter.cs" />
+    <Compile Include="AswT176Area.cs" />
+    <Compile Include="AswT176Corridor.cs" />
+    <Compile Include="AswT176Barrier.cs" />
+    <Compile Include="AswT229Tests.cs" />   <!-- T-229 -->
+    <Compile Include="AswT238Tests.cs" />   <!-- T-238 -->
+    <Compile Include="AswT238Deck.cs" />
+    <Compile Include="AswT245Tests.cs" />   <!-- T-245 -->
+    <Compile Include="AswT251Tests.cs" />   <!-- T-251 -->
+    <Compile Include="AswT260Tests.cs" />   <!-- T-260 -->
+    <Compile Include="AswT266Tests.cs" />   <!-- T-266 -->
+    <Compile Include="AswT274Tests.cs" />   <!-- T-274 -->
+    <Compile Include="AswT288Tests.cs" />   <!-- T-288 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.Datum.cs" />   <!-- T-288 -->
+    <Compile Include="../SeaPowerTacticalUI/SubDatumMath.cs" />   <!-- T-288 -->
+    <Compile Include="../SeaPowerTacticalUI/UnitActionMath.cs" />   <!-- T-245: the labels of the barrier -->
+    <Compile Include="../SeaPowerTacticalUI/UnitActionMap.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.ActionLabels.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRadarAuto.cs" />   <!-- T-241 -->
+    <Compile Include="../captest/AirRadarFakeIo.cs" />   <!-- T-241 -->
+    <Compile Include="AswT241Tests.cs" />   <!-- T-241 -->
+    <Compile Include="AswT252Tests.cs" />   <!-- T-252 -->
+    <Compile Include="AswT255Tests.cs" />   <!-- T-255 -->
+    <Compile Include="AswT298Tests.cs" />   <!-- T-298 -->
+    <Compile Include="AswT316Tests.cs" />   <!-- T-316 -->
+    <Compile Include="AswT318Tests.cs" />   <!-- T-318 -->
+    <Compile Include="AswT176Dip.cs" />
+    <Compile Include="AswT176Relief.cs" />
+    <Compile Include="AswT176Reseed.cs" />
+    <Compile Include="AswT176Local.cs" />
+    <Compile Include="AswT176View.cs" />
+    <Compile Include="AswT180Filter.cs" />   <!-- T-180 -->
+    <Compile Include="AswT173MathTests.cs" />   <!-- T-173 -->
+    <Compile Include="AswT173AttackTests.cs" />
+    <Compile Include="AswT173StrikeTests.cs" />
+  </ItemGroup>
+</Project>

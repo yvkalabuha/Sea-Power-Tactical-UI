@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-148: light stand for the CAP window model and body (draft + layout + clicks). No game, no Unity. Like captest. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="WindowTests.cs" />
+    <Compile Include="CapWorldFlatTests.cs" />
+    <Compile Include="CapWidgetTests.cs" />
+    <Compile Include="CapAlertWindowTests.cs" />
+    <Compile Include="CapRenameWinTests.cs" />   <!-- T-326 -->
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsOwnership.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirDeckBroker.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />   <!-- T-122 -->
+    <Compile Include="../SeaPowerTacticalUI/CapCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapWindowModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRelief.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.Intercept.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapInterceptMath.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapFfMath.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapFfGuard.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Alert.cs" />   <!-- T-175 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Slots.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.Restore.cs" />   <!-- T-186, T-218 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Radar.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/AirRadarAuto.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.AlertBind.cs" />   <!-- T-219 -->
+    <Compile Include="../SeaPowerTacticalUI/CapAlertBind.cs" />   <!-- T-219 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Rename.cs" />   <!-- T-326 -->
+    <Compile Include="../SeaPowerTacticalUI/AswGroupNames.cs" />   <!-- T-326 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Lend.cs" />   <!-- T-179 -->
+    <Compile Include="../SeaPowerTacticalUI/CapAlertMath.cs" />   <!-- T-179 -->
+    <Compile Include="../SeaPowerTacticalUI/AirGuardShared.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiOrderTypes.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapOrderPanel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapWindowBody.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapWindowBody.Alert.cs" />   <!-- T-179 -->
+    <!-- the shared control set (T-148 U) and the recording painter -->
+    <Compile Include="../SeaPowerTacticalUI/RadialMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFrameMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiMapDrawInput.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ZoneHandleDrag.cs" />   <!-- fix 2026-10-22: zone handles -->
+    <Compile Include="../SeaPowerTacticalUI/UiMouseBlock.cs" />
+    <Compile Include="../puretest/RecordPainter.cs" />
+  </ItemGroup>
+</Project>

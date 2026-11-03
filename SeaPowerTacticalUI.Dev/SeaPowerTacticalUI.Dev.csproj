@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Developer test channel for the UI mod (ADR-0046). NOT part of the Workshop package. No reference to the UI assembly:
+       it talks to the UI mod only through AppDomain slots (plain BCL types). Game DLLs are read from GameDir, never written. -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>SeaPowerTacticalUI.Dev</AssemblyName>
+    <RootNamespace>VoiceBotBridge.Dev</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GameDir Condition="'$(GameDir)' == ''">/home/user/drive/SteamLibrary/steamapps/common/Sea Power</GameDir>
+    <OutputPath>$(MSBuildThisFileDirectory)../out-dev/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(GameDir)/BepInEx/core/BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Common/Json.cs" />
+    <!-- air_ready (QA cheat): the pure T-120 member registry (MemberSpec / MemberResolver), see DevAirReadySpecs.cs -->
+    <Compile Include="../SeaPowerTacticalUI/GameMember.cs" />
+    <!-- 0.27.10: the shared hostility rule of the fire guard (pure) -->
+    <Compile Include="../SeaPowerTacticalUI/AttackHostility.cs" />
+    <!-- T-212: thread names/TIDs of the dev server (own registry; the UI mod reports its own) -->
+    <Compile Include="../SeaPowerTacticalUI/ProcThreads.cs;../SeaPowerTacticalUI/ModThreads.cs;../SeaPowerTacticalUI/ModShutdown.cs" />
+    <Compile Remove="obj/**" />
+  </ItemGroup>
+</Project>

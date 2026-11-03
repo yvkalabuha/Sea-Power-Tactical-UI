@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Reference-only build: the game DLLs are read from GameDir, never copied or modified.
+       Seapower-Scripts.dll is NOT referenced: all game access is by reflection (see GameApi.cs). -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>SeaPowerTacticalUI</AssemblyName>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SteamLibrary Condition="'$(SteamLibrary)' == ''">/home/user/drive/SteamLibrary</SteamLibrary>
+    <!-- T-105: AnchorChain 1.1.0 (Workshop 3380210757), reference only: it is never copied to out/ (the player subscribes to it) -->
+    <AnchorChainDll Condition="'$(AnchorChainDll)' == ''">$(SteamLibrary)/steamapps/workshop/content/1286220/3380210757/AnchorChain.dll</AnchorChainDll>
+    <GameDir Condition="'$(GameDir)' == ''">/home/user/drive/SteamLibrary/steamapps/common/Sea Power</GameDir>
+    <OutputPath>$(MSBuildThisFileDirectory)../out/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(GameDir)/BepInEx/core/BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.CoreModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- T-165 light smoke: ParticleSystem emission / bursts (a Unity module, not a game assembly) -->
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.ParticleSystemModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- T-066 radar coverage overlay: IMGUI/GL drawing, legacy Input (hotkey), font for labels -->
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.InputLegacyModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- T-085 ring pick: Physics.RaycastAll (a Unity module, not a game assembly) -->
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>$(GameDir)/Sea Power_Data/Managed/UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="AnchorChain">
+      <HintPath>$(AnchorChainDll)</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(GameDir)/BepInEx/core/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <Target Name="CheckAnchorChainDll" BeforeTargets="ResolveAssemblyReferences" Condition="!Exists('$(AnchorChainDll)')">
+    <Error Text="AnchorChain.dll not found at $(AnchorChainDll): subscribe to AnchorChain (Workshop 3380210757) or pass -p:AnchorChainDll=... (build.sh: ANCHORCHAIN_DLL)" />
+  </Target>
+  <ItemGroup>
+    <!-- action registry shared with the bot tests (plugins/sea_power/tests) -->
+    <Compile Include="../Common/**/*.cs" />
+    <Compile Remove="obj/**" />
+    <EmbeddedResource Include="../Common/actions.json" LogicalName="VoiceBotBridge.actions.json" />
+  </ItemGroup>
+</Project>

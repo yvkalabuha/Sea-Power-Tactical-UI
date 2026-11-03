@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-100: light stand for the pure air evasion code (no game, no Unity): AirEvasionMath and AirEvasionController on a fake game. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Stub.cs" />
+    <Compile Include="AirEvasionMathTests.cs" />
+    <Compile Include="AirEvasionControllerTests.cs" />
+    <Compile Include="AirEvasionFakeGame.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirEvasionMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirEvasionController.cs" />
+    <Compile Include="../Common/TacticsMath.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+  </ItemGroup>
+</Project>

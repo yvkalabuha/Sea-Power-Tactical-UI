@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-098: light stand for the pure Standing Orders code (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../Common/ControlMemory.cs" />
+    <Compile Include="../SeaPowerTacticalUI/DoctrineFlags.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirDefenseReady.cs" />
+    <Compile Include="../SeaPowerTacticalUI/EvasionMath.cs" />
+    <Compile Include="EvasionHoldScenarios.cs" />
+    <!-- T-272 / ADR-0108: terrain guard of the evasion course -->
+    <Compile Include="../SeaPowerTacticalUI/EvasionCourseGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarRouteMath.cs" />
+    <Compile Include="EvasionTerrainScenarios.cs" />
+    <!-- T-278 / ADR-0111: the way back after an evasion, detour round the coast -->
+    <Compile Include="../SeaPowerTacticalUI/EvasionReturnGuard.cs" />
+    <Compile Include="EvasionReturnScenarios.cs" />
+    <!-- T-279 / ADR-0112: the evasion helm in PerformingAirOps -->
+    <Compile Include="../SeaPowerTacticalUI/EvasionHelmMath.cs" />
+    <Compile Include="EvasionHelmScenarios.cs" />
+    <!-- T-286 / ADR-0116: noisemaker reserve of the surface evasion -->
+    <Compile Include="../SeaPowerTacticalUI/EvasionDecoyMath.cs" />
+  </ItemGroup>
+</Project>

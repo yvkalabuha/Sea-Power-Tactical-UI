@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-341 phase B: light stand for the strike window body, the formatters, the map pick and the overlay math. No game, no Unity. Like aswwintest. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="StrikeWinTests.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RadialMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFrameMath.cs" />
+    <Compile Include="../puretest/RecordPainter.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTypes.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeCalib.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTofCache.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeCalibLog.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.Air.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.Target.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.Cards.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.Ew.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.Deck.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowBody.Auto.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTargetPick.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeOverlayMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeGeoMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTotMath.cs" />
+  </ItemGroup>
+</Project>

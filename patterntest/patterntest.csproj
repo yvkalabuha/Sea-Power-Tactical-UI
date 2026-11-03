@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-176: light stand for the pure ASW pattern math v3 (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />   <!-- LoadoutOption for AswMath.cs -->
+    <Compile Include="../SeaPowerTacticalUI/AswRouteGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Course.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Plan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswLocalizeMath.cs" />
+    <Compile Include="PatternAreaTests.cs" />
+    <Compile Include="PatternLatTests.cs" />
+    <Compile Include="PatternCourseTests.cs" />
+    <Compile Include="PatternPlanTests.cs" />
+    <Compile Include="LocalizeTests.cs" />
+    <Compile Include="GuardTests.cs" />
+  </ItemGroup>
+</Project>

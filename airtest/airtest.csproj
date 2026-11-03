@@ -1,0 +1,111 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-119: light stand for the deck broker (ADR-0042): pure code, a fake deck, no game, no Unity. Like captest (T-112). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <DefineConstants>$(DefineConstants);SAR_WIP</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="FakeDeck.cs" />
+    <Compile Include="AirBrokerTests.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsOwnership.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirDeckBroker.cs" />
+    <!-- D1: both controllers (ASW + helicopter SAR, CAP) on their fakes behind one broker -->
+    <Compile Include="MuxAirOps.cs" />
+    <Compile Include="AirControllersTests.cs" />
+    <Compile Include="AirT186Tests.cs" />   <!-- T-186 -->
+    <Compile Include="AirT200Tests.cs" />   <!-- T-200 -->
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AttackHostility.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswRouteGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswGroupNames.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />   <!-- T-122 -->
+    <Compile Include="../SeaPowerTacticalUI/AswView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRelief.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Commands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Tactics.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Contacts.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.View.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswDrawPlan.cs" />   <!-- T-174 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.Save.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Radar.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.Adopt.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswStrikeMath.cs" />   <!-- T-173 -->
+    <Compile Include="../SeaPowerTacticalUI/AswLaneMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswLocalizeMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Attack.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Strike.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.cs" />   <!-- T-176 -->
+    <Compile Include="../SeaPowerTacticalUI/AswHoldMath.cs" />   <!-- T-331 (AswController.Attack) -->
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Course.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Plan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Patterns.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Corridor.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Barrier.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.DipChain.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.DeckDown.cs" />   <!-- T-231 -->
+    <Compile Include="../SeaPowerTacticalUI/AswDipTasks.cs" />   <!-- T-214 -->
+    <Compile Include="../SeaPowerTacticalUI/AswController.PlanView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Localize.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.Lanes.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswController.AirGuard.cs" />   <!-- T-175 -->
+    <Compile Include="../SeaPowerTacticalUI/AirGuardMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirGuardShared.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRetreatSteer.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarAirOrder.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarRouteMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarShipPanel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapTakeoverMath.cs" />   <!-- T-317: CapFakeGame -->
+    <Compile Include="../SeaPowerTacticalUI/CapSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapWindowModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.Intercept.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapInterceptMath.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapFfMath.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapFfGuard.cs" />   <!-- T-333 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Alert.cs" />   <!-- T-175 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Slots.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.Restore.cs" />   <!-- T-186, T-218 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Radar.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/AirRadarAuto.cs" />   <!-- T-241 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.AlertBind.cs" />   <!-- T-219 -->
+    <Compile Include="../SeaPowerTacticalUI/CapAlertBind.cs" />   <!-- T-219 -->
+    <Compile Include="../SeaPowerTacticalUI/CapAlertMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CapController.Rename.cs" />   <!-- T-326 -->
+    <Compile Include="../SeaPowerTacticalUI/CapController.Lend.cs" />
+    <Compile Include="../sartest/SarFakeGame.cs" />
+    <Compile Include="../aswtest/AswFakeGame.cs" />
+    <Compile Include="../aswtest/AswFakeDeck.cs" />
+    <Compile Include="../captest/CapFakeGame.cs" />
+  </ItemGroup>
+</Project>

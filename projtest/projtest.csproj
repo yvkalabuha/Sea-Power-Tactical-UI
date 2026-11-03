@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-309 A: light stand for the pure beta map projector (no game, no Unity). Streams add their own *Cases.cs (Program.cs finds them by reflection). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="GameRef.cs" />
+    <Compile Include="ProjectorCases.cs" />
+    <Compile Include="PxCases.cs" />
+    <Compile Include="RingGeoMetricStub.cs" />   <!-- T-337: MapPx.ArcMetric (T-321) needs the type; the real one lives in RangeRingKin.cs (drags the whole ring model) -->
+    <Compile Include="CheckCases.cs" Condition="Exists('CheckCases.cs')" />
+    <Compile Include="CheckSettleCases.cs" Condition="Exists('CheckSettleCases.cs')" />
+    <Compile Include="PxBudgetCases.cs" Condition="Exists('PxBudgetCases.cs')" />
+    <Compile Include="RasterBudgetCases.cs" Condition="Exists('RasterBudgetCases.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/MapProjector.cs" />
+    <Compile Include="../SeaPowerTacticalUI/MapPx.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoverageMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoverageRasterPx.cs" Condition="Exists('../SeaPowerTacticalUI/CoverageRasterPx.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/MapProjectorCheck.cs" Condition="Exists('../SeaPowerTacticalUI/MapProjectorCheck.cs')" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-175 / ADR-0075: light stand for the pure air_guard code (no game, no Unity). Like captest. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirGuardMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirGuardShared.cs" />   <!-- T-179 -->
+    <Compile Include="../SeaPowerTacticalUI/AirGuardController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirTimeX1.cs" />   <!-- T-175 stream T -->
+    <Compile Include="AirGuardFakeGame.cs" />
+    <Compile Include="AirGuardTests.cs" />
+    <Compile Include="AirGuardT192Tests.cs" />   <!-- T-192 -->
+    <Compile Include="AirGuardT207Tests.cs" />   <!-- T-207 -->
+    <Compile Include="AirGuardT236Tests.cs" />   <!-- T-236 -->
+    <Compile Include="../SeaPowerTacticalUI/AirGuardController.ActionLabels.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UnitActionMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UnitActionMap.cs" />
+  </ItemGroup>
+</Project>

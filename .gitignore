@@ -1,0 +1,7 @@
+bin/
+obj/
+out/
+out-*/
+dist/
+__pycache__/
+*.pyc
