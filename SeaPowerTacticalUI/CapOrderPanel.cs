@@ -133,7 +133,7 @@ namespace VoiceBotBridge
             }
             else if (HasZone(g))
             {
-                d.SizeText = CapWindowModel.Fmt((g.Rect[3] - g.Rect[1]) * 60.0 * AswMath.LonK(g.Rect[0], g.Rect[2])); d.WidthText = CapWindowModel.Fmt((g.Rect[2] - g.Rect[0]) * 60.0);
+                d.SizeText = CapWindowModel.Fmt(GeoLon.DLon(g.Rect[1], g.Rect[3]) * 60.0 * AswMath.LonK(g.Rect[0], g.Rect[2])); d.WidthText = CapWindowModel.Fmt((g.Rect[2] - g.Rect[0]) * 60.0);
             }
             d.NText = (g.N > 0 ? g.N : DefaultN).ToString(System.Globalization.CultureInfo.InvariantCulture);
             d.KText = g.K >= 0 ? g.K.ToString(System.Globalization.CultureInfo.InvariantCulture) : "";

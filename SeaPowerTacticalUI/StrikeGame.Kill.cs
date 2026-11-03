@@ -13,6 +13,7 @@ namespace VoiceBotBridge
         private sealed partial class StrikeGameImpl
         {
             private int _hitCursor;
+            private readonly StrikeHitFilter _hitFilter = new StrikeHitFilter();   // T-363: the tracks seen as surface ships, alive or already destroyed
             private readonly Dictionary<int, int> _speedMem = new Dictionary<int, int>();   // uid -> the throttle step before the mod set one (1-based)
 
             /// <summary>Globals._damageBonus (0.5 / 0.35 / 0.25 / 0.1 / 0 by the difficulty); not readable = the fallback of the plan and known = false.</summary>
@@ -41,10 +42,10 @@ namespace VoiceBotBridge
                     if (led == null) return res;
                     var hits = led.Since(ref _hitCursor);
                     if (hits.Count == 0) return res;
-                    var ships = new HashSet<int>(Ships().Select(s => s.TrackId));
+                    Ships();   // refreshes the filter; a ship that sank in this very tick is no longer in the list, its hits are kept (T-363)
                     foreach (var h in hits)
                     {
-                        if (h.Kind != HeAmmoKind.Missile || !ships.Contains(h.TrackId)) continue;
+                        if (!_hitFilter.Keep(h.Kind == HeAmmoKind.Missile, h.TrackId)) continue;
                         var ammo = _a.HeAmmoByFile(h.AmmoFile);
                         double power = ammo == null ? 0 : (h.Dud ? ammo.DudPower : ammo.Power);
                         res.Add(new StrikeHitSeen

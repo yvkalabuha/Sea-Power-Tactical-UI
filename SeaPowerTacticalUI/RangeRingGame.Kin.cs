@@ -46,47 +46,97 @@ namespace VoiceBotBridge
         private bool _worldLoggedSet, _worldLoggedVal;
         private double _worldNextPrimeS = double.NegativeInfinity;
         private const double PrimeS = 2.0;
+        private const double PrimeFastS = 0.25;   // T-356: until the world of the mission is decided
+        private const double EquatorDeg = 8.0, ProbeOffDeg = 20.0;
 
         /// <summary>T-347/T-348: true = the game world is the LCC globe at the point (lon metric ~ cos(lat)); false = flat (stable) or unknown. Cached per RangeRingKin.CellKey
         /// (WorldCellCache: undecided cells and a failed metric are remembered too). Every change of the world is written to AswMath.WorldGlobe.</summary>
         internal bool WorldGlobeAt(double lat, double lon)
         {
+            bool decided;
+            return WorldMeasure(lat, lon, "at", out decided);
+        }
+
+        /// <summary>One cached measurement; decided = the cell holds an answer of the metric (then AswMath.WorldKnown is set). src goes to the [World] line.</summary>
+        private bool WorldMeasure(double lat, double lon, string src, out bool decided)
+        {
+            decided = false;
             try
             {
                 long key = RangeRingKin.CellKey(lat, lon);
                 double now = _worldClock.Elapsed.TotalSeconds;
                 bool cached;
-                if (_worldCache.TryGet(key, now, out cached)) return cached;
+                if (_worldCache.TryGet(key, now, out cached))
+                {
+                    decided = _worldCache.IsDecided(key);
+                    if (decided) AswMath.WorldKnown = true;
+                    return cached;
+                }
                 RingGeoMetric m;
-                bool decided = false, globe = false;
+                bool globe = false;
                 bool ok = RrGameMetric(lat, lon, out m);
                 if (ok) globe = AswMath.GlobeFromMetric(lat, m.LonNmPerDeg, m.LatNmPerDeg, out decided);
                 if (_worldCache.Put(key, now, ok, decided, globe)) AswMath.WorldGlobe = globe;
-                if (decided && (!_worldLoggedSet || _worldLoggedVal != globe))
+                if (decided)
                 {
-                    _worldLoggedSet = true; _worldLoggedVal = globe;
-                    try { string line = "[World] globe=" + (globe ? "on" : "off") + " lat=" + lat.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture); var s = AswLogSink; if (s != null) s(line); else UnityEngine.Debug.Log(line); } catch { }
+                    AswMath.WorldKnown = true;
+                    if (!_worldLoggedSet || _worldLoggedVal != globe)
+                    {
+                        _worldLoggedSet = true; _worldLoggedVal = globe;
+                        try { string line = "[World] globe=" + (globe ? "on" : "off") + " lat=" + lat.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " src=" + src; var s = AswLogSink; if (s != null) s(line); else UnityEngine.Debug.Log(line); } catch { }
+                    }
                 }
                 return decided ? globe : _worldCache.Last;
             }
             catch { return _worldCache.Last; }
         }
 
-        /// <summary>T-348: primes AswMath.WorldGlobe once per PrimeS of real time in a mission from a point of the mission zone (the first own unit).
-        /// After the first decided value only cache hits. Main thread (TickMission).</summary>
+        /// <summary>T-356 (ADR-0135): the mission was entered (lifecycle order 0, before sar 20 / asw 30 / cap 40 / strike 42 restore the orders): the cells of the
+        /// last mission are forgotten (a new mission may have another projection), the world is probed at once.</summary>
+        internal void WorldEnter()
+        {
+            try
+            {
+                _worldCache.ResetCells();
+                AswMath.WorldKnown = false;
+                _worldLoggedSet = false;
+                _worldNextPrimeS = double.NegativeInfinity;
+                WorldProbe("enter");
+            }
+            catch { }
+        }
+
+        /// <summary>The mission was left: the world of the next one is not known yet (AswMath.WorldGlobe keeps the last value as the best guess).</summary>
+        internal void WorldLeave() { AswMath.WorldKnown = false; }
+
+        /// <summary>The first own unit; near the equator (|lat| below 8 deg: both worlds coincide) a second probe 20 deg away on the same meridian
+        /// (LCC is conformal: lon/lat metric = cos(phi) at any point). true = the world is decided.</summary>
+        private bool WorldProbe(string src)
+        {
+            if (MissionRef() == null) return false;
+            foreach (var u in OwnUnits())
+            {
+                double lat, lon, h;
+                if (u == null || !OwnPos(u, out lat, out lon, out h)) continue;
+                bool decided;
+                WorldMeasure(lat, lon, src, out decided);
+                if (decided) return true;
+                if (Math.Abs(lat) < EquatorDeg) WorldMeasure(lat >= 0 ? lat + ProbeOffDeg : lat - ProbeOffDeg, lon, "probe20", out decided);
+                return decided;
+            }
+            return false;
+        }
+
+        /// <summary>T-348: primes AswMath.WorldGlobe once per PrimeS of real time in a mission from a point of the mission zone (the first own unit);
+        /// T-356: every PrimeFastS until the world of the mission is decided. After that only cache hits. Main thread (TickMission).</summary>
         internal void WorldPrime(double realTimeS)
         {
             try
             {
                 if (realTimeS < _worldNextPrimeS - PrimeS) _worldNextPrimeS = double.NegativeInfinity;   // the clock went back
                 if (realTimeS < _worldNextPrimeS) return;
-                _worldNextPrimeS = realTimeS + PrimeS;
-                if (MissionRef() == null) return;
-                foreach (var u in OwnUnits())
-                {
-                    double lat, lon, h;
-                    if (u != null && OwnPos(u, out lat, out lon, out h)) { WorldGlobeAt(lat, lon); return; }
-                }
+                _worldNextPrimeS = realTimeS + (AswMath.WorldKnown ? PrimeS : PrimeFastS);
+                WorldProbe("prime");
             }
             catch { }
         }

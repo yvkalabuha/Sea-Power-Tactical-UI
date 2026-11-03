@@ -528,7 +528,7 @@ namespace VoiceBotBridge
         public static void BearingDistance(double lat1, double lon1, double lat2, double lon2, bool globe, out double bearingDeg, out double distM)
         {
             if (globe) { BearingDistance(lat1, lon1, lat2, lon2, out bearingDeg, out distM); return; }
-            double n = (lat2 - lat1) * FlatMPerDeg, e = (lon2 - lon1) * FlatMPerDeg;
+            double n = (lat2 - lat1) * FlatMPerDeg, e = GeoLon.DLon(lon1, lon2) * FlatMPerDeg;
             distM = Math.Sqrt(n * n + e * e);
             bearingDeg = (Math.Atan2(e, n) * Deg + 360.0) % 360.0;
         }
@@ -536,7 +536,7 @@ namespace VoiceBotBridge
         /// <summary>Initial bearing (0..360) and distance in metres between two points (haversine).</summary>
         public static void BearingDistance(double lat1, double lon1, double lat2, double lon2, out double bearingDeg, out double distM)
         {
-            double p1 = lat1 * Rad, p2 = lat2 * Rad, dl = (lon2 - lon1) * Rad, dp = p2 - p1;
+            double p1 = lat1 * Rad, p2 = lat2 * Rad, dl = GeoLon.DLon(lon1, lon2) * Rad, dp = p2 - p1;
             double sdp = Math.Sin(dp / 2), sdl = Math.Sin(dl / 2);
             double a = sdp * sdp + Math.Cos(p1) * Math.Cos(p2) * sdl * sdl;
             distM = 2 * EarthRadiusM * Math.Asin(Math.Min(1.0, Math.Sqrt(a)));
@@ -823,9 +823,9 @@ namespace VoiceBotBridge
             if (p.Globe)
             {
                 dyM = (lat - p.Lat) * Rad * EarthRadiusM;
-                dxM = (lon - p.Lon) * Rad * EarthRadiusM * Math.Cos((lat + p.Lat) * 0.5 * Rad);
+                dxM = GeoLon.DLon(p.Lon, lon) * Rad * EarthRadiusM * Math.Cos((lat + p.Lat) * 0.5 * Rad);
             }
-            else { dyM = (lat - p.Lat) * FlatMPerDeg; dxM = (lon - p.Lon) * FlatMPerDeg; }   // T-352: the flat world of stable
+            else { dyM = (lat - p.Lat) * FlatMPerDeg; dxM = GeoLon.DLon(p.Lon, lon) * FlatMPerDeg; }   // T-352: the flat world of stable
             double d2 = dxM * dxM + dyM * dyM;
             if (d2 >= p.RangeM * p.RangeM) return false;
             double b = (Math.Atan2(dxM, dyM) * Deg + 360.0) % 360.0;
@@ -839,10 +839,12 @@ namespace VoiceBotBridge
         {
             double latMin = double.MaxValue, latMax = double.MinValue, lonMin = double.MaxValue, lonMax = double.MinValue;
             bool any = false;
+            double refLon = 0;   // T-356: the box is continuous across the antimeridian (longitudes unwrapped to the first centre; may exceed 180)
             if (profiles != null)
                 foreach (RayProfile p in profiles)
                 {
-                    Extend(ref latMin, ref latMax, ref lonMin, ref lonMax, p.Lat, p.Lon);
+                    if (!any) refLon = p.Lon;
+                    Extend(ref latMin, ref latMax, ref lonMin, ref lonMax, p.Lat, GeoLon.UnwrapLon(refLon, p.Lon));
                     any = true;
                     if (p.Visible == null || !(p.RangeM > 0)) continue;
                     double step = 360.0 / p.Rays;
@@ -854,7 +856,7 @@ namespace VoiceBotBridge
                         if (far < 0) continue;
                         double la, lo;
                         Destination(p.Lat, p.Lon, ray * step, (far + 1) * p.BinM, p.Globe, out la, out lo);
-                        Extend(ref latMin, ref latMax, ref lonMin, ref lonMax, la, lo);
+                        Extend(ref latMin, ref latMax, ref lonMin, ref lonMax, la, GeoLon.UnwrapLon(refLon, lo));
                     }
                 }
             if (!any) return new GeoBox();
@@ -881,16 +883,18 @@ namespace VoiceBotBridge
             if (profiles == null || w <= 0 || h <= 0) return res;
             double dLat = (box.LatMax - box.LatMin) / h, dLon = (box.LonMax - box.LonMin) / w;
             if (!(dLat > 0) || !(dLon > 0)) return res;
+            double boxMid = (box.LonMin + box.LonMax) / 2;
             foreach (RayProfile p in profiles)
             {
                 if (p.Visible == null || !(p.RangeM > 0) || p.Tier < 0 || p.Tier >= MaxTiers) continue;
                 byte bit = (byte)(1 << (p.Active ? p.Tier : 4 + p.Tier));
+                double pLon = GeoLon.UnwrapLon(boxMid, p.Lon);   // T-356
                 double latSpan = p.Globe ? p.RangeM / EarthRadiusM * Deg : p.RangeM / FlatMPerDeg;
                 double lonSpan = p.Globe ? latSpan / Math.Max(0.01, Math.Cos(p.Lat * Rad)) : latSpan;   // T-352: flat = the same span in degrees
                 int y0 = Math.Max(0, (int)Math.Floor((box.LatMax - (p.Lat + latSpan)) / dLat));
                 int y1 = Math.Min(h - 1, (int)Math.Ceiling((box.LatMax - (p.Lat - latSpan)) / dLat));
-                int x0 = Math.Max(0, (int)Math.Floor((p.Lon - lonSpan - box.LonMin) / dLon));
-                int x1 = Math.Min(w - 1, (int)Math.Ceiling((p.Lon + lonSpan - box.LonMin) / dLon));
+                int x0 = Math.Max(0, (int)Math.Floor((pLon - lonSpan - box.LonMin) / dLon));
+                int x1 = Math.Min(w - 1, (int)Math.Ceiling((pLon + lonSpan - box.LonMin) / dLon));
                 for (int y = y0; y <= y1; y++)
                 {
                     double lat = box.LatMax - (y + 0.5) * dLat;
@@ -1599,7 +1603,7 @@ namespace VoiceBotBridge
         {
             if (p.Visible == null || !(p.RangeM > 0)) return false;
             double dyM = (lat - p.Lat) * Rad * EarthRadiusM;
-            double dxM = (lon - p.Lon) * Rad * EarthRadiusM * Math.Cos((lat + p.Lat) * 0.5 * Rad);
+            double dxM = GeoLon.DLon(p.Lon, lon) * Rad * EarthRadiusM * Math.Cos((lat + p.Lat) * 0.5 * Rad);
             double d2 = dxM * dxM + dyM * dyM;
             if (d2 >= p.RangeM * p.RangeM) return false;
             double b = (Math.Atan2(dxM, dyM) * Deg + 360.0) % 360.0;
@@ -1702,6 +1706,20 @@ namespace VoiceBotBridge
                     double wDeg = (xMax - xMin + 1) * (box.LonMax - box.LonMin) / 128, hDeg = (yMax - yMin + 1) * (box.LatMax - box.LatMin) / 128;
                     Check(xMax >= 0 && Math.Abs(wDeg - hDeg) <= 2.0 * Math.Max((box.LonMax - box.LonMin) / 128, (box.LatMax - box.LatMin) / 128), "worldflat flat raster is square in degrees: " + wDeg + " x " + hDeg);
                 }
+            }
+            // T-356: a radar at 179.8 E, 60 N: the box stays narrow across the antimeridian and the raster equals the one of the copy shifted by -10 deg
+            foreach (bool globe in new[] { false, true })
+            {
+                RadarSpec rw = TestRadar("Search"), rs = TestRadar("Search");
+                rw.Lat = rs.Lat = 60; rw.Lon = 179.8; rs.Lon = 169.8; rw.Globe = rs.Globe = globe;
+                RayProfile pw = BuildProfile(rw, T(15, 1, true, false), 0, MinPowerKw, null, 180, 64), ps = BuildProfile(rs, T(15, 1, true, false), 0, MinPowerKw, null, 180, 64);
+                var lw = new List<RayProfile> { pw }; var ls = new List<RayProfile> { ps };
+                GeoBox bw = Bounds(lw, 0.1), bs = Bounds(ls, 0.1);
+                Check(bw.LonMax - bw.LonMin < 10.0 && Math.Abs((bw.LonMax - bw.LonMin) - (bs.LonMax - bs.LonMin)) < 1e-9, "worldflat t356 box width globe=" + globe + ": " + (bw.LonMax - bw.LonMin));
+                byte[] rasW = Rasterize(lw, bw, 128, 128), rasS = Rasterize(ls, bs, 128, 128);
+                int setW = 0, diff = 0;
+                for (int i = 0; i < rasW.Length; i++) { if (rasW[i] != 0) setW++; if (rasW[i] != rasS[i]) diff++; }
+                Check(setW > 100 && diff <= setW / 100, "worldflat t356 raster across 180 globe=" + globe + ": set " + setW + " diff " + diff);
             }
             RadarSpec ma = TestRadar("Search"), mb = TestRadar("Search");
             ma.Lat = mb.Lat = 60; ma.Lon = mb.Lon = 10; ma.Globe = false; mb.Globe = false;

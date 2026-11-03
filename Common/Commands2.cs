@@ -291,7 +291,7 @@ namespace VoiceBotBridge
                     {
                         if (Kind(c) != "Torpedo" || Relation(c) == "friendly" || IsGone(c)) continue;
                         var p = TrackPos(c); if (p == null) continue;
-                        double d = DistanceNm(lat0, lon0, p[0], p[1]);
+                        double d = MetricDistanceNm(lat0, lon0, p[0], p[1]);
                         if (d < best) { best = d; v = c; }
                     }
             }
@@ -299,7 +299,7 @@ namespace VoiceBotBridge
             {
                 var p = TrackPos(v);
                 if (p == null) return Err(id, "no_position", "torpedo track has no position");
-                brg = Bearing(lat0, lon0, p[0], p[1]); rng = DistanceNm(lat0, lon0, p[0], p[1]);
+                brg = MetricBearing(lat0, lon0, p[0], p[1]); rng = MetricDistanceNm(lat0, lon0, p[0], p[1]);
                 source = "track"; var d = D(Get(v, "Id")); if (d.HasValue) track = (int)d.Value;
             }
             else
@@ -317,7 +317,7 @@ namespace VoiceBotBridge
             course = Math.Round(course);
             if (course >= 360) course -= 360;
             double lat, lon;
-            Destination(lat0, lon0, course, EvadeLegNm, out lat, out lon);
+            MetricDestination(lat0, lon0, course, EvadeLegNm, out lat, out lon);
             string wp = PlaceWaypoint(id, u, lat, lon, false, "");
             if (!wp.Contains("\"ok\":true")) return wp;
 

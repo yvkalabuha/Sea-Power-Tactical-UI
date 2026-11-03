@@ -12,7 +12,7 @@ namespace VoiceBotBridge
         {
             C("tti", AirEvasionMathTests.Tti), C("closing", AirEvasionMathTests.Closing), C("button", AirEvasionMathTests.Button),
             C("auto", AirEvasionMathTests.Auto), C("cooldown", AirEvasionMathTests.Cooldown), C("beam", AirEvasionMathTests.Beam),
-            C("replace", AirEvasionMathTests.Replace), C("beamend", AirEvasionMathTests.BeamEnd), C("lat", AirEvasionMathTests.Lat),
+            C("replace", AirEvasionMathTests.Replace), C("beamend", AirEvasionMathTests.BeamEnd), C("lat", AirEvasionMathTests.Lat), C("t356", AirEvasionMathTests.Antimeridian),
         };
 
         private static readonly List<KeyValuePair<string, Func<string>>> Controller = new List<KeyValuePair<string, Func<string>>>

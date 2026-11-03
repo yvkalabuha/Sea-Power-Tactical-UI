@@ -240,8 +240,8 @@ namespace VoiceBotBridge
                 double dist = double.MaxValue;
                 if (haveSel && hasPos)
                 {
-                    dist = DistanceNm(lat0, lon0, t.Lat.Value, t.Lon.Value);
-                    sb.Append(",\"bearing_deg\":").Append(Json.Num(Math.Round(Bearing(lat0, lon0, t.Lat.Value, t.Lon.Value), 1)));
+                    dist = MetricDistanceNm(lat0, lon0, t.Lat.Value, t.Lon.Value);
+                    sb.Append(",\"bearing_deg\":").Append(Json.Num(Math.Round(MetricBearing(lat0, lon0, t.Lat.Value, t.Lon.Value), 1)));
                     sb.Append(",\"distance_nm\":").Append(Json.Num(Math.Round(dist, 2)));
                 }
                 items.Add(new KeyValuePair<double, string>(dist, sb.Append('}').ToString()));

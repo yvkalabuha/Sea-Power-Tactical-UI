@@ -123,10 +123,13 @@ namespace VoiceBotBridge.Ui
             if (_ov != null) _ov.RequestDraw();
         }
 
+        private bool _worldSeen;   // T-356: AswMath.WorldGlobe as the live datums know it
+
         public override void Update(UiFrame frame)
         {
             var book = _book;
             if (book == null || !_api.Frame.InMission) return;
+            if (_worldSeen != AswMath.WorldGlobe) { _worldSeen = AswMath.WorldGlobe; book.SetWorld(_worldSeen); }   // T-356
             if (frame.RealTime >= _nextPoll)
             {
                 _nextPoll = frame.RealTime + 1.0;

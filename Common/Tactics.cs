@@ -363,18 +363,18 @@ namespace VoiceBotBridge
                     {
                         if (Relation(c) != "hostile" || IsGone(c)) continue;
                         var p = TrackPos(c); if (p == null) continue;
-                        double d = DistanceNm(lat0, lon0, p[0], p[1]);
+                        double d = MetricDistanceNm(lat0, lon0, p[0], p[1]);
                         if (d < best) { best = d; v = c; }
                     }
                 if (v == null) return Err(id, "no_hostile_contact", "no hostile contact in the plotting table");
             }
             var tp = TrackPos(v);
             if (tp == null) return Err(id, "no_position", "threat track has no position");
-            double brg = Bearing(lat0, lon0, tp[0], tp[1]);
+            double brg = MetricBearing(lat0, lon0, tp[0], tp[1]);
             double course = Math.Round(TacticsMath.AwayCourse(brg));
             if (course >= 360) course -= 360;
             double lat, lon;
-            Destination(lat0, lon0, course, dist, out lat, out lon);
+            MetricDestination(lat0, lon0, course, dist, out lat, out lon);
             var tid2 = D(Get(v, "Id"));
             return PlaceWaypoint(id, u, lat, lon, false, ",\"course\":" + Json.Num(course) + ",\"threat_track_id\":" + (tid2.HasValue ? Json.Num(tid2.Value) : "null") +
                 ",\"threat_bearing_deg\":" + Json.Num(Math.Round(brg, 1)));
@@ -404,7 +404,7 @@ namespace VoiceBotBridge
             {
                 if (Kind(c) != "Torpedo" || Relation(c) == "friendly" || IsGone(c)) continue;
                 var p = TrackPos(c); if (p == null) continue;
-                if (DistanceNm(lat0, lon0, p[0], p[1]) > 10.0) continue;
+                if (MetricDistanceNm(lat0, lon0, p[0], p[1]) > 10.0) continue;
                 var d = D(Get(c, "Id")); if (d.HasValue) track = (int)d.Value;
                 return true;
             }
@@ -534,7 +534,7 @@ namespace VoiceBotBridge
             bool targetIsAir = target != null && IsAlive(target) && UnitKindOfObj(target) == "air";
             double lat0, lon0, h, lat1 = 0, lon1 = 0;
             double range = 99;
-            if (OwnPos(air, out lat0, out lon0, out h) && targetIsAir && OwnPos(target, out lat1, out lon1, out h)) range = DistanceNm(lat0, lon0, lat1, lon1);
+            if (OwnPos(air, out lat0, out lon0, out h) && targetIsAir && OwnPos(target, out lat1, out lon1, out h)) range = MetricDistanceNm(lat0, lon0, lat1, lon1);
             bool hold = WeaponStatusName(air) == "hold";
             bool guidingOther = false;
             var tasks = Get(air, "_alignmentTasks") as IEnumerable;
@@ -552,11 +552,11 @@ namespace VoiceBotBridge
             if (decision == "retarget" && !AllowAttack) decision = "evade";
             var saved = Waypoints(air);
             double hdg = GridHeadingTrueOf(air) ?? 0;
-            double brg = Bearing(lat0, lon0, lat1, lon1);
+            double brg = MetricBearing(lat0, lon0, lat1, lon1);
             double course = Math.Round(TacticsMath.BeamCourse(hdg, brg));
             if (course >= 360) course -= 360;
             double lat, lon;
-            Destination(lat0, lon0, course, 20.0, out lat, out lon);
+            MetricDestination(lat0, lon0, course, 20.0, out lat, out lon);
             string ack = PlaceWaypoint("0", air, lat, lon, false, "");
             if (!ack.Contains("\"ok\":true")) return;
             _plRuns[air] = new PlRun { Air = air, Target = target, Mode = decision, Guidance = guidance, TargetTrack = ttrack, Saved = saved, Placed = new[] { lat, lon }, StartT = WatchNow(), Course = course };
@@ -573,7 +573,7 @@ namespace VoiceBotBridge
                 if (WatchNow() - run.StartT < EvadeS) continue;
                 _plRuns.Remove(air);
                 var wps = Waypoints(air);
-                if (wps.Count == 0 || DistanceNm(wps[0][0], wps[0][1], run.Placed[0], run.Placed[1]) > 0.2)
+                if (wps.Count == 0 || MetricDistanceNm(wps[0][0], wps[0][1], run.Placed[0], run.Placed[1]) > 0.2)
                 {
                     EvLine("post_launch", PlEvent(air, run.Mode, "end", "overridden", run.Guidance, run.TargetTrack, null, null)); // somebody else gave an order: leave it
                     continue;

@@ -66,6 +66,7 @@ namespace VoiceBotBridge
             new KeyValuePair<string, Func<string>>("zone target", InterceptZoneTests.TargetAndInside),
             new KeyValuePair<string, Func<string>>("zone track", InterceptZoneTests.Track),
             new KeyValuePair<string, Func<string>>("zone submerged", InterceptZoneTests.Submerged),
+            new KeyValuePair<string, Func<string>>("t356 geo", InterceptZoneTests.Antimeridian),   // T-356
         };
 
         private static int Main(string[] args)

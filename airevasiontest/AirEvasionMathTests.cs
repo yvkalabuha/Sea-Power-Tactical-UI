@@ -6,6 +6,25 @@ namespace VoiceBotBridge
     /// <summary>T-100 A1: AirEvasionMath cases.</summary>
     internal static class AirEvasionMathTests
     {
+        /// <summary>T-356: the missile geometry across the antimeridian equals the shifted pair; bit-identical to the plain subtraction inside 180 deg.</summary>
+        public static string Antimeridian()
+        {
+            foreach (bool globe in new[] { false, true })
+                foreach (double phi in new[] { 0.0, 45.0, 60.0, 70.0 })
+                {
+                    double d1 = AirEvasionMath.DistNm(phi, 179.9, phi + 0.1, -179.9, globe), d2 = AirEvasionMath.DistNm(phi, 179.9, phi + 0.1, 180.1, globe);
+                    if (Math.Abs(d1 - d2) > 1e-9) return "DistNm across 180 " + globe + "/" + phi;
+                    double b1 = AirEvasionMath.BearingDeg(phi, 179.9, phi + 0.1, -179.9, globe), b2 = AirEvasionMath.BearingDeg(phi, 179.9, phi + 0.1, 180.1, globe);
+                    if (Math.Abs(b1 - b2) > 1e-9) return "BearingDeg across 180 " + globe + "/" + phi;
+                    double c1 = AirEvasionMath.ClosingKn(phi, 179.9, 90, 400, phi + 0.1, -179.9, 270, 900, globe), c2 = AirEvasionMath.ClosingKn(phi, 179.9, 90, 400, phi + 0.1, 180.1, 270, 900, globe);
+                    if (Math.Abs(c1 - c2) > 1e-9) return "ClosingKn across 180 " + globe + "/" + phi;
+                    double n = 0.1 * 60.0, e = (12.3 - 11.9) * 60.0 * (globe ? Math.Cos(((phi + phi + 0.1) * 0.5) * Math.PI / 180.0) : 1.0);
+                    double inRange = AirEvasionMath.DistNm(phi, 11.9, phi + 0.1, 12.3, globe);
+                    if (Math.Abs(inRange - Math.Sqrt(n * n + e * e)) > 1e-6) return "DistNm in range " + globe + "/" + phi;
+                }
+            return null;
+        }
+
         private static string Req(bool ok, string msg) { return ok ? null : msg; }
 
         private static bool Near(double a, double b, double e) { return Math.Abs(a - b) <= e; }

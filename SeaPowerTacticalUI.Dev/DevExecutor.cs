@@ -13,11 +13,13 @@ namespace VoiceBotBridge.Dev
         private readonly Func<DevSlots> _resolve;
         private readonly DevAirReady _airReady;
         private readonly DevGfx _gfx;
+        private readonly Func<bool> _forceOn;
 
-        public DevExecutor(DevLogRing ring, Func<bool> fireOn, Action<string> warn, Func<DevSlots> resolve = null, DevAirReady airReady = null, DevGfx gfx = null)
+        public DevExecutor(DevLogRing ring, Func<bool> fireOn, Action<string> warn, Func<DevSlots> resolve = null, DevAirReady airReady = null, DevGfx gfx = null, Func<bool> forceOn = null)
         {
             _ring = ring; _fireOn = fireOn; _warn = warn ?? (s => { }); _resolve = resolve ?? DevSlots.Resolve; _airReady = airReady ?? new DevAirReady();
             _gfx = gfx ?? new DevGfx();
+            _forceOn = forceOn ?? (() => true);
         }
 
         public bool FireOn { get { return _fireOn(); } }
@@ -62,6 +64,7 @@ namespace VoiceBotBridge.Dev
             if (group == "fire") return Fire(r, steps);
             if (r.Cmd == "air_ready") return AirReady(r);
             if (r.Cmd == "gfx") return Gfx(r);
+            if (r.Cmd == "force") return Force(r, steps);
             return RunSteps(r, steps, null);
         }
 
@@ -131,6 +134,22 @@ namespace VoiceBotBridge.Dev
             string res = err ?? ("ok changes=" + ((List<object>)data["changes"]).Count + " errors=" + ((List<object>)data["errors"]).Count);
             Journal(DevGfx.Line(r.Args, err == null ? res : res + " (" + detail + ")"));
             return err == null ? DevProtocol.Ok(r.Id, data, null) : DevProtocol.Err(r.Id, err, detail, null);
+        }
+
+        /// <summary>T-361 (ADR-0136): QA scenario by real game orders; the work is the `qa_force` link command. Every outcome is journaled as [Dev][FORCE].</summary>
+        private string Force(DevRequest r, List<Dictionary<string, object>> steps)
+        {
+            if (!_forceOn())
+            {
+                Journal(DevForce.Line(r.Args, "force_disabled"));
+                return DevProtocol.Err(r.Id, "force_disabled", "[Dev] ForceCommands = false", null);
+            }
+            string reply = RunSteps(r, steps, null);
+            var d = Json.Parse(reply) as Dictionary<string, object>;
+            bool ok = d != null && d.ContainsKey("ok") && d["ok"] is bool && (bool)d["ok"];
+            string res = ok ? "ok" : (d != null && d.ContainsKey("error") ? d["error"] as string : null) ?? "bad_reply";
+            Journal(DevForce.Line(r.Args, res));
+            return reply;
         }
 
         private string Fire(DevRequest r, List<Dictionary<string, object>> steps)

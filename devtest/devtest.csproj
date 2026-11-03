@@ -36,6 +36,7 @@
     <Compile Include="../SeaPowerTacticalUI.Dev/DevAirReady.cs" />
     <Compile Include="FakeAirDeck.cs" />
     <Compile Include="../SeaPowerTacticalUI.Dev/DevGfx.cs" />
+    <Compile Include="../SeaPowerTacticalUI.Dev/DevForce.cs" />   <!-- T-361 -->
     <Compile Include="FakeGfx.cs" />
     <Compile Include="../SeaPowerTacticalUI/ProcThreads.cs;../SeaPowerTacticalUI/ModThreads.cs;../SeaPowerTacticalUI/ModShutdown.cs" />   <!-- T-212 -->
   </ItemGroup>

@@ -74,6 +74,8 @@
     <Compile Include="../SeaPowerTacticalUI/CapFfMath.cs" />   <!-- T-333 -->
     <Compile Include="../SeaPowerTacticalUI/CapFfGuard.cs" />   <!-- T-333 -->
     <Compile Include="CapT333Tests.cs" />   <!-- T-333 -->
+    <Compile Include="CapT362Tests.cs" />   <!-- T-362 -->
+    <Compile Include="../SeaPowerTacticalUI/QaForceMath.cs" />   <!-- T-361 -->
     <Compile Include="CapT333FfTests.cs" />   <!-- T-333 -->
     <Compile Include="../SeaPowerTacticalUI/CapController.Membership.cs" />   <!-- T-328 -->
     <Compile Include="../SeaPowerTacticalUI/RingGroups.cs" />   <!-- T-328 -->

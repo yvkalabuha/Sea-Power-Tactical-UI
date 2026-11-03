@@ -99,7 +99,8 @@ namespace VoiceBotBridge
                 foreach (var t in variants[vi].PerTarget)
                     _log("[Strike] strike killplan grp=" + g.Name + " plan=" + I(planId) + " var=" + I(vi) + " tgt=" + I(t.TrackId) + " cls=" + (t.ClassIni ?? t.ClassName ?? "-") + " ammo=" + (t.Ammo ?? "-") + " mode=" + (t.Goal ?? "breach")
                         + " h=" + I(t.H) + " h1=" + I(t.H1) + " M=" + I(t.MSink) + " n=" + I(t.N) + " sigma=" + F3(t.Sigma) + " p_sunk=" + F3(t.PSunk) + " p1=" + F3(t.PBreach) + " B=" + F1(t.Budget) + " B1=" + F1(t.BudgetLeft)
-                        + " dmg_bonus=" + F3(bonus) + " bonus_src=" + (known ? "game" : "default"));
+                        + " dmg_bonus=" + F3(bonus) + " bonus_src=" + (known ? "game" : "default")
+                        + " L=" + (t.LossPerHit >= 0 ? F1(t.LossPerHit) : "-") + " ad=" + (t.H1 > t.H ? "1" : "0"));   // T-342 E: the damage of one hit and the air-defence margin (strike_calib.py kill reads them)
         }
 
         private void ResetKill()

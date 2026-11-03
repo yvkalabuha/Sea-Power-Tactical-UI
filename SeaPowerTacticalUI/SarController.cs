@@ -101,7 +101,7 @@ namespace VoiceBotBridge
 
         private static double Nm(GeoPt a, GeoPt b)
         {
-            double x = (b.Lat - a.Lat) * 60.0, y = (b.Lon - a.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat);
+            double x = (b.Lat - a.Lat) * 60.0, y = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat);
             return Math.Sqrt(x * x + y * y);
         }
 

@@ -48,6 +48,7 @@ namespace VoiceBotBridge
             sets.Add(SpecSet.Of("sub_datum", typeof(SubDatumSpecs)));   // T-288
             sets.Add(SpecSet.Of("map_projector", typeof(MapProjectorSpecs)));   // T-309
             sets.Add(SpecSet.Of("grid", typeof(GridSpecs)));   // T-308
+            sets.Add(SpecSet.Of("qa_force", typeof(QaForceSpecs)));   // T-361: dev force scenarios (all optional)
         }
     }
 }

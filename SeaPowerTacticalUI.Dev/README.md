@@ -8,6 +8,7 @@
 - Конфиг `BepInEx/config/ru.voicebot.seapower.ui.dev.cfg`, секция `[Dev]`:
   - `Enabled` (false; установщик ставит true);
   - `FireCommands` (true): команды `attack`, `smart_attack`, `asw_attack`, `set_roe` — только по враждебным целям, каждая строка в журнале `[Dev][FIRE]`;
+  - `ForceCommands` (true): команда `force` (QA-сценарии, см. ниже); каждая строка в журнале `[Dev][FORCE]`;
   - `Port` (47390; перебор до +4);
   - `StartDelayS` (20), `StartQuietS` (5), `StartMaxDelayS` (180) — отложенный старт канала (T-282, зависание первого запуска): сокет и потоки появляются не раньше `StartDelayS` с запуска игры и после загрузки сцены главного меню или миссии (buildIndex 1 или 2; 0 — загрузочная сцена; T-285) и через `StartQuietS` без загрузки сцен, но не позже `StartMaxDelayS` (предел считается от запуска игры). Журнал: `dev gate: scene '…' #N loaded`. До этого клиенты видят `unavailable: no session file`. В журнале: `dev server start delayed …` при запуске, `dev server started: listening on … (after quiet|max_delay …s)` при открытии. `0/0/0` — открыть сразу. Accept — через `Poll` 250 мс, клиентские потоки постоянные (пул по числу клиентов).
 
@@ -28,6 +29,18 @@
 - `{"op":"set","lever":L,"on":true|false}`; L: `rcm` (RenderColorMask off), `ssao` (AmplifyOcclusionEffect off), `bloom_lite` (glare/flare off, BloomDownsampleCount ≤3), `cloud` (`Clouds` SetActive(false) + ScreenSpaceCloudShadow off), `refl_mask` (reflectionMask=0), `ovl` (normal/foam overlay QUARTER), `lod` (lodBias 0.5), `plight` (pixelLightCount 0), `softp` (softParticles off), `particles` (maxParticles ×0.25 у систем, живых сейчас), `fps60` (targetFrameRate 60 + vSync 0, только для замера). Исходное значение запоминается при первой записи и возвращается при `on:false`; `{"op":"reset"}` откатывает всё.
 - Ответ: `{lever, on, changes:[{member, was, now}], errors}`; нет ни одного члена — `unsupported` (detail — список). Строка `[Dev][GFX]` в журнале. Всё через рефлексию в dev-DLL (`DevGfx.cs`), в Workshop-DLL ничего. Частота рендера / render scale и PiP-камера — вне объёма (решение заказчика).
 - Игра может перезаписать часть значений при смене настроек (`OptionsManager.ApplyOptions`) — тогда повторить `set`.
+
+## QA-сценарии `force` (T-361, ADR-0136)
+> ЧИТ, ТОЛЬКО DEV: меняет состояние ИГРЫ (в том числе врага: читает его истинные позиции) и не доступен без dev-мода и вне миссии. Состояние самого мода не подделывается: игре отдаётся настоящий приказ (маршрут, сброс буя, ROE), дальше мод реагирует как на ИИ или игрока.
+- Путь: `ui_command force {"op": …}` → link `qa_force` UI-мода (ответ `forbidden` без dev-мода, `not_in_session` вне миссии). Выключатель `[Dev] ForceCommands` (true): выключен → `force_disabled`, без обращения к игре. Журнал: `[Dev][FORCE] op=… args=… → ok|<код>` (dev) и `[QaForce] op=… uid=… -> ok|<код>` (лог мода).
+- Операции (обязательные аргументы; умолчания):
+  - `buoy_on_sub` (`uid` — свой ПЛО-ЛА; `target_uid` — ПЛ врага, иначе ближайшая; `dist_nm` 0.3, 0..2; `ammo`): ЛА сбрасывает АКТИВНЫЙ буй рядом с истинной позицией вражеской ПЛ (контакт даёт игра). Ответ: `sub_uid, sub_name, sub_dist_nm, ammo, lat, lon, queued`. Для T-316.
+  - `route_shift` (`uid`; `dist_nm` 2, 0.6..30; `bearing` 90; `require_ai` true): последняя точка маршрута игры сдвигается сырым приказом; пока нет окна ИИ (бой) — `not_in_ai_window` (с `require_ai:false` проверки нет). Ответ: `wps, from, to, ai_state, in_window`. Для T-323.
+  - `divert` (`uid`; `dist_nm` 20, 1..100; `bearing` — по умолчанию 90° вправо от текущего курса): одна точка вместо пути домой. Ответ: `lat, lon, bearing, state, rtb_order` (`rtb_order:true` сразу после приказа = игра ещё держит RTB, повторить). Для T-332.
+  - `ff_lead` (`uid` — свой ЛА, `shooter` — борт ПВО, `target_id` — трек игрока; `ahead_nm` 1.0, 0.2..2; `off_deg` 0, 0..90): ЛА идёт в точку на линии стрелок→цель (`off_deg` — угол от линии, видимый со стрелка: 0 в конусе ±10°, 30 вне конуса). Одноразовый приказ: повторять каждые 5–10 с. Ответ: `fr_target_nm, cone_deg`. Для T-333.
+  - `steer_hostile` (`to_uid` — свой SAR-вертолёт; `uid` — вражеский ЛА, иначе ближайший; `stop_nm` 4, 1..20; `away` false; `hold_fire` true): враг идёт в `stop_nm` от вертолёта (`away:true` — на 60 миль за него, для `receding`); оружие врага «hold» (`hold_fire` в ответе: `ok|unsupported|off`). Ответ: `tracked` (false = трека на карте игрока нет, AirGuard не увидит). Враг/скрипт может перебить точку — повторить. Для T-318.
+- Ошибки: `bad_args` (в т.ч. чужой аргумент для операции или выход из диапазона), `unit_not_found`, `not_air_unit`, `no_enemy_sub`, `no_enemy_air`, `no_active_buoy`, `no_waypoints`, `not_in_ai_window`, `no_track`, `no_position`, `order_failed:<…>`, `ui_mod_absent`.
+- Примеры: `ui_command force {"op":"buoy_on_sub","uid":123}`; `ui_command force {"op":"ff_lead","uid":55,"shooter":101,"target_id":9,"off_deg":30}`.
 
 ## Память `gc` (T-212)
 - `ui_command gc {}` — на главном потоке `GC.Collect(); WaitForPendingFinalizers(); Collect()`; ответ `{live_mb, before_mb, ms}`. Пауза 0.1–1 с, вызывать только вручную (не из таймеров). Строка `[Dev][GC]` в журнале. Живой объём без мусора для сравнения между загрузками; затем `ui_state memory` → `lifecycle.prev_alive` (старые миссии, ещё живые после GC).

@@ -23,7 +23,7 @@ namespace VoiceBotBridge.Ui
         public override string Id { get { return "cap"; } }
         public int SettingsOrder { get { return 60; } }
 
-        public override void SelfCheck(ISelfCheck check) { check.Specs(CapSpecs.Set); check.Specs(AirRadarSpecs.Set); check.Specs(CapFfSpecs.Set); }   // T-241: the radar members are checked with the CAP module
+        public override void SelfCheck(ISelfCheck check) { check.Specs(CapSpecs.Set); check.Specs(AirRadarSpecs.Set); check.Specs(CapFfSpecs.Set); check.Specs(QaForceSpecs.Set); }   // T-241: the radar members are checked with the CAP module
         public override string[] DependsOn { get { return new[] { "radar", "asw", "toast" }; } }
 
         public override void Bind(IUiConfig cfg)
@@ -309,7 +309,7 @@ namespace VoiceBotBridge.Ui
             {
                 var v = cap.ViewLight();
                 foreach (var g in v.Groups)
-                    if (g.Ordered && g.Rect != null && g.Rect.Length >= 4) return new GeoPt((g.Rect[0] + g.Rect[2]) * 0.5, (g.Rect[1] + g.Rect[3]) * 0.5);
+                    if (g.Ordered && g.Rect != null && g.Rect.Length >= 4) return new GeoPt((g.Rect[0] + g.Rect[2]) * 0.5, GeoLon.MidLon(g.Rect[1], g.Rect[3]));
                 int uid = _api.CapSelectedUid();
                 return uid != 0 ? _api.CapUnitPos(uid) : null;
             }

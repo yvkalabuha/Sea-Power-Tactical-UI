@@ -2,6 +2,30 @@
 
 Newest first. / Новые версии сверху.
 
+## Unreleased
+
+### Русский
+
+### English
+
+## 0.31.2 — 2026-11-03
+
+### Русский
+- «Удар»: журнал попаданий считал не все попадания по тонущему кораблю: удар, потопивший цель, и все попадания того же тика отбрасывались (трек уничтоженного корабля уже не в списке кораблей), поэтому `strike kill` писал `hits_before=0` при попаданиях в журнале игры (T-363). Теперь учитываются попадания по любому треку, который был виден как надводный корабль. Рассчитанный план и поведение «Удара» не меняются.
+- Стабильная: курс восстановления на 75 миль после уклонения, CAP и SAR без маршрута («Вернуть управление»), «Оторваться», уклонение от торпеды командой, разворот самолёта после пуска и дистанции/пеленги в ответах команд (`contacts`, состояние юнита, точка маршрута) считаются в плоской метрике игры (1° = 60 миль), а не на шаре; снято известное ограничение 0.30.42/0.31.1 (T-355). Бета: без изменений.
+- Геометрия у меридиана 180° (бета, Тихий океан; T-356): расстояния, пеленги, зоны SAR/CAP/ПЛО, перехват, растр РЛС и сетка маршрута SAR считают разность долгот коротким путём через ±180°; в игру долгота уходит приведённой к (−180°, 180°]. Мир (плоский/глобус) решается на каждую миссию до восстановления приказов из сохранения (раньше в первые секунды первой миссии сессии геометрия считалась плоской). Сетка SAR на высоких широтах: свой множитель долготы на каждую строку (на 70° ошибка востока была до 6,9 %). В обычных координатах и в плоском мире результат побитово прежний; на стабильной поведение не меняется.
+- Окно «Удар»: пометка «только ИК» у вражеского истребителя берётся из данных игры по классу (все ракеты «воздух–воздух» класса имеют ИК-наведение и не наводятся на излучение/помеху; класс со смешанным составом, например МиГ-21, пометки не получает; нет данных — пометки нет). Пометка только информирует, назначение РЭБ не меняется. Dev-проба `strike_probe op=seeker` сверяет класс с фактической загрузкой цели (T-342 E).
+- Точность на высоких широтах (бета, T-362): узоры ПЛО (ряды, кольцо, ползущая линия, расширяющийся квадрат, барьер, коридор) строятся азимутальной равнопромежуточной проекцией, зоны CAP — со множителем долготы своей строки (рамки, полосы, расстояние до зоны, круги, точка перехвата); ошибка ≤ 0,5 % на 70° (было до 1,2–2,3 %). Плоский мир и стабильная: поведение побитово прежнее.
+- Dev-мод (только для разработчиков, T-361): команда `force` — QA-сценарии настоящими приказами игры (активный буй на ПЛ, сдвиг маршрута в бою ИИ, увод с пути домой, свой ЛА на линию огня, вражеский ЛА к SAR-вертолёту); выключатель `[Dev] ForceCommands`, журнал `[Dev][FORCE]`. Без dev-мода мод не меняется.
+
+### English
+- Strike: the hit log missed hits on a sinking ship: the hit that sank the target and every hit of the same tick were dropped (the destroyed ship's track was already gone from the ship list), so `strike kill` wrote `hits_before=0` while the game log showed the hits (T-363). Hits on any track that was seen as a surface ship now count. The plan and the strike behaviour are unchanged.
+- Stable: the 75 nm restore course after evasion, CAP and SAR without a route ("Release control"), "Break contact", the torpedo-evasion command, the after-launch aircraft turn and the distances/bearings in command replies (`contacts`, unit state, waypoint ack) use the game's flat metric (1° = 60 nm) instead of a sphere; the known limitation of 0.30.42/0.31.1 is lifted (T-355). Beta: unchanged.
+- Geometry at the 180° meridian (beta, Pacific; T-356): distances, bearings, SAR/CAP/ASW zones, intercept, the radar raster and the SAR route grid take the longitude difference the short way across ±180°; longitudes reach the game wrapped to (-180°, 180°]. The world (flat/globe) is decided per mission before the saved orders are restored (earlier the first seconds of the first mission of a session used the flat geometry). SAR grid at high latitudes: its own longitude factor per row (the east error was up to 6.9 % at 70°). Results for ordinary coordinates and in the flat world are bit-identical; stable behaviour is unchanged.
+- Strike window: the "IR only" mark of an enemy fighter comes from the game data of its class (every air-to-air missile of the class is IR homing and none homes on emissions / jammers); a mixed class such as the MiG-21 gets no mark, no data means no mark. The mark is informational, the jammer assignment is unchanged. The dev probe `strike_probe op=seeker` compares the class with the actual load of the target (T-342 E).
+- High-latitude accuracy (beta, T-362): ASW search patterns (rows, ring, creeping line, expanding square, barrier, corridor) use an azimuthal equidistant projection and CAP zones use the longitude factor of their own row (frames, strips, zone distance, circles, intercept point); error <= 0.5 % at 70 degrees (was up to 1.2-2.3 %). Flat world and stable: bit-identical behaviour.
+- Dev mod (developers only, T-361): the `force` command - QA scenarios by real game orders (an active buoy on a submarine, a route shift during an AI fight, a divert from the way home, an own aircraft into the line of fire, a hostile aircraft towards a SAR helicopter); switch `[Dev] ForceCommands`, journal `[Dev][FORCE]`. The mod does not change without the dev mod.
+
 ## 0.31.1 — 2026-11-03
 
 ### Русский

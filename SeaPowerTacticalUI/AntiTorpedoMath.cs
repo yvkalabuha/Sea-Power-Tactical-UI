@@ -125,7 +125,7 @@ namespace VoiceBotBridge
             if (n > 0)
             {
                 // the plotting table repeats a position between detections: only a moved position is a sample
-                double dy0 = (lat - s.Lat[n - 1]) * 60.0, dx0 = (lon - s.Lon[n - 1]) * 60.0 * (Globe ? Math.Cos(lat * Math.PI / 180.0) : 1.0);
+                double dy0 = (lat - s.Lat[n - 1]) * 60.0, dx0 = GeoLon.DLon(s.Lon[n - 1], lon) * 60.0 * (Globe ? Math.Cos(lat * Math.PI / 180.0) : 1.0);
                 if (Math.Sqrt(dx0 * dx0 + dy0 * dy0) <= SameNm) return;
             }
             s.T.Add(nowS); s.Lat.Add(lat); s.Lon.Add(lon);
@@ -145,7 +145,7 @@ namespace VoiceBotBridge
                 {
                     double dt = s.T[j] - s.T[i];
                     if (dt < MinPairDtS) continue;
-                    double dy = (s.Lat[j] - s.Lat[i]) * 60.0, dx = (s.Lon[j] - s.Lon[i]) * 60.0 * (Globe ? Math.Cos(s.Lat[i] * Math.PI / 180.0) : 1.0);
+                    double dy = (s.Lat[j] - s.Lat[i]) * 60.0, dx = GeoLon.DLon(s.Lon[i], s.Lon[j]) * 60.0 * (Globe ? Math.Cos(s.Lat[i] * Math.PI / 180.0) : 1.0);
                     v.Add(Math.Sqrt(dx * dx + dy * dy) / dt * 3600.0);
                 }
             if (v.Count == 0) return null;

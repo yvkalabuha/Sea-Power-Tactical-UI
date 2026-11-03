@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using VoiceBotBridge.Ui;
 
 namespace VoiceBotBridge
 {
@@ -11,9 +12,46 @@ namespace VoiceBotBridge
     // is touched only to give the JamTask (StrikeGame.Ew.cs). Every method catches inside.
     internal sealed partial class GameApi
     {
+        private readonly Dictionary<string, List<string>> _strikeClassSeekers = new Dictionary<string, List<string>>();
+
+        /// <summary>T-342 E (plan 46): the seeker codes ("ir", "sarh", "arh+hoj" ...) of the air-to-air missiles of a class, from the encyclopedia (open data, as AgClassAawNm; the object of a track is not read):
+        /// the weapons of every entry of the class (the union of its loadouts, the country loadouts are not told apart). null = the encyclopedia is not ready (not cached, asked again); an empty list = no data for the class.</summary>
+        internal IList<string> ClassAamSeekers(string ini)
+        {
+            if (string.IsNullOrEmpty(ini)) return new List<string>();
+            List<string> cached;
+            if (_strikeClassSeekers.TryGetValue(ini, out cached)) return cached;
+            try
+            {
+                var enc = RrEncyclopediaReadyObject();
+                var entries = enc == null ? null : Get(enc, RangeRingSpecs.EncEntries) as IEnumerable;
+                if (entries == null) return null;   // not cached: the encyclopedia is not ready yet
+                var res = new List<string>();
+                if (Present(StrikeSpecs.MweGuidance))
+                    foreach (var e in entries)
+                    {
+                        if (e == null || (Get(e, RangeRingSpecs.EntryIniRef) as string) != ini) continue;
+                        var ws = Get(e, RangeRingSpecs.EntryWeapons) as IEnumerable;
+                        if (ws == null) continue;
+                        foreach (var w in ws)
+                        {
+                            if (w == null) continue;
+                            if (RrAmmoType(Get(w, RangeRingSpecs.WeaponType)) != RingAmmoType.Missile) continue;
+                            if (RrTarget(Get(w, RangeRingSpecs.WeaponTargetType)) != RingTarget.Aaw && RrTarget(Get(w, RangeRingSpecs.WeaponSecondaryTargetType)) != RingTarget.Aaw) continue;
+                            object g = Get(w, StrikeSpecs.MweGuidance), sp = Present(StrikeSpecs.MweSecondaryPassive) ? Get(w, StrikeSpecs.MweSecondaryPassive) : null;
+                            string code = StrikeEwFighterMath.SeekerCode(g == null ? null : g.ToString(), sp == null ? null : sp.ToString(), null);
+                            if (code != null) res.Add(code);
+                        }
+                    }
+                _strikeClassSeekers[ini] = res;
+                return res;
+            }
+            catch (Exception) { return null; }
+        }
+
         private sealed partial class StrikeGameImpl
         {
-            private sealed class FighterClass { public bool IsFighter; public string Src = "none"; public bool IrOnly; public string Roles; }
+            private sealed class FighterClass { public bool IsFighter; public string Src = "none"; public bool IrOnly; public string Roles; public IList<string> Seekers; }
             private readonly Dictionary<string, FighterClass> _fighterCls = new Dictionary<string, FighterClass>();
 
             private FighterClass FighterClassOf(string ini, double rNm)
@@ -61,8 +99,13 @@ namespace VoiceBotBridge
                     }
                 }
                 catch (Exception) { }
+                // T-342 E: IrOnly from the seekers of the AAMs of the class; the encyclopedia not ready (null) = no mark now and the class is not cached (asked again, no journal line yet)
+                c.Seekers = _a.ClassAamSeekers(ini);
+                c.IrOnly = StrikeEwFighterMath.IrOnly(c.Seekers);
+                if (c.Seekers == null) return c;
                 _fighterCls[ini] = c;
-                _a.StrikeLog("[Strike] strike ew fighter class ini=" + ini + " fighter=" + (c.IsFighter ? "true" : "false") + " src=" + c.Src + " roles=" + (string.IsNullOrEmpty(c.Roles) ? "none" : c.Roles) + " ir_only=" + (c.IrOnly ? "true" : "false"));
+                _a.StrikeLog("[Strike] strike ew fighter class ini=" + ini + " fighter=" + (c.IsFighter ? "true" : "false") + " src=" + c.Src + " roles=" + (string.IsNullOrEmpty(c.Roles) ? "none" : c.Roles) + " ir_only=" + (c.IrOnly ? "true" : "false")
+                    + " seekers=" + StrikeEwFighterMath.SeekersText(c.Seekers) + " hoj=" + (StrikeEwFighterMath.HomeOnJam(c.Seekers) ? "1" : "0"));
                 return c;
             }
 

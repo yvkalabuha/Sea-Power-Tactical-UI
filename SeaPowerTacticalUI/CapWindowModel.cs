@@ -441,7 +441,7 @@ namespace VoiceBotBridge
                 var g = v.Groups[gi];
                 if (g == null || !g.Ordered || g.Rect == null || g.Rect.Length < 4 || g.Line == null || string.IsNullOrEmpty(g.Line.Group)) continue;
                 bool prio = g.Line.DeckPriority;
-                res.Add(new ZoneLabel { Index = gi, Lat = Math.Max(g.Rect[0], g.Rect[2]), Lon = Math.Min(g.Rect[1], g.Rect[3]), Prio = prio,
+                res.Add(new ZoneLabel { Index = gi, Lat = Math.Max(g.Rect[0], g.Rect[2]), Lon = Math.Min(g.Rect[1], GeoLon.UnwrapLon(g.Rect[1], g.Rect[3])), Prio = prio,
                                         Text = g.Line.Group + (prio ? " · " + CapWindow.WarnText("deck_priority") : "") });
             }
             return res;

@@ -14,17 +14,25 @@ namespace VoiceBotBridge
     {
         public GeoPt Origin;
         public double C;                 // cell size, nm
-        public double LonK = 1.0;        // T-348: east-west scale of the grid (AswMath.LonK at the origin latitude; 1.0 on stable)
+        public double LonK = 1.0;        // T-348: K of the origin row (old tests); = AswMath.LonK at the origin latitude; 1.0 on stable
+        public double[] RowK;            // T-356 (R4): AswMath.LonK(Lat(i)) snapshot per row (1.0 exactly in the flat world); the background Solve reads only this snapshot
+        public double KMax = 1.0;        // max RowK (the step count of GridClear)
         public int RowMin, ColMin, Rows, Cols;
         public int Cells { get { return Rows * Cols; } }
         public double Lat(int i) { return Origin.Lat + (RowMin + i) * C / 60.0; }
-        public double Lon(int j) { return Origin.Lon + (ColMin + j) * C / (60.0 * LonK); }
-        public GeoPt Center(int i, int j) { return new GeoPt(Lat(i), Lon(j)); }
+        public double Lon(int i, int j) { return Origin.Lon + (ColMin + j) * C / (60.0 * RowK[i]); }
+        public GeoPt Center(int i, int j) { return new GeoPt(Lat(i), Lon(i, j)); }
+        /// <summary>Snapshot of the east-west scale per row (call after Rows/RowMin/C are final).</summary>
+        public void SnapK()
+        {
+            RowK = new double[Rows]; KMax = 1.0;
+            for (int i = 0; i < Rows; i++) { RowK[i] = AswMath.LonK(Lat(i)); if (i == 0 || RowK[i] > KMax) KMax = RowK[i]; }
+        }
         public void Locate(GeoPt g, out int i, out int j)
         {
             i = (int)Math.Round((g.Lat - Origin.Lat) * 60.0 / C) - RowMin;
-            j = (int)Math.Round((g.Lon - Origin.Lon) * 60.0 * LonK / C) - ColMin;
             if (i < 0) i = 0; else if (i >= Rows) i = Rows - 1;
+            j = (int)Math.Round(GeoLon.DLon(Origin.Lon, g.Lon) * 60.0 * RowK[i] / C) - ColMin;
             if (j < 0) j = 0; else if (j >= Cols) j = Cols - 1;
         }
     }
@@ -61,7 +69,7 @@ namespace VoiceBotBridge
 
         private double Get(GeoPt g, Func<GeoPt, double> heightM, ref int used)
         {
-            double n = (g.Lat - _from.Lat) * 60.0, e = (g.Lon - _from.Lon) * 60.0 * AswMath.LonK(_from.Lat, g.Lat);
+            double n = (g.Lat - _from.Lat) * 60.0, e = GeoLon.DLon(_from.Lon, g.Lon) * 60.0 * AswMath.LonK(_from.Lat, g.Lat);
             long key = (((long)Math.Round(n / 0.05)) << 32) ^ (((long)Math.Round(e / 0.05)) & 0xffffffffL);
             double h;
             if (_cache.TryGetValue(key, out h)) return h;
@@ -180,14 +188,14 @@ namespace VoiceBotBridge
 
         private static bool GridClear(RouteGrid g, bool[,] blocked, GeoPt a, GeoPt b)
         {
-            double dn = (b.Lat - a.Lat) * 60.0, de = (b.Lon - a.Lon) * 60.0 * g.LonK;
+            double dn = (b.Lat - a.Lat) * 60.0, de = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * g.KMax;
             double len = Math.Sqrt(dn * dn + de * de);
             int steps = Math.Max(1, (int)Math.Ceiling(len / (g.C * 0.25)));
             for (int s = 0; s <= steps; s++)
             {
                 double t = (double)s / steps;
                 int i, j;
-                g.Locate(new GeoPt(a.Lat + (b.Lat - a.Lat) * t, a.Lon + (b.Lon - a.Lon) * t), out i, out j);
+                g.Locate(new GeoPt(a.Lat + (b.Lat - a.Lat) * t, a.Lon + GeoLon.DLon(a.Lon, b.Lon) * t), out i, out j);
                 if (blocked[i, j]) return false;
             }
             return true;
@@ -206,13 +214,13 @@ namespace VoiceBotBridge
 
         internal static double Nm(GeoPt a, GeoPt b)
         {
-            double dn = (b.Lat - a.Lat) * 60.0, de = (b.Lon - a.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat);
+            double dn = (b.Lat - a.Lat) * 60.0, de = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat);
             return Math.Sqrt(dn * dn + de * de);
         }
 
         internal static RouteGrid MakeGrid(GeoPt a, GeoPt b, double factor, int maxCells)
         {
-            double dn = (b.Lat - a.Lat) * 60.0, de = (b.Lon - a.Lon) * 60.0 * AswMath.LonK(a.Lat);
+            double dn = (b.Lat - a.Lat) * 60.0, de = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * AswMath.LonK(a.Lat);
             double d = Math.Sqrt(dn * dn + de * de);
             double m = Math.Max(5.0, 0.5 * d) * factor;
             double c = CellNm(d);
@@ -230,6 +238,7 @@ namespace VoiceBotBridge
                 if (cells <= maxCells) break;
                 c *= Math.Sqrt((double)cells / maxCells) * 1.002;
             }
+            g.SnapK();
             return g;
         }
 
@@ -237,7 +246,13 @@ namespace VoiceBotBridge
         public static double[] Frame(GeoPt a, GeoPt b, double factor)
         {
             RouteGrid g = MakeGrid(a, b, factor, new RouteParams().MaxCells);
-            return new[] { g.Lat(0) - g.C / 120.0, g.Lon(0) - g.C / (120.0 * g.LonK), g.Lat(g.Rows - 1) + g.C / 120.0, g.Lon(g.Cols - 1) + g.C / (120.0 * g.LonK) };
+            double west = double.MaxValue, east = double.MinValue;   // T-356: the extremes over the rows (every row has its own K)
+            for (int i = 0; i < g.Rows; i++)
+            {
+                west = Math.Min(west, g.Lon(i, 0) - g.C / (120.0 * g.RowK[i]));
+                east = Math.Max(east, g.Lon(i, g.Cols - 1) + g.C / (120.0 * g.RowK[i]));
+            }
+            return new[] { g.Lat(0) - g.C / 120.0, west, g.Lat(g.Rows - 1) + g.C / 120.0, east };
         }
 
         public static double FrameCellNm(GeoPt a, GeoPt b, double factor, int maxCells, out int cells)
@@ -377,7 +392,7 @@ namespace VoiceBotBridge
         {
             var res = new List<GeoPt>();
             double lk = AswMath.LonK(a.Lat, b.Lat);
-            double dn = (b.Lat - a.Lat) * 60.0, de = (b.Lon - a.Lon) * 60.0 * lk;
+            double dn = (b.Lat - a.Lat) * 60.0, de = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * lk;
             double len = Math.Sqrt(dn * dn + de * de);
             int steps = Math.Max(1, (int)Math.Ceiling(len / p.StepNm));
             double un = len > 1e-9 ? dn / len : 1, ue = len > 1e-9 ? de / len : 0;
@@ -453,8 +468,8 @@ namespace VoiceBotBridge
         {
             double ax = 0, ay = 0;
             double k = AswMath.LonK(a.Lat, b.Lat);
-            double bx = (b.Lat - a.Lat) * 60.0, by = (b.Lon - a.Lon) * 60.0 * k;
-            double px = (p.Lat - a.Lat) * 60.0, py = (p.Lon - a.Lon) * 60.0 * k;
+            double bx = (b.Lat - a.Lat) * 60.0, by = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * k;
+            double px = (p.Lat - a.Lat) * 60.0, py = GeoLon.DLon(a.Lon, p.Lon) * 60.0 * k;
             double l2 = bx * bx + by * by;
             double t = l2 < 1e-12 ? 0 : ((px - ax) * bx + (py - ay) * by) / l2;
             t = t < 0 ? 0 : (t > 1 ? 1 : t);
@@ -570,14 +585,50 @@ namespace VoiceBotBridge
                         var q = AswMath.Offset(new GeoPt(lat + 0.1, 10.0), 90.0, 2.0);
                         if (Math.Abs(PointSegNm(q, s1, s2) - 2.0) > 0.03) return "lat " + lat + ": PointSegNm " + PointSegNm(q, s1, s2);
                     }
+                    // T-356 R4: an 80 nm grid keeps true miles on every row (K per row); the corners against the great circle, east part within 1.5 %
+                    using (AswMath.WorldScope(true))
+                    {
+                        RouteGrid g = MakeGrid(a, AswMath.Offset(a, 90.0, 80.0), 1.0, 40000);
+                        foreach (int ci in new[] { 0, g.Rows - 1 })
+                            foreach (int cj in new[] { 0, g.Cols - 1 })
+                            {
+                                GeoPt corner = g.Center(ci, cj), onMeridian = new GeoPt(corner.Lat, a.Lon);
+                                double want = Math.Abs((g.ColMin + cj) * g.C), got = AswMath.GreatCircleNm(onMeridian, corner);
+                                if (Math.Abs(got - want) > 0.015 * want) return "lat " + lat + ": corner " + ci + "," + cj + " east " + got.ToString("0.00") + " vs " + want.ToString("0.00");
+                            }
+                    }
+                    // T-356 R3: the grid across the antimeridian = the grid of the copy shifted by -10 deg
+                    foreach (bool globe in new[] { false, true })
+                        using (AswMath.WorldScope(globe))
+                        {
+                            var wa = new GeoPt(lat, 179.8); var wb = new GeoPt(lat + 0.05, -179.89);
+                            var sa = new GeoPt(lat, 169.8); var sb = new GeoPt(lat + 0.05, 170.11);
+                            RouteGrid gw = MakeGrid(wa, wb, 1.0, 40000), gs = MakeGrid(sa, sb, 1.0, 40000);
+                            if (gw.Rows != gs.Rows || gw.Cols != gs.Cols || gw.ColMin != gs.ColMin || gw.C != gs.C) return "lat " + lat + ": antimeridian grid shape " + globe;
+                            int wi, wj, si, sj; gw.Locate(wb, out wi, out wj); gs.Locate(sb, out si, out sj);
+                            if (wi != si || wj != sj) return "lat " + lat + ": antimeridian Locate " + globe;
+                            GeoPt cw = gw.Center(gw.Rows / 2, gw.Cols - 1), cs = gs.Center(gs.Rows / 2, gs.Cols - 1);
+                            if (Math.Abs(GeoLon.DLon(cs.Lon + 10.0, cw.Lon)) > 1e-9) return "lat " + lat + ": antimeridian Center " + globe;
+                            if (Math.Abs(Nm(wa, wb) - Nm(sa, sb)) > 1e-9) return "lat " + lat + ": antimeridian Nm " + globe;
+                            RouteResult rw = PlanSync(wa, wb, h => -500.0, new RouteParams()), rs = PlanSync(sa, sb, h => -500.0, new RouteParams());
+                            if (rw.Kind != "direct" || rs.Kind != "direct" || rw.Probes != rs.Probes) return "lat " + lat + ": antimeridian route " + rw.Kind + "/" + rs.Kind + " " + rw.Probes + "/" + rs.Probes;
+                        }
                     // flat: bit-identical to the old formulas
                     using (AswMath.WorldScope(false))
                     {
                         var b = new GeoPt(lat + 0.1, 10.3);
                         RouteGrid g = MakeGrid(a, b, 1.0, 40000);
                         if (g.LonK != 1.0) return "lat " + lat + ": flat grid K";
-                        for (int j = 0; j < g.Cols; j += 7)
-                            if (g.Lon(j) != g.Origin.Lon + (g.ColMin + j) * g.C / 60.0) return "lat " + lat + ": flat Lon(j)";
+                        for (int i = 0; i < g.Rows; i += 5)
+                        {
+                            if (g.RowK[i] != 1.0) return "lat " + lat + ": flat RowK";
+                            for (int j = 0; j < g.Cols; j += 7)
+                                if (g.Lon(i, j) != g.Origin.Lon + (g.ColMin + j) * g.C / 60.0) return "lat " + lat + ": flat Lon(i,j)";
+                        }
+                        double[] ff = Frame(a, b, 1.0);
+                        if (ff[1] != g.Lon(0, 0) - g.C / (120.0 * g.LonK) || ff[3] != g.Lon(0, g.Cols - 1) + g.C / (120.0 * g.LonK)) return "lat " + lat + ": flat Frame";
+                        int li, lj; g.Locate(b, out li, out lj);
+                        if (lj != (int)Math.Round((b.Lon - a.Lon) * 60.0 * 1.0 / g.C) - g.ColMin) return "lat " + lat + ": flat Locate";
                         double dn = (b.Lat - a.Lat) * 60.0, de = (b.Lon - a.Lon) * 60.0;
                         if (Nm(a, b) != Math.Sqrt(dn * dn + de * de)) return "lat " + lat + ": flat Nm";
                         double bx = (b.Lat - a.Lat) * 60.0, by = (b.Lon - a.Lon) * 60.0;

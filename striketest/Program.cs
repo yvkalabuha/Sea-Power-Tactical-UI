@@ -64,7 +64,7 @@ namespace VoiceBotBridge
             if (all || a == "probe") bad += Report("probe", StrikeProbe.SelfTest());
             foreach (string part in new[] { "eligibility", "sectors", "station", "timing", "decide", "return", "plan" })
                 if (all || a == "ew" || a == "ew-" + part) bad += Report("ew-" + part, StrikeEwMath.SelfTest(part));
-            foreach (string part in new[] { "threat", "assign", "standoff", "mode", "budget", "hyst", "role", "lat" })
+            foreach (string part in new[] { "threat", "assign", "standoff", "mode", "budget", "hyst", "role", "lat", "seeker" })
                 if (all || a == "ewf" || a == "ewf-" + part) bad += Report("ewf-" + part, StrikeEwFighterMath.SelfTest(part));
             if (all || a == "ewlat") bad += Report("ewlat", StrikeEwMath.SelfTest("lat") ?? StrikeEwFighterMath.SelfTest("lat"));
             foreach (string part in new[] { "return-fighter", "reserve" })

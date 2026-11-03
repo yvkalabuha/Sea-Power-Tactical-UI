@@ -122,7 +122,7 @@ namespace VoiceBotBridge
             return res;
         }
 
-        private static GeoPt Between(GeoPt a, GeoPt b, double t) { return new GeoPt(a.Lat + (b.Lat - a.Lat) * t, a.Lon + (b.Lon - a.Lon) * t); }
+        private static GeoPt Between(GeoPt a, GeoPt b, double t) { return new GeoPt(a.Lat + (b.Lat - a.Lat) * t, a.Lon + GeoLon.DLon(a.Lon, b.Lon) * t); }
 
         public static string SelfTest()
         {

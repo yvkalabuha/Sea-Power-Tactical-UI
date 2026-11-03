@@ -83,7 +83,7 @@ namespace VoiceBotBridge
 
         private static void Local(GeoPt origin, double lat, double lon, out double x, out double y)
         {
-            x = (lon - origin.Lon) * 60.0 * AswMath.LonK(origin.Lat, lat); y = (lat - origin.Lat) * 60.0;
+            x = GeoLon.DLon(origin.Lon, lon) * 60.0 * AswMath.LonK(origin.Lat, lat); y = (lat - origin.Lat) * 60.0;
         }
 
         /// <summary>Seconds from now until the unit, moving from start along pts at kn, is first within RangeNm of the threat, which moves on with
@@ -163,7 +163,7 @@ namespace VoiceBotBridge
 
         public static double FlatNm(GeoPt a, GeoPt b)
         {
-            double dn = (b.Lat - a.Lat) * 60.0, de = (b.Lon - a.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat);
+            double dn = (b.Lat - a.Lat) * 60.0, de = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat);
             return Math.Sqrt(dn * dn + de * de);
         }
 
@@ -180,10 +180,10 @@ namespace VoiceBotBridge
         public static bool LegCrosses(GeoPt a, GeoPt b, IList<IcThreat> zones, double marginNm)
         {
             if (zones == null) return false;
-            double bx = (b.Lon - a.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat), by = (b.Lat - a.Lat) * 60.0, l2 = bx * bx + by * by;
+            double bx = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * AswMath.LonK(a.Lat, b.Lat), by = (b.Lat - a.Lat) * 60.0, l2 = bx * bx + by * by;
             foreach (IcThreat t in zones)
             {
-                double px = (t.Lon - a.Lon) * 60.0 * AswMath.LonK(a.Lat, t.Lat), py = (t.Lat - a.Lat) * 60.0;
+                double px = GeoLon.DLon(a.Lon, t.Lon) * 60.0 * AswMath.LonK(a.Lat, t.Lat), py = (t.Lat - a.Lat) * 60.0;
                 double s = l2 < 1e-12 ? 0 : Math.Max(0, Math.Min(1, (px * bx + py * by) / l2));
                 double dx = px - bx * s, dy = py - by * s;
                 if (Math.Sqrt(dx * dx + dy * dy) <= t.RangeNm + marginNm) return true;

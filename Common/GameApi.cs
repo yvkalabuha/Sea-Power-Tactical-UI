@@ -505,6 +505,9 @@ namespace VoiceBotBridge
 
         private object MakeGeo(double lat, double lon, double height)
         {
+            // T-356 (ADR-0135): the game takes a longitude in (-180, 180]; the mod builds continuous points (180.4). Same bits inside the range.
+            // Inlined: VoiceBotBridge does not compile the mod's longitude helper class.
+            if (lon > 180.0 || lon <= -180.0) { lon = Math.IEEERemainder(lon, 360.0); if (lon <= -180.0) lon += 360.0; }
             var t = FindType("SeaPower.GeoPosition");
             object gp = Activator.CreateInstance(t); // boxed struct: SetValue mutates the box
             t.GetField("_latitude").SetValue(gp, lat);
@@ -565,8 +568,8 @@ namespace VoiceBotBridge
             }
             return Ok(id, "\"uid\":" + Json.Num(D(Get(u, "UniqueID")) ?? -1) +
                 ",\"dest_lat\":" + Json.Num(lat) + ",\"dest_lon\":" + Json.Num(lon) +
-                ",\"bearing_deg\":" + Json.Num(Math.Round(Bearing(lat0, lon0, lat, lon), 1)) +
-                ",\"distance_nm\":" + Json.Num(Math.Round(DistanceNm(lat0, lon0, lat, lon), 1)) +
+                ",\"bearing_deg\":" + Json.Num(Math.Round(MetricBearing(lat0, lon0, lat, lon), 1)) +
+                ",\"distance_nm\":" + Json.Num(Math.Round(MetricDistanceNm(lat0, lon0, lat, lon), 1)) +
                 ",\"append\":" + Json.Bool(append) +
                 ",\"telegraph_before\":" + (tgBefore.HasValue ? tgBefore.Value.ToString() : "null") +
                 ",\"telegraph_after\":" + (tgAfter.HasValue ? tgAfter.Value.ToString() : "null") +
@@ -596,7 +599,7 @@ namespace VoiceBotBridge
             double lat0, lon0, h;
             if (!OwnPos(u, out lat0, out lon0, out h)) return Err(id, "no_position", null);
             double lat, lon;
-            Destination(lat0, lon0, c.Value, far, out lat, out lon);
+            MetricDestination(lat0, lon0, c.Value, far, out lat, out lon);
             return PlaceWaypoint(id, u, lat, lon, false, ",\"course\":" + Json.Num(c.Value));
         }
 

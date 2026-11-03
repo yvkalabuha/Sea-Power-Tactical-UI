@@ -57,6 +57,7 @@ namespace VoiceBotBridge.Dev
             R("sub_datum_dismiss", "control", "datum", "sub_datum_dismiss"),
             R("air_ready", "control", "ship_uid key all", ""),   // QA cheat: runs in the dev DLL itself (DevAirReady), never through link
             R("gfx", "control", "op lever on", ""),               // T-165 graphics A/B: runs in the dev DLL itself (DevGfx), never through link
+            R("force", "control", "op uid target_uid to_uid shooter target_id dist_nm bearing ahead_nm off_deg stop_nm ammo require_ai away hold_fire", "qa_force"),   // T-361 (ADR-0136): QA scenarios by real game orders, dev only
             R("attack", "fire", "shooter target weapon salvo", "attack"),
             R("smart_attack", "fire", "shooter target ammo", "smart_attack"),
             R("asw_attack", "fire", "proposal_id", "asw_attack"),   // T-173: the link answers no_confirm_needed (the question is gone); kept for old clients
@@ -84,8 +85,9 @@ namespace VoiceBotBridge.Dev
             var t = new Dictionary<string, char>();
             foreach (string s in "targets weapon ammo proposal_id roe name state id mode kind group window depth pattern on_complete type loadout contains level key op lever speed after goal".Split(' ')) t[s] = 'S';
             foreach (string s in "value radius_nm lead_nm width_nm corridor_x_nm barrier_x_nm bearing dist_nm size_nm w_nm origin_lat origin_lon missile_pct fuel_margin_s ring_margin_nm fuel_floor_pct alt_ft k pursuit_nm shift_s".Split(' ')) t[s] = 'N';
-            foreach (string s in "datum uid airborne ref_uid contact formation shooter target salvo track_id target_id target_uid origin_uid anchor_uid on_station ready limit lines ship_uid per_raid choose variant".Split(' ')) t[s] = 'I';
-            foreach (string s in "on center cancel need_long_range dash_rtb all fill accept_alert stale_ok obj".Split(' ')) t[s] = 'B';
+            foreach (string s in "ahead_nm off_deg stop_nm".Split(' ')) t[s] = 'N';   // T-361 (force)
+            foreach (string s in "datum uid airborne ref_uid contact formation shooter target salvo track_id target_id target_uid to_uid origin_uid anchor_uid on_station ready limit lines ship_uid per_raid choose variant".Split(' ')) t[s] = 'I';
+            foreach (string s in "on center cancel need_long_range dash_rtb all fill accept_alert stale_ok obj require_ai away hold_fire".Split(' ')) t[s] = 'B';
             foreach (string s in "uids add remove track_ids".Split(' ')) t[s] = 'U';
             foreach (string s in "tactics sections deck_keys".Split(' ')) t[s] = 'T';
             foreach (string s in "rect area origin standoff".Split(' ')) t[s] = 'A';
@@ -279,6 +281,12 @@ namespace VoiceBotBridge.Dev
                     if (op != "dump" && op != "reset") return Bad("op: dump|set|reset");
                     if (Has(a, "lever on")) return Bad(op + " takes no lever / on");
                     return null;   // no link steps: DevExecutor runs it locally (DevGfx)
+                }
+                case "force":
+                {
+                    string ferr = DevForce.Check(a);
+                    if (ferr != null) return ferr;
+                    var s = Step("qa_force"); Copy(s, a, "op uid target_uid to_uid shooter target_id dist_nm bearing ahead_nm off_deg stop_nm ammo require_ai away hold_fire"); steps.Add(s); return null;
                 }
                 case "smart_attack":
                 {

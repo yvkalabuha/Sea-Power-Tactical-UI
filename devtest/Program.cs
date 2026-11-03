@@ -14,7 +14,7 @@ namespace VoiceBotBridge.Dev
             string mode = argv.Length > 0 ? argv[0] : "selftest";
             if (mode == "table") { Console.WriteLine(DevCommandTable.TableJson()); return 0; }
             if (mode == "serve") return Serve(argv);
-            if (mode != "selftest") { Console.Error.WriteLine("usage: devtest selftest|table|serve --dir D [--max-clients N] [--fire off] [--no-slots] [--no-diag] [--stall] [--idle-s N] [--timeout-ms N]"); return 2; }
+            if (mode != "selftest") { Console.Error.WriteLine("usage: devtest selftest|table|serve --dir D [--max-clients N] [--fire off] [--force off] [--fail cmd=code] [--no-slots] [--no-diag] [--stall] [--idle-s N] [--timeout-ms N]"); return 2; }
             int bad = 0;
             bad += Run("DevProtocol", ProtocolTest());
             bad += Run("DevCommands", DevCommandTable.SelfTest() ?? CommandsTest());
@@ -26,6 +26,7 @@ namespace VoiceBotBridge.Dev
             bad += Run("DevAirReady", AirReadyTest());
             bad += Run("DevGfx", GfxTest());
             bad += Run("DevGfx lod", LodTest());
+            bad += Run("DevForce", DevForce.SelfTest() ?? ForceTest() ?? ForceExecTest());   // T-361
             bad += Run("DevGc", GcTest());   // T-212
             bad += Run("dev stop selftest", StopTest());   // T-220
             bad += Run("dev stop by poll", StopPollTest());   // T-282
@@ -337,6 +338,51 @@ namespace VoiceBotBridge.Dev
             return null;
         }
 
+        // force (T-361): translation into one qa_force step, dev-side argument checks
+        private static string ForceTest()
+        {
+            if (Tr("force", O("op", "route_shift", "uid", 7.0)) != "[{\"cmd\":\"qa_force\",\"op\":\"route_shift\",\"uid\":7}]") return "route_shift: " + Tr("force", O("op", "route_shift", "uid", 7.0));
+            if (Tr("force", O("op", "steer_hostile", "to_uid", 5.0, "away", true, "stop_nm", 4.0)) != "[{\"cmd\":\"qa_force\",\"op\":\"steer_hostile\",\"to_uid\":5,\"stop_nm\":4,\"away\":true}]") return "steer_hostile";
+            if (!Tr("force", O("op", "route_shift")).StartsWith("ERR bad_args")) return "missing uid";
+            if (!Tr("force", O("op", "nope")).StartsWith("ERR bad_args")) return "unknown op";
+            if (!Tr("force", O("op", "divert", "uid", 7.0, "away", true)).StartsWith("ERR bad_args")) return "foreign arg";
+            if (!Tr("force", O("op", "divert", "uid", "x")).StartsWith("ERR bad_args")) return "wrong type";
+            if (!Tr("force", O("op", "divert", "uid", 7.0, "dist_nm", 500.0)).StartsWith("ERR bad_args")) return "range";
+            if (DevCommandTable.GroupOf("force") != "control") return "group";
+            return null;
+        }
+
+        // force through the executor: switch, journal, link errors, no link slot
+        private static string ForceExecTest()
+        {
+            FakeGame.Install(true, true);
+            var args = O("op", "route_shift", "uid", 7.0, "dist_nm", 2.0);
+            var ex = Exec(true);
+            FakeGame.Calls.Clear();
+            var ok = Call(ex, "force", args);
+            if (!Ok(ok) || Calls() != 1 || !Last().Contains("\"qa_force\"")) return "ok";
+            if (Warned.Count != 1 || Warned[0] != "[Dev][FORCE] op=route_shift args=dist_nm=2 uid=7 → ok") return "journal ok: " + (Warned.Count > 0 ? Warned[0] : "none");
+            FakeGame.Fail["qa_force"] = "not_in_ai_window";
+            var bad = Call(ex, "force", args);
+            if (Ok(bad) || Code(bad) != "not_in_ai_window") return "link error";
+            if (Warned.Count != 2 || !Warned[1].EndsWith("→ not_in_ai_window")) return "journal error";
+            FakeGame.Fail["qa_force"] = "forbidden";
+            if (Code(Call(ex, "force", args)) != "forbidden") return "forbidden passthrough";
+            FakeGame.Fail.Clear();
+            var off = new DevExecutor(new DevLogRing(), () => true, Warned.Add, null, null, null, () => false);
+            Warned.Clear(); FakeGame.Calls.Clear();
+            if (Code(Call(off, "force", args)) != "force_disabled" || Calls() != 0) return "disabled";
+            if (Warned.Count != 1 || !Warned[0].EndsWith("→ force_disabled")) return "journal disabled";
+            if (Code(Call(off, "ping", null)) != null) return "disabled must not block ping";
+            if (Code(Call(Exec(false), "force", args)) != null) return "fire switch must not block force";
+            FakeGame.Uninstall();
+            Warned.Clear();
+            if (Code(Call(Exec(true), "force", args)) != "ui_mod_absent") return "no link";
+            if (Warned.Count != 1 || !Warned[0].EndsWith("→ ui_mod_absent")) return "journal absent";
+            if (Code(Call(Exec(true), "force", O("op", "nope"))) != "bad_args") return "bad_args via executor";
+            return null;
+        }
+
         // gc (T-212): in the table as a read command, forced collection answers live_mb / ms
         private static string GcTest()
         {
@@ -551,7 +597,7 @@ namespace VoiceBotBridge.Dev
                                    (r, reply, ms, waitMs) => lines.Add(DevCmdLog.Line(DateTime.Now, r.Cmd, reply, ms, waitMs)));
             pump.Enqueue(new DevRequest { Id = 1.0, Cmd = "state" });
             pump.Enqueue(new DevRequest { Id = 2.0, Cmd = "bad" });
-            pump.Pump(4, 100);
+            pump.Pump(4, 5000); // wide budget: cold JIT under a parallel build can eat 100 ms on the first command (flake 2026-11-03)
             if (lines.Count != 2) return "pump log: " + lines.Count + " lines";
             if (!lines[0].Contains(" [Dev] cmd state -> ok exec_ms=") || !lines[1].Contains(" [Dev] cmd bad -> !bad_args exec_ms=")) return "pump log: " + string.Join(" | ", lines);
             var thrower = new DevPump(r => DevProtocol.Ok(r.Id, "x", null), null, null, (r, reply, ms, w) => { throw new InvalidOperationException("log"); });
@@ -602,13 +648,15 @@ namespace VoiceBotBridge.Dev
 
         private static int Serve(string[] argv)
         {
-            string dir = null; bool fireOn = true, noSlots = false, noDiag = false; int idle = 60, timeoutMs = 5000, maxClients = 2;
+            string dir = null; bool fireOn = true, forceOn = true, noSlots = false, noDiag = false; int idle = 60, timeoutMs = 5000, maxClients = 2; string failCmd = null, failCode = null;
             for (int i = 1; i < argv.Length; i++)
             {
                 switch (argv[i])
                 {
                     case "--dir": dir = argv[++i]; break;
                     case "--fire": fireOn = argv[++i] != "off"; break;
+                    case "--force": forceOn = argv[++i] != "off"; break;   // T-361
+                    case "--fail": { string[] kv = argv[++i].Split('='); failCmd = kv[0]; failCode = kv[1]; break; }   // T-361: the fake link answers this error for one cmd
                     case "--no-slots": noSlots = true; break;
                     case "--no-diag": noDiag = true; break;
                     case "--stall": FakeGame.Stall = true; break;
@@ -622,10 +670,11 @@ namespace VoiceBotBridge.Dev
             bool stall = FakeGame.Stall;
             if (noSlots) FakeGame.Uninstall(); else FakeGame.Install(!noDiag, true);
             FakeGame.Stall = stall;
+            if (failCmd != null) FakeGame.Fail[failCmd] = failCode;
             FakeGame.CallsFile = Path.Combine(dir, "calls.jsonl");
             string logPath = Path.Combine(dir, "log.txt");
             var ring = new DevLogRing();
-            var exec = new DevExecutor(ring, () => fireOn, line => { lock (ring) File.AppendAllText(logPath, line + "\n"); });
+            var exec = new DevExecutor(ring, () => fireOn, line => { lock (ring) File.AppendAllText(logPath, line + "\n"); }, null, null, null, () => forceOn);
             var pump = new DevPump(exec.Handle, exec.FireTimeout);
             string token = DevSession.NewToken();
             var server = new DevServer(new[] { 0 }, token, r => pump.Await(pump.Enqueue(r), timeoutMs), exec.Hello, TimeSpan.FromSeconds(idle), 65536, line => { lock (ring) File.AppendAllText(logPath, line + "\n"); }, maxClients);

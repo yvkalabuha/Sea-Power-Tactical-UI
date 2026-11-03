@@ -89,6 +89,59 @@ namespace VoiceBotBridge
             return last.ClosingKn <= 0 ? "receding" : "far";
         }
 
+        // ---- T-342 phase E (plan 46): the type of the seeker of an air-to-air missile -> the "IR only" mark of a fighter class ----
+        private static readonly string[] GuidanceNames = { "None", "IRHoming", "SemiActiveRadarHoming", "ActiveRadarHoming", "AntiRadiationHoming", "LaserHoming", "TVHoming", "ActiveSonarHoming", "PassiveSonarHoming", "WakeHoming", "ActivePassiveSonarHoming" };
+        private static readonly string[] SeekerOrder = { "ir", "sarh", "arh", "arm", "cmd", "other" };
+
+        private static string Squash(string s) { return s == null ? "" : s.Replace(" ", "").Replace("_", "").Replace("-", "").ToLowerInvariant(); }
+
+        /// <summary>ir | sarh | arh | arm | cmd | other (+"+hoj" when the missile also homes on emissions / jammers before the lock); null for no data. The names of the game enum, its spelling with spaces ("IR Homing") and its number are accepted; same words as CapFfMath.SeekerOf for ir / sarh / arh / cmd.</summary>
+        public static string SeekerCode(string guidanceType, string secondaryPassive, string midCourse)
+        {
+            string g = Squash(guidanceType);
+            if (g.Length == 0) return null;
+            int n;
+            if (int.TryParse(g, NumberStyles.None, CultureInfo.InvariantCulture, out n) && n >= 0 && n < GuidanceNames.Length) g = Squash(GuidanceNames[n]);
+            string code;
+            if (g == "irhoming" || g == "ir") code = "ir";
+            else if (g == "semiactiveradarhoming" || g == "sarh") code = "sarh";
+            else if (g == "activeradarhoming" || g == "arh") code = "arh";
+            else if (g == "antiradiationhoming" || g == "arm") code = "arm";
+            else if (g == "none" && (Squash(midCourse) == "radiocommand" || Squash(midCourse) == "datalink")) code = "cmd";
+            else code = "other";
+            string sp = Squash(secondaryPassive);
+            if (sp.Length > 0 && sp != "none") code += "+hoj";
+            return code;
+        }
+
+        private static string BaseCode(string c) { int i = c.IndexOf('+'); return i < 0 ? c : c.Substring(0, i); }
+
+        /// <summary>At least one missile and every one is an exact "ir" (no home-on-jam, nothing else). An empty / unknown list is false (the safe side: no mark).</summary>
+        public static bool IrOnly(IList<string> seekerCodes)
+        {
+            if (seekerCodes == null || seekerCodes.Count == 0) return false;
+            foreach (var c in seekerCodes) if (c != "ir") return false;
+            return true;
+        }
+
+        public static bool HomeOnJam(IList<string> seekerCodes)
+        {
+            if (seekerCodes == null) return false;
+            foreach (var c in seekerCodes) if (c != null && c.IndexOf("+hoj", StringComparison.Ordinal) >= 0) return true;
+            return false;
+        }
+
+        /// <summary>The distinct seeker kinds in the fixed order ir, sarh, arh, arm, cmd, other, comma separated; none for an empty list.</summary>
+        public static string SeekersText(IList<string> seekerCodes)
+        {
+            if (seekerCodes == null || seekerCodes.Count == 0) return "none";
+            var have = new HashSet<string>();
+            foreach (var c in seekerCodes) if (!string.IsNullOrEmpty(c)) have.Add(BaseCode(c));
+            var res = new List<string>();
+            foreach (var k in SeekerOrder) if (have.Contains(k)) res.Add(k);
+            return res.Count == 0 ? "none" : string.Join(",", res);
+        }
+
         /// <summary>T-346: the roles of an aircraft class ("Fighter,Bomber") name a fighter.</summary>
         public static bool RoleIsFighter(string csv)
         {
@@ -234,6 +287,7 @@ namespace VoiceBotBridge
             if ((all || part == "hyst") && (e = THyst()) != null) return "hyst: " + e;
             if ((all || part == "role") && (e = TRole()) != null) return "role: " + e;
             if ((all || part == "lat") && (e = TLat()) != null) return "lat: " + e;
+            if ((all || part == "seeker") && (e = TSeeker()) != null) return "seeker: " + e;
             return null;
         }
 
@@ -462,6 +516,29 @@ namespace VoiceBotBridge
             if (Mode("guard", "ships") != "retreat" || Mode("retreat", "fighters") != "retreat" || CanJamFighters("guard", "fighters") || CanJamFighters("retreat", "ships")) return "retreat";
             foreach (string st in new[] { "back", "lost", "no_station", "off" })
                 if (CanJamFighters(st, "ships") || CanJamFighters(st, "fighters")) return "terminal " + st;
+            return null;
+        }
+
+        private static string TSeeker()
+        {
+            // all 11 values of the game enum, by name and by number
+            string[] want = { "other", "ir", "sarh", "arh", "arm", "other", "other", "other", "other", "other", "other" };
+            for (int i = 0; i < GuidanceNames.Length; i++)
+            {
+                if (SeekerCode(GuidanceNames[i], "None", "None") != want[i]) return "name " + GuidanceNames[i] + " -> " + SeekerCode(GuidanceNames[i], "None", "None");
+                if (SeekerCode(i.ToString(CultureInfo.InvariantCulture), null, null) != want[i]) return "number " + i;
+            }
+            if (SeekerCode("None", "None", "RadioCommand") != "cmd" || SeekerCode("None", null, "Datalink") != "cmd" || SeekerCode("None", null, "WireGuided") != "other") return "cmd";
+            if (SeekerCode("IR Homing", "None", null) != "ir" || SeekerCode("irhoming", null, null) != "ir" || SeekerCode("IRHOMING", "", null) != "ir") return "case and spaces";
+            if (SeekerCode("ActiveRadarHoming", "HomeOnJam", null) != "arh+hoj" || SeekerCode("SemiActiveRadarHoming", "Full", null) != "sarh+hoj" || SeekerCode("IRHoming", "None", null) != "ir") return "hoj";
+            if (SeekerCode(null, null, null) != null || SeekerCode("", "None", null) != null || SeekerCode("   ", null, null) != null) return "no data";
+            if (SeekerCode("99", null, null) != "other" || SeekerCode("Banana", null, null) != "other") return "unknown";
+            // IrOnly: at least one, all exactly ir
+            if (IrOnly(null) || IrOnly(new string[0]) || !IrOnly(new[] { "ir" }) || !IrOnly(new[] { "ir", "ir" })) return "ir only basics";
+            if (IrOnly(new[] { "ir", "sarh" }) || IrOnly(new[] { "ir", "ir+hoj" }) || IrOnly(new[] { "ir", "other" }) || IrOnly(new[] { "ir", null })) return "ir only mixed";
+            if (HomeOnJam(null) || HomeOnJam(new[] { "ir", "sarh" }) || !HomeOnJam(new[] { "ir", "arh+hoj" })) return "hoj list";
+            if (SeekersText(null) != "none" || SeekersText(new string[0]) != "none") return "text empty";
+            if (SeekersText(new[] { "arh+hoj", "sarh", "ir", "ir", "cmd", "other" }) != "ir,sarh,arh,cmd,other") return "text order " + SeekersText(new[] { "arh+hoj", "sarh", "ir", "ir", "cmd", "other" });
             return null;
         }
 

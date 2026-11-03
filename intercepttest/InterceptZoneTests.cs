@@ -7,6 +7,26 @@ namespace VoiceBotBridge
     /// <summary>T-169 / ADR-0067: the enemy weapon zones of the intercept (InterceptThreatMath, the controller on the fake game).</summary>
     internal static class InterceptZoneTests
     {
+        /// <summary>T-356: the threat and contact-info geometry across the antimeridian equals the shifted pair; bit-identical inside 180 deg.</summary>
+        public static string Antimeridian()
+        {
+            foreach (bool globe in new[] { false, true })
+                foreach (double phi in new[] { 0.0, 45.0, 60.0, 70.0 })
+                    using (AswMath.WorldScope(globe))
+                    {
+                        var a = new GeoPt(phi, 179.9); var b = new GeoPt(phi + 0.1, -179.9); var b2 = new GeoPt(phi + 0.1, 180.1);
+                        if (Math.Abs(InterceptThreatMath.FlatNm(a, b) - InterceptThreatMath.FlatNm(a, b2)) > 1e-9) return "FlatNm across 180 " + globe + "/" + phi;
+                        double x1, y1, x2, y2;
+                        ContactInfoMath.ToLocalNm(phi, 179.9, phi + 0.1, -179.9, globe, out x1, out y1);
+                        ContactInfoMath.ToLocalNm(phi, 179.9, phi + 0.1, 180.1, globe, out x2, out y2);
+                        if (Math.Abs(x1 - x2) > 1e-9 || Math.Abs(y1 - y2) > 1e-9) return "ToLocalNm across 180 " + globe + "/" + phi;
+                        var c = new GeoPt(phi + 0.05, 10.2);
+                        double n = (c.Lat - phi) * 60.0, e = (c.Lon - 10.0) * 60.0 * AswMath.LonK(phi, c.Lat);
+                        if (InterceptThreatMath.FlatNm(new GeoPt(phi, 10.0), c) != Math.Sqrt(n * n + e * e)) return "FlatNm bits " + globe + "/" + phi;
+                    }
+            return null;
+        }
+
         private sealed class Rig
         {
             public InterceptFakeGame G = new InterceptFakeGame();

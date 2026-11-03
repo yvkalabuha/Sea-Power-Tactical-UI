@@ -483,7 +483,8 @@ namespace VoiceBotBridge
         {
             if (z == null || z.Rect == null || z.Rect.Length < 4) return double.MaxValue;
             double n = Math.Max(Math.Max(z.Rect[0] - g.Lat, 0), g.Lat - z.Rect[2]) * 60.0;
-            double e = Math.Max(Math.Max(z.Rect[1] - g.Lon, 0), g.Lon - z.Rect[3]) * 60.0 * AswMath.LonK(z.Rect[0], z.Rect[2]);
+            double r3 = GeoLon.UnwrapLon(z.Rect[1], z.Rect[3]), gl = GeoLon.UnwrapLon(GeoLon.MidLon(z.Rect[1], z.Rect[3]), g.Lon);   // T-356: across the antimeridian
+            double e = Math.Max(Math.Max(z.Rect[1] - gl, 0), gl - r3) * 60.0 * AswMath.LonK(g.Lat, Math.Min(Math.Max(g.Lat, z.Rect[0]), z.Rect[2]));   // T-362: K of the segment point -> nearest latitude of the zone
             return Math.Sqrt(n * n + e * e);
         }
 
@@ -493,7 +494,7 @@ namespace VoiceBotBridge
             if (z.Anchor != "unit") return z.Rect;
             if (anchorPos == null) { z.AnchorLost = true; return z.Rect; }
             z.AnchorLost = false;
-            double hl = (z.Rect[2] - z.Rect[0]) / 2, hw = (z.Rect[3] - z.Rect[1]) / 2;
+            double hl = (z.Rect[2] - z.Rect[0]) / 2, hw = GeoLon.DLon(z.Rect[1], z.Rect[3]) / 2;
             double cl = anchorPos.Value.Lat + z.OffLat, cw = anchorPos.Value.Lon + z.OffLon;
             z.Rect = new[] { cl - hl, cw - hw, cl + hl, cw + hw };
             return z.Rect;
@@ -516,8 +517,10 @@ namespace VoiceBotBridge
         {
             var res = new List<CapLane>();
             if (z == null || z.Rect == null || z.Rect.Length < 4 || n < 1) return res;
-            double hNm = (z.Rect[2] - z.Rect[0]) * 60.0, wNm = (z.Rect[3] - z.Rect[1]) * 60.0 * AswMath.LonK(z.Rect[0], z.Rect[2]);
+            double hNm = (z.Rect[2] - z.Rect[0]) * 60.0, wNm = GeoLon.DLon(z.Rect[1], z.Rect[3]) * 60.0 * AswMath.LonK(z.Rect[0], z.Rect[2]);
             bool ns = hNm >= wNm;                       // long axis north-south
+            // T-362: a north-south zone is laid out on its widest row (legs stay on meridians: the strips are fractions of the row, a trapezoid); legs along parallels get the length of their own row
+            if (ns) wNm = GeoLon.DLon(z.Rect[1], z.Rect[3]) * 60.0 * AswMath.LonK(WideLat(z.Rect));
             double len = ns ? hNm : wNm, wid = ns ? wNm : hNm;
             double rc = Math.Max(1, coverNm);
             double strip = wid / n;
@@ -533,20 +536,21 @@ namespace VoiceBotBridge
             for (int i = 0; i < n; i++)
             {
                 double c = (i + 0.5) * strip;
-                var lane = new CapLane { Slot = i, Center = Pt(z, ns, len / 2, c), CoverNm = rc };
+                var lane = new CapLane { Slot = i, Center = Pt(z, ns, ns ? len / 2 : RowLenNm(z, z.Rect[0] + c / 60.0) / 2, c), CoverNm = rc };
                 if (small)
                 {
-                    lane.Center = new GeoPt((z.Rect[0] + z.Rect[2]) / 2, (z.Rect[1] + z.Rect[3]) / 2);
+                    lane.Center = new GeoPt((z.Rect[0] + z.Rect[2]) / 2, GeoLon.MidLon(z.Rect[1], z.Rect[3]));
                     CircleLane(lane, i, n, circR, p);
                 }
                 else
                 {
-                    double a0 = inset, a1 = len - inset;
+                    double a0 = inset;
                     lane.Legs = m; lane.LegSpacingNm = d;
                     lane.Track = new List<GeoPt>();
                     for (int j = 0; j < m; j++)
                     {
                         double cj = i * strip + (j + 0.5) * d;
+                        double a1 = (ns ? len : RowLenNm(z, z.Rect[0] + cj / 60.0)) - inset;   // T-362: along a parallel the true length of the leg's own row
                         double s = j % 2 == 0 ? a0 : a1, e = j % 2 == 0 ? a1 : a0;
                         lane.Track.Add(Pt(z, ns, s, cj)); lane.Track.Add(Pt(z, ns, e, cj));
                     }
@@ -574,7 +578,8 @@ namespace VoiceBotBridge
             for (int j = 0; j < k; j++)
             {
                 double a = (a0 + 360.0 * j / k) * Math.PI / 180.0;
-                lane.Track.Add(new GeoPt(lane.Center.Lat + radiusNm * Math.Cos(a) / 60.0, lane.Center.Lon + radiusNm * Math.Sin(a) / (60.0 * AswMath.LonK(lane.Center.Lat))));
+                double lat = lane.Center.Lat + radiusNm * Math.Cos(a) / 60.0;   // T-362: K of the segment centre -> point
+                lane.Track.Add(new GeoPt(lat, lane.Center.Lon + radiusNm * Math.Sin(a) / (60.0 * AswMath.LonK(lane.Center.Lat, lat))));
             }
             double step = Math.Max(0, p.CircleAltStepFt);
             lane.AltFt = (int)Math.Round((p.PatrolAltFt > 0 ? p.PatrolAltFt : p.CircleBaseAltFt) + i * step);
@@ -584,14 +589,14 @@ namespace VoiceBotBridge
         public static bool OnCircle(GeoPt g, CapLane lane, CapParams p)
         {
             if (lane == null || !lane.Circle) return false;
-            double dy = (g.Lat - lane.Center.Lat) * 60.0, dx = (g.Lon - lane.Center.Lon) * 60.0 * AswMath.LonK(lane.Center.Lat);
+            double dy = (g.Lat - lane.Center.Lat) * 60.0, dx = GeoLon.DLon(lane.Center.Lon, g.Lon) * 60.0 * AswMath.LonK(lane.Center.Lat, g.Lat);
             return Math.Sqrt(dx * dx + dy * dy) <= lane.RadiusNm + p.CircleTolNm;
         }
 
         /// <summary>T-250: phase of pos around center: 0 = north, clockwise, [0, 360) (flat degrees, as CircleLane).</summary>
         public static double CirclePhaseDeg(GeoPt pos, GeoPt center)
         {
-            double a = Math.Atan2(pos.Lon - center.Lon, pos.Lat - center.Lat) * 180.0 / Math.PI;
+            double a = Math.Atan2(GeoLon.DLon(center.Lon, pos.Lon), pos.Lat - center.Lat) * 180.0 / Math.PI;
             a = (a % 360 + 360) % 360;
             return a >= 360 ? 0 : a;
         }
@@ -668,7 +673,8 @@ namespace VoiceBotBridge
             for (int j = 0; j < laps * k; j++)
             {
                 double a = (lane.StartDeg + (bm + j) * step) * Math.PI / 180.0;
-                r.Add(new GeoPt(lane.Center.Lat + radiusNm * Math.Cos(a) / 60.0, lane.Center.Lon + radiusNm * Math.Sin(a) / (60.0 * AswMath.LonK(lane.Center.Lat))));
+                double lat = lane.Center.Lat + radiusNm * Math.Cos(a) / 60.0;   // T-362
+                r.Add(new GeoPt(lat, lane.Center.Lon + radiusNm * Math.Sin(a) / (60.0 * AswMath.LonK(lane.Center.Lat, lat))));
             }
             r.Add(r[0]);
             return r;
@@ -714,12 +720,26 @@ namespace VoiceBotBridge
             return r;
         }
 
+        /// <summary>T-362: nm per degree of longitude on the row of latitude lat (60 on stable, bit-identical).</summary>
+        private static double RowK(double lat) { return 60.0 * AswMath.LonK(lat); }
+
+        /// <summary>T-362: the zone edge nearest the equator (the widest row): 0 when the zone straddles the equator.</summary>
+        internal static double WideLat(double[] rect)
+        {
+            if (rect[0] <= 0 && rect[2] >= 0) return 0;
+            return Math.Abs(rect[0]) < Math.Abs(rect[2]) ? rect[0] : rect[2];
+        }
+
+        /// <summary>T-362: the length of the zone along the parallel lat, nm (same order of operations as the mid-row width on stable).</summary>
+        private static double RowLenNm(CapZone z, double lat) { return GeoLon.DLon(z.Rect[1], z.Rect[3]) * 60.0 * AswMath.LonK(lat); }
+
         // a: nm along the long axis from the min edge, c: nm across from the min edge.
+        // T-362: north-south legs stay on meridians (c is a fraction of the widest row); legs along parallels use the K of their own row.
         private static GeoPt Pt(CapZone z, bool ns, double a, double c)
         {
-            double k = 60.0 * AswMath.LonK(z.Rect[0], z.Rect[2]);   // T-348: nm per degree of longitude (60 on stable)
-            return ns ? new GeoPt(z.Rect[0] + a / 60.0, z.Rect[1] + c / k)
-                      : new GeoPt(z.Rect[0] + c / 60.0, z.Rect[1] + a / k);
+            if (ns) return new GeoPt(z.Rect[0] + a / 60.0, z.Rect[1] + c / RowK(WideLat(z.Rect)));
+            double lat = z.Rect[0] + c / 60.0;
+            return new GeoPt(lat, z.Rect[1] + a / RowK(lat));
         }
 
         public static bool BeyondLeash(GeoPt g, CapZone z, CapParams p) { return DistToZoneNm(g, z) > p.PursuitNm; }

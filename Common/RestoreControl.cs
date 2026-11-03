@@ -226,7 +226,7 @@ namespace VoiceBotBridge
                 try
                 {
                     var wps = Waypoints(u);
-                    if (wps.Count > 0 && DistanceNm(wps[0][0], wps[0][1], run.Placed[0], run.Placed[1]) <= 0.2)
+                    if (wps.Count > 0 && MetricDistanceNm(wps[0][0], wps[0][1], run.Placed[0], run.Placed[1]) <= 0.2)
                     {
                         if (run.Saved.Count == 0) Call(u, "RemoveWaypoints");
                         for (int i = 0; i < run.Saved.Count; i++) PlaceWaypoint("0", u, run.Saved[i][0], run.Saved[i][1], i > 0, "");
@@ -269,7 +269,7 @@ namespace VoiceBotBridge
             detail.Add(roeAction == "restore" ? "roe " + curRoe + "->" + roeTo : "roe " + roeAction);
 
             var wpsNow = Waypoints(u);
-            string routeAction = ControlMemory.DecideRoute(entry, wpsNow.Count > 0 ? wpsNow[0] : null, (a, b) => DistanceNm(a[0], a[1], b[0], b[1]));
+            string routeAction = ControlMemory.DecideRoute(entry, wpsNow.Count > 0 ? wpsNow[0] : null, (a, b) => MetricDistanceNm(a[0], a[1], b[0], b[1]));
             int routePoints = 0;
             if (routeAction == "restore")
             {
@@ -285,7 +285,7 @@ namespace VoiceBotBridge
                         double lat0, lon0, h, lat, lon;
                         if (OwnPos(u, out lat0, out lon0, out h))
                         {
-                            Destination(lat0, lon0, entry.SavedCourseDeg.Value, 75, out lat, out lon);
+                            MetricDestination(lat0, lon0, entry.SavedCourseDeg.Value, 75, out lat, out lon);
                             PlaceWaypoint("0", u, lat, lon, false, "");
                             routePoints = 1;
                         }

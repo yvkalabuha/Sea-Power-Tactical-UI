@@ -12,7 +12,7 @@ namespace VoiceBotBridge
         private static Dictionary<string, object> Obj(string j) { return StrikeT341CtlTests.Obj(j); }
         private static List<object> Arr(object o) { return StrikeT341CtlTests.Arr(o); }
 
-        public static readonly string[] Names = { "hit-log", "kill-log", "goal", "view" };
+        public static readonly string[] Names = { "hit-log", "kill-log", "goal", "view", "hit-filter" };
 
         public static string Dispatch(string n)
         {
@@ -26,6 +26,7 @@ namespace VoiceBotBridge
                     case "kill-log": return KillLog();
                     case "goal": return Goal();
                     case "view": return View();
+                    case "hit-filter": return StrikeHitFilter.SelfTest();   // T-363
                 }
             }
             finally { StrikeController.DefaultGoal = saved; }

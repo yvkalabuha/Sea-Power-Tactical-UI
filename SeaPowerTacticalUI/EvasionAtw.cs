@@ -733,7 +733,7 @@ namespace VoiceBotBridge
         {
             return new AtwFrozenIn
             {
-                PX = (c.PLon - lon0) * 60.0 * cosLat, PY = (c.PLat - lat0) * 60.0, PursuitKn = c.Kn,
+                PX = GeoLon.DLon(lon0, c.PLon) * 60.0 * cosLat, PY = (c.PLat - lat0) * 60.0, PursuitKn = c.Kn,
                 OwnHdgDeg = double.IsNaN(hdg) ? 0 : hdg, OwnKn = ownKn, ReactionS = EvasionAtwReactionS, SalvoKn = salvoKn
             };
         }

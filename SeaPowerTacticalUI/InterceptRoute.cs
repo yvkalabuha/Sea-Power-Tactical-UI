@@ -140,7 +140,7 @@ namespace VoiceBotBridge
             for (int i = 0; i <= n; i++)
             {
                 double t = (double)i / n;
-                var g = new GeoPt(a.Lat + (b.Lat - a.Lat) * t, a.Lon + (b.Lon - a.Lon) * t);
+                var g = new GeoPt(a.Lat + (b.Lat - a.Lat) * t, a.Lon + GeoLon.DLon(a.Lon, b.Lon) * t);
                 if (!SarRouteMath.Passable(_heightM(g), p.MinDepthM)) return true;
             }
             return false;

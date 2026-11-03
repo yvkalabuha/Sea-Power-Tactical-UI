@@ -25,23 +25,57 @@ namespace VoiceBotBridge
             foreach (double lat in Lats)
             {
                 var o = new GeoPt(lat, 10);
-                foreach (double axis in new[] { 0.0, 90.0 })
+                foreach (double axis in new[] { 0.0, 45.0, 90.0 })
                 {
                     string err;
                     using (AswMath.WorldScope(true))
                     {
                         int dropped;
                         var rows = AswMath.Rows(5, 30, 100, 3600, 8, out dropped);
-                        if ((err = Pts(o, axis, rows, "rows " + lat + "/" + axis, 0.015)) != null) return err;
+                        if ((err = Pts(o, axis, rows, "rows " + lat + "/" + axis, 0.005)) != null) return err;
                         var ring = AswMath.StandingRing(8, 1);
                         foreach (var p in ring)
                         {
                             double d = AswMath.GreatCircleNm(o, AswMath.ToGeo(o, axis, p));
                             double want = Math.Sqrt(p.X * p.X + p.Y * p.Y);
-                            if (want > 0.5 && Math.Abs(d / want - 1) > 0.015) return "ring " + lat + "/" + axis + " " + d + " vs " + want;
+                            if (want > 0.5 && Math.Abs(d / want - 1) > 0.005) return "ring " + lat + "/" + axis + " " + d + " vs " + want;
                         }
-                        if ((err = Pts(o, axis, AswMath.CreepingLine(20, 10, 4), "creeping " + lat + "/" + axis, 0.015)) != null) return err;
-                        if ((err = Pts(o, axis, AswMath.ExpandingSquare(new NmPt(0, 0), 2, 6), "square " + lat + "/" + axis, 0.015)) != null) return err;
+                        if ((err = Pts(o, axis, AswMath.CreepingLine(20, 10, 4), "creeping " + lat + "/" + axis, 0.005)) != null) return err;
+                        if ((err = Pts(o, axis, AswMath.ExpandingSquare(new NmPt(0, 0), 2, 6), "square " + lat + "/" + axis, 0.005)) != null) return err;
+                    }
+                }
+                // T-362: radius from the origin, round trip, corridor and barrier rows
+                using (AswMath.WorldScope(true))
+                {
+                    for (double x = -40; x <= 40; x += 10)
+                        for (double y = -40; y <= 40; y += 10)
+                        {
+                            var pt = new NmPt(x, y);
+                            var g = AswMath.ToGeo(o, 45, pt);
+                            double want = Math.Sqrt(x * x + y * y);
+                            if (want > 0.5 && Math.Abs(AswMath.GreatCircleNm(o, g) / want - 1) > 0.005) return "radius " + lat + " " + x + "," + y;
+                            var back = AswMath.ToLocal(o, 45, g);
+                            if (Math.Abs(back.X - x) > 1e-6 || Math.Abs(back.Y - y) > 1e-6) return "round trip " + lat + " " + x + "," + y;
+                        }
+                    bool wide;
+                    foreach (double ax in new[] { 0.0, 45.0 })
+                    {
+                        var cr = AswPatternMath.CorridorRows(60, 5, 8, out wide);
+                        for (int i = 1; i < cr.Length; i++)
+                        {
+                            double step = cr[i] - cr[i - 1];
+                            if (Math.Abs(step) < 0.5) continue;
+                            double got = AswMath.GreatCircleNm(AswMath.ToGeo(o, ax, new NmPt(0, cr[i - 1])), AswMath.ToGeo(o, ax, new NmPt(0, cr[i])));
+                            if (Math.Abs(got / Math.Abs(step) - 1) > 0.005) return "corridor " + lat + "/" + ax + " " + got + " vs " + step;
+                        }
+                        double stepNm;
+                        var ys = AswPatternMath.BarrierRowYs(60, 5, 0, false, out stepNm);
+                        for (int i = 1; i < ys.Count; i++)
+                        {
+                            double got = AswMath.GreatCircleNm(AswMath.ToGeo(o, ax, new NmPt(0, ys[i - 1])), AswMath.ToGeo(o, ax, new NmPt(0, ys[i])));
+                            double want = Math.Abs(ys[i] - ys[i - 1]);
+                            if (want > 0.5 && Math.Abs(got / want - 1) > 0.005) return "barrier " + lat + "/" + ax + " " + got + " vs " + want;
+                        }
                     }
                 }
                 // route guard: a point 2 true nm east of a meridian segment

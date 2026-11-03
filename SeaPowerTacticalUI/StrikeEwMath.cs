@@ -216,7 +216,7 @@ namespace VoiceBotBridge
             foreach (var s in sector) pl.CoverIds.Add(s.TrackId);
             pl.TOff = v.T + p.EwHoldS;
             if (sector.Count == 0) { pl.Why = "no_targets"; pl.StationPt = wait ?? new GeoPt(ew.Lat, ew.Lon); return pl; }
-            double la = sector.Average(s => s.Lat), lo = sector.Average(s => s.Lon);
+            double la = sector.Average(s => s.Lat), lo = GeoLon.MeanLon(sector.Select(s => s.Lon));
             pl.AimPt = new GeoPt(la, lo);
             double minBack = 0;
             foreach (var a in v.Assignments) if (sector.Any(s => s.TrackId == a.TargetId)) minBack = Math.Max(minBack, a.LaunchNm);
@@ -276,7 +276,7 @@ namespace VoiceBotBridge
             var hostiles = all;
             var order = ews.OrderByDescending(e => e.Ew == null ? 0 : e.Ew.ConeDeg).ThenBy(e => e.Uid).ToList();
             var cones = order.Select(e => e.Ew == null || e.Ew.ConeDeg <= 0 ? 30.0 : e.Ew.ConeDeg).ToList();
-            double fla = v.Assignments.Average(a => a.LaunchPt.Lat), flo = v.Assignments.Average(a => a.LaunchPt.Lon);
+            double fla = v.Assignments.Average(a => a.LaunchPt.Lat), flo = GeoLon.MeanLon(v.Assignments.Select(a => a.LaunchPt.Lon));
             List<int> uncovered;
             var sectors = Sectors(cover, new GeoPt(fla, flo), cones, p.EwConeMarginDeg, tgt == null ? 0 : tgt.MainId, out uncovered);
             int w0 = v.Warnings.Count;

@@ -202,7 +202,7 @@ namespace VoiceBotBridge
                 for (int j = i + 1; j < n; j++)
                 {
                     var a = tracks[i]; var b = tracks[j];
-                    double dn = (a.Lat - b.Lat) * 60, de = (a.Lon - b.Lon) * 60 * AswMath.LonK(a.Lat, b.Lat);
+                    double dn = (a.Lat - b.Lat) * 60, de = GeoLon.DLon(b.Lon, a.Lon) * 60 * AswMath.LonK(a.Lat, b.Lat);
                     if (Math.Sqrt(dn * dn + de * de) <= p.RaidNm && AswMath.AngleDiff(a.CourseDeg, b.CourseDeg) <= p.RaidCourseDeg) par[find(i)] = find(j);
                 }
             var map = new Dictionary<int, AirRaid>();
@@ -237,7 +237,7 @@ namespace VoiceBotBridge
         private static double SegDistNm(GeoPt a, GeoPt b, GeoPt p)
         {
             double lk = AswMath.LonK(a.Lat, b.Lat);
-            double abn = (b.Lat - a.Lat) * 60, abe = (b.Lon - a.Lon) * 60 * lk, apn = (p.Lat - a.Lat) * 60, ape = (p.Lon - a.Lon) * 60 * lk;
+            double abn = (b.Lat - a.Lat) * 60, abe = GeoLon.DLon(a.Lon, b.Lon) * 60 * lk, apn = (p.Lat - a.Lat) * 60, ape = GeoLon.DLon(a.Lon, p.Lon) * 60 * lk;
             double l2 = abn * abn + abe * abe;
             double k = l2 < 1e-9 ? 0 : Math.Max(0, Math.Min(1, (apn * abn + ape * abe) / l2));
             double dn = apn - k * abn, de = ape - k * abe;

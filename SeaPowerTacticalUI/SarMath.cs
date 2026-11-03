@@ -31,8 +31,11 @@ namespace VoiceBotBridge
         public bool Contains(GeoPt g)
         {
             if (Kind == "rect" && Rect != null && Rect.Length >= 4)
-                return g.Lat >= Math.Min(Rect[0], Rect[2]) && g.Lat <= Math.Max(Rect[0], Rect[2])
-                    && g.Lon >= Math.Min(Rect[1], Rect[3]) && g.Lon <= Math.Max(Rect[1], Rect[3]);
+            {
+                double l1 = GeoLon.UnwrapLon(Rect[1], Rect[3]), lo = Math.Min(Rect[1], l1), hi = Math.Max(Rect[1], l1);   // T-356: across the antimeridian
+                double gl = GeoLon.UnwrapLon((lo + hi) / 2, g.Lon);
+                return g.Lat >= Math.Min(Rect[0], Rect[2]) && g.Lat <= Math.Max(Rect[0], Rect[2]) && gl >= lo && gl <= hi;
+            }
             if (Kind == "circle")
             {
                 var d = AswMath.FlatNm(Center, g);
@@ -160,7 +163,7 @@ namespace VoiceBotBridge
     {
         private static double DistNm(double lat0, double lon0, double lat1, double lon1)
         {
-            double x = (lat1 - lat0) * 60.0, y = (lon1 - lon0) * 60.0 * AswMath.LonK(lat0, lat1);
+            double x = (lat1 - lat0) * 60.0, y = GeoLon.DLon(lon0, lon1) * 60.0 * AswMath.LonK(lat0, lat1);
             return Math.Sqrt(x * x + y * y);
         }
 

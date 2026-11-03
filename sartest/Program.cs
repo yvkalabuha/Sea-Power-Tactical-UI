@@ -30,6 +30,21 @@ namespace VoiceBotBridge
                         double h = AswMath.GreatCircleNm(new GeoPt(r[0], r[1]), new GeoPt(r[2], r[1]));
                         if (Math.Abs(w - 10.0) > 0.15 || Math.Abs(h - 10.0) > 0.15) return "lat " + lat + ": rect " + w.ToString("0.000") + "x" + h.ToString("0.000");
                     }
+                // T-356: a rectangle across the antimeridian (4 numbers and the 8-number polar form), the point -179.95 is inside 179.5..180.5
+                foreach (bool eight in new[] { false, true })
+                {
+                    var cmd = new Dictionary<string, object>(); cmd["group"] = "G";
+                    cmd["area"] = eight
+                        ? new List<object> { 60.0, 179.5, 60.0, -179.5, 61.0, -179.5, 61.0, 179.5 }
+                        : new List<object> { 60.0, 179.5, 61.0, -179.5 };
+                    string err;
+                    SarOrderCmd o = SarCommands.ParseOrder(cmd, out err);
+                    if (o == null) return "antimeridian ParseOrder " + eight + ": " + err;
+                    double[] r = o.Area.Rect;
+                    if (Math.Abs((r[3] - r[1]) - 1.0) > 1e-9) return "antimeridian width " + eight + ": " + (r[3] - r[1]);
+                    if (!o.Area.Contains(new GeoPt(60.5, -179.95)) || !o.Area.Contains(new GeoPt(60.5, 179.7)) || !o.Area.Contains(new GeoPt(60.5, 180.2))) return "antimeridian inside " + eight;
+                    if (o.Area.Contains(new GeoPt(60.5, 178.9)) || o.Area.Contains(new GeoPt(60.5, -178.9)) || o.Area.Contains(new GeoPt(62.0, -179.95))) return "antimeridian outside " + eight;
+                }
                 return null;
             }
             catch (Exception ex) { return "lat rect: " + ex; }

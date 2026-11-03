@@ -38,7 +38,7 @@ namespace VoiceBotBridge
             {
                 _apByAmmo.Clear(); _air = new List<StrikeAircraft>(); _airAt = int.MinValue;
                 _ships = new List<StrikeShip>(); _shipsAt = int.MinValue;
-                _classes.Clear(); _sams.Clear(); _classMiss.Clear(); _ciws.Clear(); _speedMem.Clear(); _hitCursor = 0; _adTriedAt = double.NegativeInfinity;
+                _classes.Clear(); _sams.Clear(); _classMiss.Clear(); _ciws.Clear(); _speedMem.Clear(); _hitCursor = 0; _hitFilter.Clear(); _adTriedAt = double.NegativeInfinity;
                 _fighterCls.Clear(); _deck = new List<StrikeDeckItem>(); _deckAt = int.MinValue; _remembered.Clear(); _deckAmmoMiss.Clear(); _decks = new List<StrikeDeckInfo>(); _decksAt = int.MinValue; _typeRange.Clear(); _vehOfKey.Clear();
             }
 

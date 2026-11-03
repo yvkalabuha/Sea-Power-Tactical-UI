@@ -15,6 +15,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="WorldOrderTests.cs" />   <!-- T-356 -->
     <Compile Include="Stub.cs" />
     <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
     <Compile Include="../SeaPowerTacticalUI/UiEscGuard.cs;../SeaPowerTacticalUI/LoadScreenMath.cs" />   <!-- T-199 -->

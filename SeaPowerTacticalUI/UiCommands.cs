@@ -55,6 +55,7 @@ namespace VoiceBotBridge
                 case "strike_cancel":
                 case "strike_launch":
                 case "strike_probe": return StrikeCmd(id, name, cmd);
+                case "qa_force": return QaForceCmd(id, cmd);   // T-361 (ADR-0136): dev only, refused without the diag slot
                 case "set_doctrine": return SetDoctrineCmd(id, cmd);
                 case "doctrine": return DoctrineCmd(id, cmd);
                 case "smart_attack":

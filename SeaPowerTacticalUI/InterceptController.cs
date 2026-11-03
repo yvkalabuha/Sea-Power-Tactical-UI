@@ -165,7 +165,7 @@ namespace VoiceBotBridge
         {
             var i = new IcInput
             {
-                DxNm = (t.Lon - o.Lon) * 60.0 * AswMath.LonK(o.Lat, t.Lat), DyNm = (t.Lat - o.Lat) * 60.0, OwnKn = ownKn,
+                DxNm = GeoLon.DLon(o.Lon, t.Lon) * 60.0 * AswMath.LonK(o.Lat, t.Lat), DyNm = (t.Lat - o.Lat) * 60.0, OwnKn = ownKn,
                 MaxRangeNm = _p.MaxRangeNm, MaxEtaH = _p.MaxEtaH
             };
             if (t.HasVel) { i.VxKn = t.VxKn; i.VyKn = t.VyKn; }
@@ -795,8 +795,8 @@ namespace VoiceBotBridge
         private static double PointSegNm(GeoPt p, GeoPt a, GeoPt b)
         {
             double k = AswMath.LonK(a.Lat, b.Lat);
-            double bx = (b.Lat - a.Lat) * 60.0, by = (b.Lon - a.Lon) * 60.0 * k;
-            double px = (p.Lat - a.Lat) * 60.0, py = (p.Lon - a.Lon) * 60.0 * k;
+            double bx = (b.Lat - a.Lat) * 60.0, by = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * k;
+            double px = (p.Lat - a.Lat) * 60.0, py = GeoLon.DLon(a.Lon, p.Lon) * 60.0 * k;
             double l2 = bx * bx + by * by;
             double t = l2 < 1e-12 ? 0 : (px * bx + py * by) / l2;
             t = t < 0 ? 0 : (t > 1 ? 1 : t);

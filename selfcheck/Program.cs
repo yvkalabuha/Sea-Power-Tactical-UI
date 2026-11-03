@@ -369,6 +369,7 @@ internal static class Program
         S("OverviewDebugGate", OverviewDebugGate.SelfTest());
         S("EvasionMath", EvasionMath.SelfTest());
         S("WorldGeoGame", GameApi.WorldGeoSelfTest());   // T-354
+        S("WorldMetric", GameApi.WorldMetricSelfTest());   // T-355
         S("EvasionCourseGuard", EvasionCourseGuard.SelfTest());   // T-272
         S("EvasionReturnGuard", EvasionReturnGuard.SelfTest());   // T-278
         S("EvasionHelmMath", EvasionHelmMath.SelfTest());   // T-279
@@ -519,7 +520,12 @@ internal static class Program
         var mr = ModUiRects.SelfTest();
         T(api, "ModUiRects.SelfTest" + (mr == null ? "" : ": " + mr), mr == null);
         Console.WriteLine(mr == null ? "ui rects selftest ok" : "ui rects selftest FAILED: " + mr);
+#if FLAVOR_UI
+        string cp;
+        using (AswMath.WorldScope(true)) cp = api.ContactsParity();   // T-355: the parity bytes are the great circle; the mod's Metric* hook follows the world
+#else
         var cp = api.ContactsParity();
+#endif
         T(api, "contacts json parity" + (cp == null ? "" : ": " + cp), cp == null);
         Console.WriteLine(cp == null ? "contacts json parity ok" : "contacts json parity FAILED: " + cp);
         // the real icon file of the installed game (read only); skipped when the game directory has no assets

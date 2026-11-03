@@ -137,6 +137,12 @@ namespace VoiceBotBridge
             return true;
         }
 
+        /// <summary>T-356: the cell holds a decided world (not the equator, not a failed metric).</summary>
+        public bool IsDecided(long key) { Cell c; return _cells.TryGetValue(key, out c) && c.State == Decided; }
+
+        /// <summary>T-356: forget the cells (a new mission may have another projection: beta DisableLCC / setLCCProjectionEnabled); Last stays as the best guess.</summary>
+        public void ResetCells() { _cells.Clear(); }
+
         /// <summary>Stores a measurement; true when Last changed (the caller logs and sets AswMath.WorldGlobe).</summary>
         public bool Put(long key, double nowS, bool metricOk, bool decided, bool globe)
         {
@@ -564,7 +570,7 @@ namespace VoiceBotBridge
             if (track != null && track.Count >= 2)
             {
                 var a = track[0]; var b = track[track.Count - 1];
-                double n = (b[0] - a[0]) * 60.0, e = (b[1] - a[1]) * 60.0 * LonK(a[0], b[0]);
+                double n = (b[0] - a[0]) * 60.0, e = GeoLon.DLon(a[1], b[1]) * 60.0 * LonK(a[0], b[0]);
                 if (Math.Sqrt(n * n + e * e) >= MinTrackNm) { src = "track"; return Norm360(Math.Atan2(e, n) / Deg); }
             }
             if (nextWpBrgDeg.HasValue && AngleDiff(nextWpBrgDeg.Value, headingDeg) <= WpHeadingTolDeg) { src = "wp"; return Norm360(nextWpBrgDeg.Value); }
@@ -577,6 +583,8 @@ namespace VoiceBotBridge
         /// <summary>T-348: the world of the running game, process-wide. false = stable/flat or unknown (default); true = beta LCC globe.
         /// Set only by GameApi.WorldGlobeAt (main thread); read anywhere.</summary>
         public static volatile bool WorldGlobe;
+        /// <summary>T-356: the world of the CURRENT mission is decided (a metric probe succeeded since Entered). false between missions and until the first decision.</summary>
+        public static volatile bool WorldKnown;
 
         /// <summary>1.0 exactly when !WorldGlobe (so x*LonK keeps the flat result bit-identical), otherwise LonScale(latA, latB, true).
         /// nm east = dLon * 60 * LonK; dLon = nm / (60 * LonK).</summary>
@@ -608,7 +616,7 @@ namespace VoiceBotBridge
         /// <summary>g relative to origin in miles: X = north, Y = east (game rule, no cos(lat)).</summary>
         public static NmPt FlatNm(GeoPt origin, GeoPt g)
         {
-            return new NmPt((g.Lat - origin.Lat) * 60.0, (g.Lon - origin.Lon) * 60.0 * LonK(origin.Lat, g.Lat));
+            return new NmPt((g.Lat - origin.Lat) * 60.0, GeoLon.DLon(origin.Lon, g.Lon) * 60.0 * LonK(origin.Lat, g.Lat));
         }
 
         public static GeoPt Offset(GeoPt g, double bearingDeg, double distNm)
@@ -618,34 +626,68 @@ namespace VoiceBotBridge
             return new GeoPt(lat, g.Lon + distNm * Math.Sin(b) / (60.0 * LonK(g.Lat, lat)));
         }
 
+        /// <summary>T-362: beyond this latitude ToGeo/ToLocal fall back to the mid-latitude rule.</summary>
+        internal const double AeqdMaxLat = 89.0;
+
+        /// <summary>Flat world (!WorldGlobe): the old code verbatim (bit-identical). Globe: azimuthal equidistant about origin on the sphere 1 deg = 60 nm
+        /// (exact distance and bearing from origin; segment lengths within 0.003 % at +-40 nm); |origin.Lat| >= 89 or |result lat| >= 89.5 -> the old mid-latitude formula.
+        /// Longitude stays continuous: origin.Lon + dl (ADR-0135 3.2.1), no wrap.</summary>
         public static GeoPt ToGeo(GeoPt origin, double axisDeg, NmPt p)
         {
             double a = axisDeg * Deg;
             double north = p.X * Math.Cos(a) - p.Y * Math.Sin(a);
             double east = p.X * Math.Sin(a) + p.Y * Math.Cos(a);
+            if (WorldGlobe && Math.Abs(origin.Lat) < AeqdMaxLat)
+            {
+                double d = Math.Sqrt(north * north + east * east) / 60.0 * Deg;
+                if (d < 1e-12) return origin;
+                double th = Math.Atan2(east, north), p1 = origin.Lat * Deg;
+                double sinp2 = Math.Sin(p1) * Math.Cos(d) + Math.Cos(p1) * Math.Sin(d) * Math.Cos(th);
+                double p2 = Math.Asin(Math.Max(-1.0, Math.Min(1.0, sinp2)));
+                if (Math.Abs(p2 / Deg) < 89.5)
+                {
+                    double dl = Math.Atan2(Math.Sin(th) * Math.Sin(d) * Math.Cos(p1), Math.Cos(d) - Math.Sin(p1) * Math.Sin(p2));
+                    return new GeoPt(p2 / Deg, origin.Lon + dl / Deg);
+                }
+            }
             double lat = origin.Lat + north / 60.0;
             return new GeoPt(lat, origin.Lon + east / (60.0 * LonK(origin.Lat, lat)));
         }
 
+        /// <summary>Exact inverse of ToGeo in both worlds (the same fallback rule).</summary>
         public static NmPt ToLocal(GeoPt origin, double axisDeg, GeoPt g)
         {
             double a = axisDeg * Deg;
-            double north = (g.Lat - origin.Lat) * 60.0;
-            double east = (g.Lon - origin.Lon) * 60.0 * LonK(origin.Lat, g.Lat);
+            double north, east;
+            if (WorldGlobe && Math.Abs(origin.Lat) < AeqdMaxLat && Math.Abs(g.Lat) < 89.5)
+            {
+                double p1 = origin.Lat * Deg, p2 = g.Lat * Deg, dl = GeoLon.DLon(origin.Lon, g.Lon) * Deg;
+                double sdp = Math.Sin((p2 - p1) / 2), sdl = Math.Sin(dl / 2);
+                double hav = sdp * sdp + Math.Cos(p1) * Math.Cos(p2) * sdl * sdl;
+                double d = 2.0 * Math.Asin(Math.Min(1.0, Math.Sqrt(hav)));
+                double th = Math.Atan2(Math.Sin(dl) * Math.Cos(p2), Math.Cos(p1) * Math.Sin(p2) - Math.Sin(p1) * Math.Cos(p2) * Math.Cos(dl));
+                double nm = d / Deg * 60.0;
+                north = nm * Math.Cos(th); east = nm * Math.Sin(th);
+            }
+            else
+            {
+                north = (g.Lat - origin.Lat) * 60.0;
+                east = GeoLon.DLon(origin.Lon, g.Lon) * 60.0 * LonK(origin.Lat, g.Lat);
+            }
             return new NmPt(north * Math.Cos(a) + east * Math.Sin(a), -north * Math.Sin(a) + east * Math.Cos(a));
         }
 
         public static double DistNm(GeoPt a, GeoPt b)
         {
             double n = (b.Lat - a.Lat) * 60.0;
-            double e = (b.Lon - a.Lon) * 60.0 * LonK(a.Lat, b.Lat);
+            double e = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * LonK(a.Lat, b.Lat);
             return Math.Sqrt(n * n + e * e);
         }
 
         public static double BearingDeg(GeoPt a, GeoPt b)
         {
             double n = (b.Lat - a.Lat) * 60.0;
-            double e = (b.Lon - a.Lon) * 60.0 * LonK(a.Lat, b.Lat);
+            double e = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * LonK(a.Lat, b.Lat);
             return Norm360(Math.Atan2(e, n) / Deg);
         }
 
@@ -662,20 +704,20 @@ namespace VoiceBotBridge
         /// <summary>The point g in the frame of origin: X = north, Y = east, nm.</summary>
         public static NmPt WorldNm(GeoPt origin, GeoPt g, bool globe)
         {
-            return new NmPt((g.Lat - origin.Lat) * 60.0, (g.Lon - origin.Lon) * 60.0 * LonScale(origin.Lat, g.Lat, globe));
+            return new NmPt((g.Lat - origin.Lat) * 60.0, GeoLon.DLon(origin.Lon, g.Lon) * 60.0 * LonScale(origin.Lat, g.Lat, globe));
         }
 
         public static double DistNm(GeoPt a, GeoPt b, bool globe)
         {
             double n = (b.Lat - a.Lat) * 60.0;
-            double e = (b.Lon - a.Lon) * 60.0 * LonScale(a.Lat, b.Lat, globe);
+            double e = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * LonScale(a.Lat, b.Lat, globe);
             return Math.Sqrt(n * n + e * e);
         }
 
         /// <summary>Radial speed of a track (velocity vNorthKn/vEastKn) towards a point, kn (&gt; 0 = approaching). d &lt; 1e-6 gives coincideKn.</summary>
         public static double RadialClosingKn(GeoPt track, GeoPt point, double vNorthKn, double vEastKn, bool globe, double coincideKn)
         {
-            double pn = (track.Lat - point.Lat) * 60.0, pe = (track.Lon - point.Lon) * 60.0 * LonScale(track.Lat, point.Lat, globe);
+            double pn = (track.Lat - point.Lat) * 60.0, pe = GeoLon.DLon(point.Lon, track.Lon) * 60.0 * LonScale(track.Lat, point.Lat, globe);
             double d = Math.Sqrt(pn * pn + pe * pe);
             if (d < 1e-6) return coincideKn;
             return -((pn * vNorthKn + pe * vEastKn) / d);
@@ -935,7 +977,8 @@ namespace VoiceBotBridge
             {
                 if (c.Where != "air" || c.Type != launched.Type || known.Contains(c.Uid) || taken(c.Uid)) continue;
                 if (!pos) return c.Uid;
-                double d = (c.Lat - deckLat) * (c.Lat - deckLat) + (c.Lon - deckLon) * (c.Lon - deckLon);
+                double dlo = GeoLon.DLon(deckLon, c.Lon);   // T-362: across the antimeridian
+                double d = (c.Lat - deckLat) * (c.Lat - deckLat) + dlo * dlo;
                 if (d < bd) { bd = d; best = c.Uid; }
             }
             return best;
