@@ -23,7 +23,7 @@ namespace VoiceBotBridge.Ui
         public static void ToLocalNm(double lat0, double lon0, double lat, double lon, bool globe, out double xNm, out double yNm)
         {
             yNm = (lat - lat0) * 60.0;
-            xNm = (lon - lon0) * 60.0 * (globe ? Math.Cos(lat0 * Math.PI / 180.0) : 1.0);
+            xNm = GeoLon.DLon(lon0, lon) * 60.0 * (globe ? Math.Cos(lat0 * Math.PI / 180.0) : 1.0);
         }
 
         /// <summary>r = target relative to the reference (nm), v = relative velocity (kn). false: |v| &lt; 0.5 kn, opening, or later than maxS.</summary>

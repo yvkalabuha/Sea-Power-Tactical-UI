@@ -15,6 +15,7 @@ namespace VoiceBotBridge.Dev
     public sealed class DevPlugin : BaseUnityPlugin
     {
         private ConfigEntry<bool> _fire;
+        private ConfigEntry<bool> _force;
         private DevServer _server;
         private DevPump _pump;
         private DevExecutor _exec;
@@ -30,6 +31,7 @@ namespace VoiceBotBridge.Dev
         {
             var enabled = Config.Bind("Dev", "Enabled", false, "Open the dev channel on 127.0.0.1 (developer machines only).");
             _fire = Config.Bind("Dev", "FireCommands", true, "Allow attack / smart_attack / asw_attack / set_roe (hostile targets only, every call is logged as [Dev][FIRE]).");
+            _force = Config.Bind("Dev", "ForceCommands", true, "Allow force (QA scenarios by real game orders: buoy on a sub, route shift, divert, a friend into the line of fire, a hostile to a SAR helicopter); every call is logged as [Dev][FORCE].");
             var port = Config.Bind("Dev", "Port", 47390, "First port to try (the next 4 are tried when it is busy).");
             var startDelay = Config.Bind("Dev", "StartDelayS", 20f, "T-282: earliest second (since game start) the channel may open. 0/0/0 = open at once.");
             var startQuiet = Config.Bind("Dev", "StartQuietS", 5f, "T-282: seconds without a scene load before the channel opens (counted only after the main-menu/mission scene is loaded, T-285).");
@@ -39,7 +41,7 @@ namespace VoiceBotBridge.Dev
             var ring = new DevLogRing();
             _listener = new DevLogListener(ring);
             BepInEx.Logging.Logger.Listeners.Add(_listener);
-            var exec = new DevExecutor(ring, () => _fire.Value, line => Logger.LogWarning(line));
+            var exec = new DevExecutor(ring, () => _fire.Value, line => Logger.LogWarning(line), forceOn: () => _force.Value);
             // hang triage: every command one line with wall time, result and main-thread exec ms; timeouts too (any group)
             _pump = new DevPump(exec.Handle, (r, why) => { Logger.LogWarning(DevCmdLog.Timeout(DateTime.Now, r.Cmd, why)); exec.FireTimeout(r, why); }, null,
                                 (r, reply, ms, waitMs) => Logger.LogInfo(DevCmdLog.Line(DateTime.Now, r.Cmd, reply, ms, waitMs)));
@@ -72,7 +74,7 @@ namespace VoiceBotBridge.Dev
             UnhookScene();
             if (!_server.Start()) { Logger.LogError("dev channel: no free port " + _ports[0] + ".." + _ports[_ports.Length - 1]); _server = null; return; }
             DevSession.Write(_sessionDir, _server.Port, _token, System.Diagnostics.Process.GetCurrentProcess().Id, DevInfo.Version, DateTime.UtcNow.ToString("o"), _fire.Value);
-            Logger.LogWarning("dev server started: listening on 127.0.0.1:" + _server.Port + " (dev-only, FireCommands=" + _fire.Value + ") (after " + _gate.Why + " " + Time.realtimeSinceStartup.ToString("0.0") + "s)");
+            Logger.LogWarning("dev server started: listening on 127.0.0.1:" + _server.Port + " (dev-only, FireCommands=" + _fire.Value + ", ForceCommands=" + _force.Value + ") (after " + _gate.Why + " " + Time.realtimeSinceStartup.ToString("0.0") + "s)");
         }
 
         private static bool SceneLoadedByIndex(int i)

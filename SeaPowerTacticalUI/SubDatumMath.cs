@@ -47,7 +47,7 @@ namespace VoiceBotBridge
         public static DxY ToLocal(double lat0, double lon0, double lat, double lon, bool globe)
         {
             double c = globe ? Math.Cos(lat0 * Math.PI / 180) : 1.0;
-            return new DxY((lon - lon0) * 60 * c, (lat - lat0) * 60);
+            return new DxY(GeoLon.DLon(lon0, lon) * 60 * c, (lat - lat0) * 60);
         }
 
         public static void ToGeo(double lat0, double lon0, DxY p, bool globe, out double lat, out double lon)

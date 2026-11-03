@@ -87,7 +87,8 @@ namespace VoiceBotBridge
             {
                 if (Math.Abs(flat[i]) > 90 || Math.Abs(flat[i + 1]) > 180) return null;
                 la0 = Math.Min(la0, flat[i]); la1 = Math.Max(la1, flat[i]);
-                lo0 = Math.Min(lo0, flat[i + 1]); lo1 = Math.Max(lo1, flat[i + 1]);
+                double ll = GeoLon.UnwrapLon(flat[1], flat[i + 1]);   // T-356: one box across the antimeridian (lon1 may exceed 180, width < 180)
+                lo0 = Math.Min(lo0, ll); lo1 = Math.Max(lo1, ll);
             }
             if (!(la1 > la0) || !(lo1 > lo0)) return null;
             return new[] { la0, lo0, la1, lo1 };

@@ -60,6 +60,11 @@ namespace VoiceBotBridge
         // ---- optional (phase E1): the difficulty of the game (the SAM chance against the player's missiles is multiplied by 1 - reduction) ----
         public static readonly MemberSpec GlobalMissileReduction = MemberSpec.Field(Info, "SeaPower.Globals", "_missileInterceptChanceReduction", false, true);
 
+        // ---- optional (T-342 phase E): the seeker type of the air-to-air missiles of a class (the "IR only" mark of a fighter; the encyclopedia is open data, the object of a track is not read) ----
+        public static readonly MemberSpec MweGuidance = MemberSpec.Prop(Info, "SeaPower.MuseumWeaponEntry", "GuidanceType", false);
+        public static readonly MemberSpec MweSecondaryPassive = MemberSpec.Prop(Info, "SeaPower.MuseumWeaponEntry", "SecondaryPassiveRadarGuidanceType", false);
+        public static readonly MemberSpec AmmoSecondaryPassive = MemberSpec.Field(Probe, Amm, "_secondaryPassiveRadarGuidanceType", false);   // only the dev probe op=seeker (the actual load of a track)
+
         // ---- optional: the dev probe (strike_probe): the veto of an auto attack, the missiles in flight and what their seeker holds ----
         public static readonly MemberSpec TaskBase = MemberSpec.Field(Probe, "SeaPower.EngageTask", "_baseObject", false);
         public static readonly MemberSpec TaskTarget = MemberSpec.Field(Probe, "SeaPower.EngageTask", "_targetObject", false);

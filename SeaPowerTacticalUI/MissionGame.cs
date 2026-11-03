@@ -55,7 +55,7 @@ namespace VoiceBotBridge
         // ---------- subscribers ----------
 
         /// <summary>
-        /// The order is the contract. Entered ascending: air_tick(10, subscribed by AirTickFeature) -> sar(20) -> asw(30) -> cap(40) -> identify(50) -> smart_attack(60).
+        /// The order is the contract. Entered ascending: world(0, T-356: the world of the mission before any restore) -> air_tick(10, subscribed by AirTickFeature) -> sar(20) -> asw(30) -> cap(40) -> identify(50) -> smart_attack(60).
         /// Left descending: input(90) -> doctrine(70) -> ... -> sar(20) -> air_tick(10). SAR is cleared before the ASW file (which also holds the SAR part) is restored.
         /// Left only clears fields: the objects of the left mission may already be destroyed.
         /// </summary>
@@ -63,6 +63,7 @@ namespace VoiceBotBridge
         {
             m.MarkerOf = ReadLastSavePath;   // T-198 (ADR-0086): the marker is the base of the observers; the path to restore from is the loaded file
             m.StampOf = LoadedStamp;
+            m.Subscribe(0, "world", e => WorldEnter(), why => WorldLeave());   // T-356 (ADR-0135): the world of the mission is decided before sar 20 / asw 30 / cap 40 / strike 42 restore their orders
             m.Subscribe(20, "sar", e =>
             {
                 if (Sar == null || _sarImpl == null) return;

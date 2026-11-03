@@ -1,4 +1,4 @@
-# Sea Power Tactical UI 0.30.42
+# Sea Power Tactical UI 0.30.43
 
 ## Русский
 

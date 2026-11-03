@@ -41,14 +41,14 @@ namespace VoiceBotBridge.Ui
         /// <summary>Bearing own -> target, degrees 0..360 (flat on stable, x LonK on the beta globe).</summary>
         public static double BearingDeg(double lat, double lon, double tLat, double tLon, bool globe, bool keepCos = FlatWorldKeepsCos)
         {
-            double n = (tLat - lat) * 60.0, e = (tLon - lon) * 60.0 * LonK(lat, tLat, globe, keepCos);
+            double n = (tLat - lat) * 60.0, e = GeoLon.DLon(lon, tLon) * 60.0 * LonK(lat, tLat, globe, keepCos);
             if (Math.Abs(n) < 1e-12 && Math.Abs(e) < 1e-12) return 0;
             return N360(Math.Atan2(e, n) * 180.0 / Math.PI);
         }
 
         public static double DistNm(double lat, double lon, double tLat, double tLon, bool globe, bool keepCos = FlatWorldKeepsCos)
         {
-            double n = (tLat - lat) * 60.0, e = (tLon - lon) * 60.0 * LonK(lat, tLat, globe, keepCos);
+            double n = (tLat - lat) * 60.0, e = GeoLon.DLon(lon, tLon) * 60.0 * LonK(lat, tLat, globe, keepCos);
             return Math.Sqrt(n * n + e * e);
         }
 
@@ -56,7 +56,7 @@ namespace VoiceBotBridge.Ui
         public static double ClosingKn(double ownLat, double ownLon, double ownCourseDeg, double ownKn,
                                        double mLat, double mLon, double mCourseDeg, double mKn, bool globe, bool keepCos = FlatWorldKeepsCos)
         {
-            double n = (mLat - ownLat) * 60.0, e = (mLon - ownLon) * 60.0 * LonK(ownLat, mLat, globe, keepCos);
+            double n = (mLat - ownLat) * 60.0, e = GeoLon.DLon(ownLon, mLon) * 60.0 * LonK(ownLat, mLat, globe, keepCos);
             double d = Math.Sqrt(n * n + e * e);
             if (d < 1e-9) return 0;
             double ln = n / d, le = e / d;

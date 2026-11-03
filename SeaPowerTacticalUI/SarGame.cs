@@ -328,7 +328,7 @@ namespace VoiceBotBridge
                     {
                         var last = list[0];
                         double lk = AswMath.LonK(lat0, last.Lat);   // flat on stable, x LonK on the beta globe (T-348)
-                        double dn = (last.Lat - lat0) * 60.0, de = (last.Lon - lon0) * 60.0 * lk, d = Math.Sqrt(dn * dn + de * de);
+                        double dn = (last.Lat - lat0) * 60.0, de = GeoLon.DLon(lon0, last.Lon) * 60.0 * lk, d = Math.Sqrt(dn * dn + de * de);
                         if (d > 5.0) list.Insert(0, new GeoPt(last.Lat - dn / d * 1.5 / 60.0, last.Lon - de / d * 1.5 / (60.0 * lk)));
                     }
                     _placed.Remove(uid);   // T-318: a failed Goto leaves no stale base

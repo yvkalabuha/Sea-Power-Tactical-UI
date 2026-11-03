@@ -97,7 +97,7 @@ namespace VoiceBotBridge
         public static double SegDistNm(GeoPt a, GeoPt b, GeoPt c)
         {
             double k = AswMath.LonK(a.Lat, b.Lat);
-            double bx = (b.Lat - a.Lat) * 60.0, by = (b.Lon - a.Lon) * 60.0 * k, cx = (c.Lat - a.Lat) * 60.0, cy = (c.Lon - a.Lon) * 60.0 * k;
+            double bx = (b.Lat - a.Lat) * 60.0, by = GeoLon.DLon(a.Lon, b.Lon) * 60.0 * k, cx = (c.Lat - a.Lat) * 60.0, cy = GeoLon.DLon(a.Lon, c.Lon) * 60.0 * k;
             double len2 = bx * bx + by * by;
             double t = len2 < 1e-12 ? 0 : Math.Max(0, Math.Min(1, (cx * bx + cy * by) / len2));
             double dx = cx - t * bx, dy = cy - t * by;

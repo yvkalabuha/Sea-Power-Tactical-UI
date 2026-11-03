@@ -269,7 +269,12 @@ namespace VoiceBotBridge
         private double[] AreaRectOf(AswCommandsParse.AreaCmd cmd, out string tname, out int tuid, out string err)
         {
             tname = null; tuid = 0; err = null;
-            if (cmd.Rect != null) return cmd.Rect;
+            if (cmd.Rect != null)
+            {
+                var rc = (double[])cmd.Rect.Clone();   // T-356 (ADR-0135): the corners are one polygon across the antimeridian (lon may exceed 180)
+                for (int i = 3; i < rc.Length; i += 2) rc[i] = GeoLon.UnwrapLon(rc[1], rc[i]);
+                return rc;
+            }
             AswTarget t = cmd.TargetUid != 0 ? _game.Target(cmd.TargetUid) : _game.SelectedShip();
             if (t == null) { err = "no_target"; return null; }
             var ctr = AswMath.Offset(Pos(t), cmd.Bearing, cmd.DistNm);

@@ -13,4 +13,8 @@
   <ItemGroup Condition="'$(OutputType)' == 'Exe'">
     <AssemblyMetadata Include="LangDir" Value="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)SeaPowerTacticalUI/lang'))" />
   </ItemGroup>
+  <!-- T-356 (ADR-0135): the pure longitude helpers (GeoLon) join every stand (OutputType Exe); the mod takes it with its glob, VoiceBotBridge does not compile it (Common/ inlines the wrap). -->
+  <ItemGroup Condition="'$(OutputType)' == 'Exe'">
+    <Compile Include="$(MSBuildThisFileDirectory)SeaPowerTacticalUI/GeoLon.cs" />
+  </ItemGroup>
 </Project>

@@ -305,8 +305,8 @@ namespace VoiceBotBridge
             var tp = TrackPos(v);
             int contactId = (int)(D(Get(v, "Id")) ?? -1);
             string tcls = Get(Get(v, "Class"), "Value") as string;
-            double tdist = tp == null ? -1 : DistanceNm(lat0, lon0, tp[0], tp[1]);
-            double tbrg = tp == null ? -1 : Bearing(lat0, lon0, tp[0], tp[1]);
+            double tdist = tp == null ? -1 : MetricDistanceNm(lat0, lon0, tp[0], tp[1]);
+            double tbrg = tp == null ? -1 : MetricBearing(lat0, lon0, tp[0], tp[1]);
 
             // 1b. neutral guard (T-079): a neutral surface track in the seeker corridor needs confirm_neutral:true
             string neutralJson;
@@ -488,7 +488,7 @@ namespace VoiceBotBridge
                 double lat0, lon0, h;
                 var tp = TrackPos(torpVehicle);
                 double dist = -1, brg = -1;
-                if (tp != null && OwnPos(u, out lat0, out lon0, out h)) { dist = DistanceNm(lat0, lon0, tp[0], tp[1]); brg = Bearing(lat0, lon0, tp[0], tp[1]); }
+                if (tp != null && OwnPos(u, out lat0, out lon0, out h)) { dist = MetricDistanceNm(lat0, lon0, tp[0], tp[1]); brg = MetricBearing(lat0, lon0, tp[0], tp[1]); }
                 shot = new AtwShot { File = ammoFile, Display = string.IsNullOrEmpty(disp) ? ammoFile : disp, Shots = shots, Before = before, DistNm = dist, BrgDeg = brg, Task = task };
                 return true;
             }

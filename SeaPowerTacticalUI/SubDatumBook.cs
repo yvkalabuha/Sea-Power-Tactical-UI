@@ -209,6 +209,15 @@ namespace VoiceBotBridge
             if (state == "expired") Log("expired id=" + d.Id);
         }
 
+        /// <summary>T-356: the world of the game changed (the decision came after the datum was made): the live sectors get the new frame (the core is in physical nm, only the nm to degrees conversion changes).</summary>
+        public void SetWorld(bool globe)
+        {
+            bool any = false;
+            foreach (SubDatum d in _list)
+                if (d.State == "live" && d.Globe != globe) { d.Globe = globe; any = true; }
+            if (any) Revision++;
+        }
+
         /// <summary>Freeze after RefineS, expire after TtlS, drop grey sectors after FoundCloseS.</summary>
         public void Tick(double nowS)
         {

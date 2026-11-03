@@ -2,7 +2,7 @@
 
 Interface mod for **Sea Power** (BepInEx 5): radar coverage map, air defence / ASW / SAR / CAP windows, strike planner, overview, command ring, range rings. Works on its own: no bot, no network, no microphone. Languages: English, Russian, Chinese.
 
-- Version: **0.30.42** (Sea Power stable, build 261021)
+- Version: **0.30.43** (Sea Power stable, build 261021)
 - Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3827955062
 - Player guide and install: `SeaPowerTacticalUI/README.md`; history: `SeaPowerTacticalUI/CHANGELOG.md`
 - License: GPL-3.0 (`LICENSE`)

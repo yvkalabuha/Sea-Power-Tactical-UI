@@ -252,8 +252,8 @@ namespace VoiceBotBridge
                     sb.Append("{\"lat\":").Append(Json.Num(wps[i][0])).Append(",\"lon\":").Append(Json.Num(wps[i][1]));
                     if (i == 0 && lat0.HasValue && lon0.HasValue)
                     {
-                        sb.Append(",\"bearing_deg\":").Append(Json.Num(Math.Round(Bearing(lat0.Value, lon0.Value, wps[i][0], wps[i][1]), 1)));
-                        sb.Append(",\"distance_nm\":").Append(Json.Num(Math.Round(DistanceNm(lat0.Value, lon0.Value, wps[i][0], wps[i][1]), 2)));
+                        sb.Append(",\"bearing_deg\":").Append(Json.Num(Math.Round(MetricBearing(lat0.Value, lon0.Value, wps[i][0], wps[i][1]), 1)));
+                        sb.Append(",\"distance_nm\":").Append(Json.Num(Math.Round(MetricDistanceNm(lat0.Value, lon0.Value, wps[i][0], wps[i][1]), 2)));
                     }
                     sb.Append('}');
                 }

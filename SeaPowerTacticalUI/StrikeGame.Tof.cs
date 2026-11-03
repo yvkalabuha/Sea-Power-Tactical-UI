@@ -18,7 +18,7 @@ namespace VoiceBotBridge
                     if (m == null || target == null || !_a.Present(StrikeSpecs.SimEstimateShot)) return false;
                     var ap = ApOf(m.Ammo);
                     if (ap == null) return false;
-                    double eastNm = (fromLon - aimLon) * 60.0 * (AswMath.WorldGlobe ? Math.Cos(aimLat * Math.PI / 180.0) : 1.0), northNm = (fromLat - aimLat) * 60.0;
+                    double eastNm = GeoLon.DLon(aimLon, fromLon) * 60.0 * (AswMath.WorldGlobe ? Math.Cos(aimLat * Math.PI / 180.0) : 1.0), northNm = (fromLat - aimLat) * 60.0;
                     var launch = new UnityEngine.Vector3((float)(eastNm * UnitsPerNm), (float)(Math.Max(altFt, 0) / FtPerUnit), (float)(northNm * UnitsPerNm));
                     var aim = UnityEngine.Vector3.zero;
                     double hdg = target.CourseDeg * Math.PI / 180.0, v = target.SpeedKn / OverviewMath.KnPerUnity;

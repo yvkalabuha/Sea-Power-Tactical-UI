@@ -47,6 +47,7 @@ namespace VoiceBotBridge
                         try
                         {
                             if (!t.HasId || !t.Lat.HasValue || !t.Lon.HasValue || t.Kind != "Surface") continue;
+                            _hitFilter.NoteSurface(t.Id);   // T-363: noted before the IsGone skip, so the hits on a ship that has just sunk still count
                             object v;
                             if (snap.VehicleById.TryGetValue(t.Id, out v) && _a.IsGone(v)) continue;
                             var s = new StrikeShip { TrackId = t.Id, Lat = t.Lat.Value, Lon = t.Lon.Value, Side = t.Side, Identified = t.IdentifiedKnown && t.Identified };

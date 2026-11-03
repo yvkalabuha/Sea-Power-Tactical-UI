@@ -54,5 +54,66 @@ namespace VoiceBotBridge
             if (AswMath.WorldGlobe != before) return "world flag not restored";
             return null;
         }
+
+        // T-355: the Common/ geometry follows the same door as the mod (one source of truth: World* of T-354)
+        static partial void MetricDistanceHook(double lat1, double lon1, double lat2, double lon2, ref double nm, ref bool done)
+        { nm = WorldDistanceNm(lat1, lon1, lat2, lon2); done = true; }
+        static partial void MetricBearingHook(double lat1, double lon1, double lat2, double lon2, ref double deg, ref bool done)
+        { deg = WorldBearing(lat1, lon1, lat2, lon2); done = true; }
+        static partial void MetricDestinationHook(double lat1, double lon1, double brgDeg, double distNm, ref double lat2, ref double lon2, ref bool done)
+        { WorldDestination(lat1, lon1, brgDeg, distNm, out lat2, out lon2); done = true; }
+
+        /// <summary>T-355 selfcheck-ui: Common Metric* = World* in both worlds (0/45/60/70); beta = the great circle bit for bit. null = ok.</summary>
+        internal static string WorldMetricSelfTest()
+        {
+            bool before = AswMath.WorldGlobe;
+            foreach (double phi in new[] { 0.0, 45.0, 60.0, 70.0 })
+                foreach (double b in new[] { 0.0, 45.0, 90.0, 225.0 })
+                    foreach (double d in new[] { 0.2, 5.0, 75.0 })
+                    {
+                        Destination(phi, 10, b, d, out double tla, out double tlo);
+                        string tag = phi + "/" + b + "/" + d;
+                        using (AswMath.WorldScope(true))
+                        {
+                            if (MetricDistanceNm(phi, 10, tla, tlo) != DistanceNm(phi, 10, tla, tlo)) return "globe distance " + tag;
+                            if (MetricBearing(phi, 10, tla, tlo) != Bearing(phi, 10, tla, tlo)) return "globe bearing " + tag;
+                            MetricDestination(phi, 10, b, d, out double ml, out double mo);
+                            if (ml != tla || mo != tlo) return "globe destination " + tag;
+                        }
+                        using (AswMath.WorldScope(false))
+                        {
+                            if (MetricDistanceNm(phi, 10, tla, tlo) != WorldGeo.FlatDistanceNm(phi, 10, tla, tlo)) return "flat distance " + tag;
+                            if (MetricBearing(phi, 10, tla, tlo) != WorldGeo.FlatBearing(phi, 10, tla, tlo)) return "flat bearing " + tag;
+                            MetricDestination(phi, 10, b, d, out double ml, out double mo);
+                            WorldGeo.FlatDestination(phi, 10, b, d, out double fl, out double fo);
+                            if (ml != fl || mo != fo) return "flat destination " + tag;
+                        }
+                        foreach (bool g in new[] { true, false })
+                            using (AswMath.WorldScope(g))
+                            {
+                                if (MetricDistanceNm(phi, 10, tla, tlo) != WorldDistanceNm(phi, 10, tla, tlo)) return "world distance " + g + tag;
+                                if (MetricBearing(phi, 10, tla, tlo) != WorldBearing(phi, 10, tla, tlo)) return "world bearing " + g + tag;
+                                MetricDestination(phi, 10, b, d, out double ml, out double mo);
+                                WorldDestination(phi, 10, b, d, out double wl, out double wo);
+                                if (ml != wl || mo != wo) return "world destination " + g + tag;
+                            }
+                    }
+            // restore-course scenario: flat world, 70 deg, course 45, 75 nm
+            using (AswMath.WorldScope(false))
+            {
+                foreach (double phi in new[] { 0.0, 70.0 })
+                {
+                    MetricDestination(phi, 10, 45, 75, out double rl, out double ro);
+                    double flat = WorldGeo.FlatBearing(phi, 10, rl, ro);
+                    Destination(phi, 10, 45, 75, out double sl, out double so);
+                    double sph = WorldGeo.FlatBearing(phi, 10, sl, so);
+                    if (Math.Abs(flat - 45.0) > 1e-9) return "restore course flat " + phi + ": " + flat;
+                    if (phi == 70.0 && Math.Abs(sph - 45.0) <= 20.0) return "restore contrast 70: " + sph;
+                    if (phi == 0.0 && Math.Abs(sph - 45.0) >= 0.5) return "restore contrast 0: " + sph;
+                }
+            }
+            if (AswMath.WorldGlobe != before) return "world flag not restored";
+            return null;
+        }
     }
 }

@@ -114,7 +114,7 @@ namespace VoiceBotBridge
             Rec r;
             if (!_r.TryGetValue(trackId, out r) || nowS < r.LastS) { _r[trackId] = new Rec { Lat = lat, Lon = lon, SinceS = nowS, LastS = nowS }; return; }
             r.LastS = nowS;
-            double dy = (lat - r.Lat) * 60.0, dx = (lon - r.Lon) * 60.0 * (Globe ? Math.Cos(lat * Math.PI / 180.0) : 1.0);
+            double dy = (lat - r.Lat) * 60.0, dx = GeoLon.DLon(r.Lon, lon) * 60.0 * (Globe ? Math.Cos(lat * Math.PI / 180.0) : 1.0);
             if (Math.Sqrt(dx * dx + dy * dy) > SameNm) { r.Lat = lat; r.Lon = lon; r.SinceS = nowS; r.MovedS = nowS; }
         }
 
@@ -168,7 +168,7 @@ namespace VoiceBotBridge
         public bool Globe;
         private static double DistNm(double lat1, double lon1, double lat2, double lon2, bool globe)
         {
-            double dy = (lat2 - lat1) * 60.0, dx = (lon2 - lon1) * 60.0 * (globe ? Math.Cos(lat1 * Math.PI / 180.0) : 1.0);
+            double dy = (lat2 - lat1) * 60.0, dx = GeoLon.DLon(lon1, lon2) * 60.0 * (globe ? Math.Cos(lat1 * Math.PI / 180.0) : 1.0);
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
@@ -201,7 +201,7 @@ namespace VoiceBotBridge
             else if (dist > 0)
             {
                 double f = step / dist;
-                r.Lat += (ownLat - r.Lat) * f; r.Lon += (ownLon - r.Lon) * f;
+                r.Lat += (ownLat - r.Lat) * f; r.Lon += GeoLon.DLon(r.Lon, ownLon) * f;
             }
             r.TS = nowS;
             if (double.IsNaN(r.InterceptS) && DistNm(r.Lat, r.Lon, ownLat, ownLon, Globe) <= InterceptNm) r.InterceptS = nowS;

@@ -125,6 +125,8 @@
     <Compile Include="AswT343Tests.cs" />   <!-- T-343 -->
     <Compile Include="AswT344Tests.cs;AswT344Deck.cs" />   <!-- T-344 -->
     <Compile Include="AswT346Tests.cs" />   <!-- T-346 -->
+    <Compile Include="AswT356Tests.cs" />   <!-- T-356 -->
+    <Compile Include="AswT362Tests.cs" />   <!-- T-362 -->
     <Compile Include="AswT176Tests.cs" />   <!-- T-176 -->
     <Compile Include="AswT322Tests.cs" />   <!-- T-322 -->
     <Compile Include="AswT331Tests.cs;AswT331RetreatTests.cs" />   <!-- T-331 -->

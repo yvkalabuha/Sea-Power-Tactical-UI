@@ -46,6 +46,7 @@ namespace VoiceBotBridge
             sets.Add(SpecSet.Of("save_hook", typeof(SaveHookSpecs)));   // T-198
             sets.Add(SpecSet.Of("buoy_revive", typeof(BuoyReviveSpecs)));   // T-094
             sets.Add(SpecSet.Of("sub_datum", typeof(SubDatumSpecs)));   // T-288
+            sets.Add(SpecSet.Of("qa_force", typeof(QaForceSpecs)));   // T-361: dev force scenarios (all optional)
         }
     }
 }

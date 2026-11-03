@@ -166,7 +166,7 @@ namespace VoiceBotBridge
 
         private static void Local(GeoPt o, GeoPt p, out double x, out double y)
         {
-            x = (p.Lon - o.Lon) * 60 * (AswMath.WorldGlobe ? Math.Cos(o.Lat * Math.PI / 180) : 1.0); y = (p.Lat - o.Lat) * 60;   // T-352
+            x = GeoLon.DLon(o.Lon, p.Lon) * 60 * (AswMath.WorldGlobe ? Math.Cos(o.Lat * Math.PI / 180) : 1.0); y = (p.Lat - o.Lat) * 60;   // T-352
         }
 
         /// <summary>p within tolNm of any segment of pts (one point = the distance to it); bbox prefilter.</summary>
@@ -174,9 +174,11 @@ namespace VoiceBotBridge
         {
             if (pts == null || pts.Count == 0) return false;
             double minLat = double.MaxValue, maxLat = double.MinValue, minLon = double.MaxValue, maxLon = double.MinValue;
-            foreach (var q in pts) { minLat = Math.Min(minLat, q.Lat); maxLat = Math.Max(maxLat, q.Lat); minLon = Math.Min(minLon, q.Lon); maxLon = Math.Max(maxLon, q.Lon); }
+            double ref0 = pts[0].Lon;   // T-356: the box is continuous across the antimeridian (UnwrapLon returns the same bits inside 180 deg)
+            foreach (var q in pts) { double ql = GeoLon.UnwrapLon(ref0, q.Lon); minLat = Math.Min(minLat, q.Lat); maxLat = Math.Max(maxLat, q.Lat); minLon = Math.Min(minLon, ql); maxLon = Math.Max(maxLon, ql); }
+            double pLon = GeoLon.UnwrapLon(ref0, p.Lon);
             double dLat = tolNm / 60, dLon = tolNm / (60 * Math.Max(0.05, AswMath.WorldGlobe ? Math.Cos(p.Lat * Math.PI / 180) : 1.0));
-            if (p.Lat < minLat - dLat || p.Lat > maxLat + dLat || p.Lon < minLon - dLon || p.Lon > maxLon + dLon) return false;
+            if (p.Lat < minLat - dLat || p.Lat > maxLat + dLat || pLon < minLon - dLon || pLon > maxLon + dLon) return false;
             if (pts.Count == 1) { double x0, y0; Local(p, pts[0], out x0, out y0); return Math.Sqrt(x0 * x0 + y0 * y0) <= tolNm; }
             for (int i = 0; i + 1 < pts.Count; i++)
             {

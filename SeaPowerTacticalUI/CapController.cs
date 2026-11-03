@@ -763,7 +763,7 @@ namespace VoiceBotBridge
                 var pos = _g.UnitPos(z.AnchorUid);
                 if (pos == null) return "!anchor_lost";
                 z.OffLat = (z.Rect[0] + z.Rect[2]) / 2 - pos.Value.Lat;
-                z.OffLon = (z.Rect[1] + z.Rect[3]) / 2 - pos.Value.Lon;
+                z.OffLon = GeoLon.DLon(pos.Value.Lon, GeoLon.MidLon(z.Rect[1], z.Rect[3]));
             }
             if (g.Kind == "alert") SwitchToPatrol(g);
             if (cmd.AcceptAlert >= 0) g.AcceptAlert = cmd.AcceptAlert == 1;
@@ -781,7 +781,7 @@ namespace VoiceBotBridge
                 if (m.Airborne && m.Leaving == null) { string prev; if (_g.SetRoe(m.Uid, g.Roe, out prev) == null) { if (!m.RoeSet) m.PrevRoe = prev; m.RoeSet = true; } }   // T-175: not a bird that flies home on hold
             }
             // zone_far hint: a type whose range cannot cover the trip
-            var centre = new GeoPt((z.Rect[0] + z.Rect[2]) / 2, (z.Rect[1] + z.Rect[3]) / 2);
+            var centre = new GeoPt((z.Rect[0] + z.Rect[2]) / 2, GeoLon.MidLon(z.Rect[1], z.Rect[3]));
             var seen = new HashSet<string>();
             foreach (var b in _g.Birds() ?? new List<CapBird>())
             {
@@ -791,7 +791,7 @@ namespace VoiceBotBridge
                 double dist = AswMath.DistNm(deck ?? new GeoPt(b.Lat, b.Lon), centre);
                 if (CapMath.ZoneHours(b.MaxRangeNm, dist, b.PatrolKn) <= 0) Warn(g, "zone_far", b.Type);
             }
-            double w = (z.Rect[3] - z.Rect[1]) * 60.0 * AswMath.LonK(z.Rect[0], z.Rect[2]), h = (z.Rect[2] - z.Rect[0]) * 60.0;
+            double w = GeoLon.DLon(z.Rect[1], z.Rect[3]) * 60.0 * AswMath.LonK(z.Rect[0], z.Rect[2]), h = (z.Rect[2] - z.Rect[0]) * 60.0;
             Log("order " + g.Name + " zone " + F(w) + "x" + F(h) + " nm N=" + g.N + " K=" + (g.K < 0 ? "auto" : g.K.ToString()) + " roe=" + g.Roe + " anchor=" + z.Anchor
                 + (g.I != null ? " intercept=" + (g.I.On ? "on margin_nm=" + F(g.I.MarginNm) + " per_target=" + g.I.PerTarget + " keep=" + g.I.Keep + " targets=" + g.I.Targets + " speed=" + g.I.Speed : "off") : ""));
             Evt("cap_started", "{\"group\":" + Q(g.Name) + ",\"n\":" + g.N + ",\"k\":" + g.K + ",\"anchor\":" + Q(z.Anchor) + "}");
@@ -1219,7 +1219,7 @@ namespace VoiceBotBridge
             CapLane lane;
             if (m.Slot >= 0 && m.Slot < lanes.Count) lane = lanes[m.Slot];
             else if (m.Slot < 0 && g.Zone.Rect != null && g.Zone.Rect.Length >= 4)
-                lane = new CapLane { Slot = -1, Orbit = true, Center = new GeoPt((g.Zone.Rect[0] + g.Zone.Rect[2]) / 2, (g.Zone.Rect[1] + g.Zone.Rect[3]) / 2) };
+                lane = new CapLane { Slot = -1, Orbit = true, Center = new GeoPt((g.Zone.Rect[0] + g.Zone.Rect[2]) / 2, GeoLon.MidLon(g.Zone.Rect[1], g.Zone.Rect[3])) };
             else return;
             if (lane.Track == null) lane.Track = new List<GeoPt> { lane.Center };
             string sig = RouteSig(lane, g.P);
@@ -1657,7 +1657,7 @@ namespace VoiceBotBridge
                 if (g.Kind == "alert") foreach (var lr in g.Lent) gv.Lent.Add(new KeyValuePair<int, string>(lr.M.Uid, lr.To));
                 if (g.Kind == "alert" && g.A != null && g.A.Level == "hangar") gv.ReadyNow = Math.Min(gv.ReadyNow, g.A.Ready);
                 gv.ScrambleBlock = g.Kind != "alert" || !g.Ordered ? "not_alert" : (gv.ReadyNow == 0 ? "no_ready" : null);
-                double w = g.Zone.Rect == null ? 0 : (g.Zone.Rect[3] - g.Zone.Rect[1]) * 60.0 * AswMath.LonK(g.Zone.Rect[0], g.Zone.Rect[2]), h = g.Zone.Rect == null ? 0 : (g.Zone.Rect[2] - g.Zone.Rect[0]) * 60.0;
+                double w = g.Zone.Rect == null ? 0 : GeoLon.DLon(g.Zone.Rect[1], g.Zone.Rect[3]) * 60.0 * AswMath.LonK(g.Zone.Rect[0], g.Zone.Rect[2]), h = g.Zone.Rect == null ? 0 : (g.Zone.Rect[2] - g.Zone.Rect[0]) * 60.0;
                 gv.Line = new CapGroupLine { Group = g.Name, WNm = w, HNm = h, OnStation = on, N = g.N, Relieving = rel, Ready = ready, NextReliefS = nextRelief, GapS = g.GapS,
                                              DeckPriority = g.Prio, Warns = new List<string>(g.Warns) };
                 v.Groups.Add(gv);

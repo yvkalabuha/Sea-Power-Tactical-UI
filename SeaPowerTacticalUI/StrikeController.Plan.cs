@@ -102,8 +102,8 @@ namespace VoiceBotBridge
             var airborne = air.Where(a => a.Airborne).ToList();
             double now = _g.Now;
             GeoPt from = air.Count == 0 ? new GeoPt(main.Lat, main.Lon) : airborne.Count == 0
-                ? new GeoPt(air.Average(a => a.Lat), air.Average(a => a.Lon))
-                : new GeoPt(airborne.Average(a => a.Lat), airborne.Average(a => a.Lon));
+                ? new GeoPt(air.Average(a => a.Lat), GeoLon.MeanLon(air.Select(a => a.Lon)))
+                : new GeoPt(airborne.Average(a => a.Lat), GeoLon.MeanLon(airborne.Select(a => a.Lon)));
             int sim = 0, rough = 0, prof = 0, profEx = 0;   // T-350: prof = calls answered by a flight profile, profEx = of them below its measured part
             if (!o.Queued)
                 foreach (string wa in _tofs.NeedWarm(air.SelectMany(a => a.Missiles.Where(StrikeAirMath.IsStrikeMissile).Select(m => m.Ammo)).Where(a => !_warmFailed.Contains(a)))) WarmOne(wa);   // review of phase B: one cold call per missile type, not inside the plan

@@ -38,6 +38,7 @@
     <Compile Include="../SeaPowerTacticalUI/StrikeTofCache.cs" />
     <Compile Include="../SeaPowerTacticalUI/StrikeExecMath.cs" />
     <Compile Include="../SeaPowerTacticalUI/StrikeMslCache.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeHitFilter.cs" />
     <Compile Include="../SeaPowerTacticalUI/StrikeEwMath.cs" />
     <Compile Include="../SeaPowerTacticalUI/StrikeEwFighterMath.cs" />
     <Compile Include="../SeaPowerTacticalUI/StrikeController.EwFighter.cs" />

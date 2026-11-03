@@ -50,9 +50,11 @@ namespace VoiceBotBridge
             if (a == "t319") return Report("t319" + (args.Length > 1 ? " " + args[1] : ""), CapT319Tests.Run(args.Length > 1 ? args[1] : null));
             if (a == "t325") return Report("t325" + (args.Length > 1 ? " " + args[1] : ""), CapT325Tests.Run(args.Length > 1 ? args[1] : null));
             if (a == "t331") return Report("t331" + (args.Length > 1 ? " " + args[1] : ""), CapT331Tests.Run(args.Length > 1 ? args[1] : null));   // T-331
+            if (a == "t362") return Report("t362" + (args.Length > 1 ? " " + args[1] : ""), CapT362Tests.Run(args.Length > 1 ? args[1] : null));   // T-362
             if (a == "lat") return Report("lat", CapLatTests.Run());   // T-348
             if (a == "icpt") return Report("icpt", CapInterceptMath.SelfTest());   // T-333
             if (a == "ff") return Report("ff", CapFfMath.SelfTest());
+            if (a == "qaforce") return Report("qaforce", QaForceMath.SelfTest());   // T-361
             if (a == "t333") return Report("t333" + (args.Length > 1 ? " " + args[1] : ""), CapT333Tests.Run(args.Length > 1 ? args[1] : null));
             if (a == "t333-ff") return Report("t333-ff" + (args.Length > 1 ? " " + args[1] : ""), CapT333FfTests.Run(args.Length > 1 ? args[1] : null));
             if (a == "t330") return Report("t330" + (args.Length > 1 ? " " + args[1] : ""), CapT330Tests.Run(args.Length > 1 ? args[1] : null));
@@ -87,6 +89,7 @@ namespace VoiceBotBridge
             if (all) bad += Report("t241", CapT241Tests.Run());
             if (all) bad += Report("icpt", CapInterceptMath.SelfTest());
             if (all) bad += Report("ff", CapFfMath.SelfTest());
+            if (all) bad += Report("qaforce", QaForceMath.SelfTest());   // T-361
             if (all) bad += Report("lat", CapLatTests.Run());
             if (all) bad += Report("t333", CapT333Tests.Run());
             if (all) bad += Report("t333-ff", CapT333FfTests.Run());
@@ -115,7 +118,39 @@ namespace VoiceBotBridge
                 using (AswMath.WorldScope(true)) Globe(lat);
                 using (AswMath.WorldScope(false)) Flat(lat);
             }
+            Antimeridian();
             return _err;
+        }
+
+        /// <summary>T-356: a zone 179.5..180.5 deg at 60 N gives the lanes, distances, centre and circle of the zone shifted by -10 deg.</summary>
+        private static void Antimeridian()
+        {
+            foreach (bool globe in new[] { false, true })
+                using (AswMath.WorldScope(globe))
+                {
+                    string t = " antimeridian globe=" + globe;
+                    var zw = new CapZone { Rect = new[] { 60.0, 179.5, 61.0, 180.5 } };
+                    var zs = new CapZone { Rect = new[] { 60.0, 169.5, 61.0, 170.5 } };
+                    var p = new CapParams();
+                    var lw = CapMath.Lanes(zw, 2, p, 8); var ls = CapMath.Lanes(zs, 2, p, 8);
+                    True("lanes count" + t, lw.Count == 2 && ls.Count == 2);
+                    if (lw.Count == 2 && ls.Count == 2)
+                        for (int i = 0; i < 2; i++)
+                        {
+                            Near("lane centre lat" + i + t, lw[i].Center.Lat, ls[i].Center.Lat, 1e-9);
+                            Near("lane centre lon" + i + t, GeoLon.DLon(lw[i].Center.Lon, ls[i].Center.Lon + 10.0), 0, 1e-9);
+                        }
+                    foreach (var q in new[] { new GeoPt(60.5, -179.95), new GeoPt(60.5, 179.7), new GeoPt(62.0, -179.5), new GeoPt(60.5, -178.5) })
+                        Near("DistToZoneNm " + q.Lon + t, CapMath.DistToZoneNm(q, zw), CapMath.DistToZoneNm(new GeoPt(q.Lat, GeoLon.WrapLon(q.Lon) - 10.0), zs), 1e-6);
+                    True("inside" + t, CapMath.DistToZoneNm(new GeoPt(60.5, -179.95), zw) == 0);
+                    var circ = CapMath.Lanes(new CapZone { Rect = new[] { 60.0, 179.9, 60.1, 180.1 } }, 1, p, 8);
+                    if (circ.Count == 1 && circ[0].Circle)
+                        True("OnCircle" + t, CapMath.OnCircle(new GeoPt(circ[0].Center.Lat, GeoLon.WrapLon(circ[0].Center.Lon)), circ[0], p));
+                }
+            string err;
+            var d = (Dictionary<string, object>)Json.Parse("{\"group\":\"G\",\"rect\":[60,179.5,61,-179.5]}");
+            CapOrderCmd o = CapCommands.ParseOrder(d, out err);
+            True("parse rect4" + err, o != null && err == null && Math.Abs(o.Zone.Rect[1] - 179.5) < 1e-12 && Math.Abs(o.Zone.Rect[3] - 180.5) < 1e-9);
         }
 
         private static void Globe(double lat)
@@ -127,7 +162,7 @@ namespace VoiceBotBridge
             double[] r = CapCommands.PolarRect(origin, cmd);
             double wNm = AswMath.GreatCircleNm(new GeoPt(lat, r[1]), new GeoPt(lat, r[3]));
             double hNm = AswMath.GreatCircleNm(new GeoPt(r[0], 10.0), new GeoPt(r[2], 10.0));
-            Near("polar w" + t, wNm / 40, 1, 0.015); Near("polar h" + t, hNm / 20, 1, 0.015);
+            Near("polar w" + t, wNm / 40, 1, 0.005); Near("polar h" + t, hNm / 20, 1, 0.005);
             var z = new CapZone { Rect = r };
             // an east-west strip layout stays inside the zone and evenly spaced in true nm
             var p = new CapParams();
@@ -138,11 +173,11 @@ namespace VoiceBotBridge
                     True("lane inside" + t, g.Lat >= r[0] - 1e-9 && g.Lat <= r[2] + 1e-9 && g.Lon >= r[1] - 1e-9 && g.Lon <= r[3] + 1e-9);
             // leave distance: 5 true nm east of the zone
             var east = AswMath.Offset(new GeoPt((r[0] + r[2]) / 2, r[3]), 90, 5);
-            Near("dist east" + t, CapMath.DistToZoneNm(east, z) / 5, 1, 0.015);
+            Near("dist east" + t, CapMath.DistToZoneNm(east, z) / 5, 1, 0.005);
             // circle lane points lie on the radius
             var lane = new CapLane { Center = new GeoPt(lat, 10.0), Circle = true, StartDeg = 0, RadiusNm = 6 };
             var route = CapMath.CircleRouteFrom(lane, 0, 6, 1, p);
-            foreach (var g in route) Near("circle radius" + t, AswMath.GreatCircleNm(lane.Center, g) / 6, 1, 0.015);
+            foreach (var g in route) Near("circle radius" + t, AswMath.GreatCircleNm(lane.Center, g) / 6, 1, 0.005);
             True("on circle" + t, CapMath.OnCircle(route[0], lane, p));
             // intercept lead point: an eastbound raid 40 nm east flying west; ip is on the line to the target
             var bird = new GeoPt(lat, 10.0);

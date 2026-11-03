@@ -2,20 +2,20 @@ using System;
 
 namespace VoiceBotBridge
 {
-    /// <summary>T-354: the flat world of stable 261021 (GeoPosition): 1 deg = 60 nm on both axes, no cos(lat), no wrap of dLon
+    /// <summary>T-354: the flat world of stable 261021 (GeoPosition): 1 deg = 60 nm on both axes, no cos(lat), dLon through GeoLon (T-356)
     /// (as CoverageMath flat). The sphere stays in Common/GameApi (beta); WorldGeoGame picks by the world flag.</summary>
     internal static class WorldGeo
     {
         public static double FlatDistanceNm(double lat1, double lon1, double lat2, double lon2)
         {
-            double n = (lat2 - lat1) * 60.0, e = (lon2 - lon1) * 60.0;   // T-354: flat world
+            double n = (lat2 - lat1) * 60.0, e = GeoLon.DLon(lon1, lon2) * 60.0;   // T-354: flat world; T-356: across the antimeridian
             return Math.Sqrt(n * n + e * e);
         }
 
         /// <summary>0..360, clockwise from north.</summary>
         public static double FlatBearing(double lat1, double lon1, double lat2, double lon2)
         {
-            double n = (lat2 - lat1) * 60.0, e = (lon2 - lon1) * 60.0;   // T-354: flat world
+            double n = (lat2 - lat1) * 60.0, e = GeoLon.DLon(lon1, lon2) * 60.0;   // T-354: flat world; T-356: across the antimeridian
             return (Math.Atan2(e, n) * 180.0 / Math.PI + 360.0) % 360.0;
         }
 
@@ -47,6 +47,10 @@ namespace VoiceBotBridge
             }
             FlatDestination(60, 179.9, 90, 60, out _, out double wrap);
             if (Math.Abs(wrap - (-179.1)) > 1e-9) return "longitude wrap: " + wrap;
+            // T-356: across the antimeridian = the same as the shifted pair
+            if (Math.Abs(FlatDistanceNm(60, 179.9, 60, -179.9) - FlatDistanceNm(60, 179.9, 60, 180.1)) > 1e-9) return "distance across 180";
+            if (Math.Abs(FlatBearing(60, 179.9, 60, -179.9) - 90.0) > 1e-9) return "bearing across 180";
+            if (Math.Abs(FlatBearing(60, -179.9, 60, 179.9) - 270.0) > 1e-9) return "bearing across 180 (west)";
             return null;
         }
     }

@@ -72,6 +72,7 @@
     <Compile Include="../SeaPowerTacticalUI/CapFfMath.cs" />   <!-- T-333 -->
     <Compile Include="../SeaPowerTacticalUI/CapFfGuard.cs" />   <!-- T-333 -->
     <Compile Include="CapT333Tests.cs" />   <!-- T-333 -->
+    <Compile Include="CapT362Tests.cs" />   <!-- T-362 -->
     <Compile Include="CapT333FfTests.cs" />   <!-- T-333 -->
     <Compile Include="CapT326Tests.cs" />   <!-- T-326 -->
     <Compile Include="CapT328Tests.cs" />   <!-- T-328 -->
@@ -83,5 +84,6 @@
     <Compile Include="AirRadarFakeIo.cs" />   <!-- T-241 -->
     <Compile Include="CapT241Tests.cs" />   <!-- T-241 -->
     <Compile Include="CapT179LendTests.cs" />
+    <Compile Include="../SeaPowerTacticalUI/QaForceMath.cs" />   <!-- T-361 -->
   </ItemGroup>
 </Project>

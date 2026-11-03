@@ -13,7 +13,7 @@ namespace VoiceBotBridge
         private static List<object> Arr(object o) { return StrikeT341CtlTests.Arr(o); }
         private static readonly bool Trace = Environment.GetEnvironmentVariable("STRIKE_TRACE") != null;
 
-        public static readonly string[] Names = { "ewf-threat-ctl", "ewf-on", "ewf-prio", "ewf-standoff", "ewf-reserve", "ewf-view", "ewf-save", "ewf-budget" };
+        public static readonly string[] Names = { "ewf-threat-ctl", "ewf-on", "ewf-prio", "ewf-standoff", "ewf-reserve", "ewf-view", "ewf-save", "ewf-budget", "ewf-ir" };
 
         public static string Dispatch(string n)
         {
@@ -31,6 +31,7 @@ namespace VoiceBotBridge
                     case "ewf-view": return View();
                     case "ewf-save": return Save();
                     case "ewf-budget": return Budget();
+                    case "ewf-ir": return IrMark();
                 }
             }
             finally { StrikeController.DefaultGoal = saved; }
@@ -340,6 +341,32 @@ namespace VoiceBotBridge
             string raw = w.Ctl.ViewJson(20);
             if (raw.Contains("target_jammers")) return "target_jammers is dev only";
             if (!Arr(j["ew_notes"]).Cast<object>().Any(x => ((string)x).StartsWith("ewf_on:6:4021"))) return "ew_notes";
+            return null;
+        }
+
+        /// <summary>T-342 E (S4): the IR mark is the flag of the class that the game layer sets (StrikeFighter.IrOnly); the controller carries it to the threat list, the JSON and the window row. A mixed class has no mark.</summary>
+        private static string IrMark()
+        {
+            var w = Start(2);
+            string e = Launch(w); if (e != null) return e;
+            w.Step(400, () => w.St(6) == "to_station" || w.St(6) == "on_station");
+            var ir = Inbound(w, 4031, 70, 300, 0); ir.ClassIni = "wp_mig-23ms"; ir.ClassName = "MiG-23MS"; ir.IrOnly = true;
+            var mixed = Inbound(w, 4032, 75, 300, 30); mixed.ClassIni = "wp_mig-21"; mixed.ClassName = "MiG-21"; mixed.IrOnly = false;
+            w.Step(4);
+            var j = (Dictionary<string, object>)Arr(Obj(w.Ctl.ViewJson(20))["groups"])[0];
+            var th = Arr(j["fighter_threats"]).Cast<Dictionary<string, object>>().ToList();
+            var a = th.FirstOrDefault(x => (x["tgt"] as double?) == 4031); var b = th.FirstOrDefault(x => (x["tgt"] as double?) == 4032);
+            if (a == null || b == null) return "both fighters are threats " + th.Count;
+            if (!(a["ir_only"] is bool) || !(bool)a["ir_only"]) return "the IR class has the mark";
+            if (!(b["ir_only"] is bool) || (bool)b["ir_only"]) return "the mixed class has no mark";
+            var tl = w.Grp.FighterThreats;   // the source of the window rows (StrikeController.WinView)
+            if (!tl.First(x => x.F.TrackId == 4031).F.IrOnly || tl.First(x => x.F.TrackId == 4032).F.IrOnly) return "threat list flags";
+            // no data (the game layer could not read the seekers) = no mark, not a guess
+            var none = Inbound(w, 4033, 80, 300, -30); none.ClassIni = "wp_x"; none.ClassName = "X";
+            w.Step(3);
+            j = (Dictionary<string, object>)Arr(Obj(w.Ctl.ViewJson(20))["groups"])[0];
+            var c = Arr(j["fighter_threats"]).Cast<Dictionary<string, object>>().FirstOrDefault(x => (x["tgt"] as double?) == 4033);
+            if (c == null || (bool)c["ir_only"]) return "unknown class has no mark";
             return null;
         }
 

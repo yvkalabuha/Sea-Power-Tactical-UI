@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using VoiceBotBridge.Ui;
 using System.Runtime.CompilerServices;
 
 namespace VoiceBotBridge
@@ -92,6 +93,7 @@ namespace VoiceBotBridge
                     case "fire": return ProbeFire(g, uid, tid, ammo, Int(cmd, "salvo", 1));
                     case "tof": return ProbeTof(g, uid, tid, ammo);
                     case "limit": return ProbeLimit(tid);
+                    case "seeker": return ProbeSeeker(tid);
                     case "ew":
                     {
                         object onv; bool? onEw = cmd.TryGetValue("on", out onv) && onv is bool ? (bool?)(bool)onv : null;
@@ -135,6 +137,46 @@ namespace VoiceBotBridge
             StrikeLog("[Strike] strike probe limit tgt=" + tid.ToString(CultureInfo.InvariantCulture) + " limit=" + (limit.HasValue ? Math.Round(limit.Value, 1).ToString(CultureInfo.InvariantCulture) : "-") + " max=" + (max.HasValue ? Math.Round(max.Value, 1).ToString(CultureInfo.InvariantCulture) : "-")
                       + " last=" + (last.HasValue ? Math.Round(last.Value, 1).ToString(CultureInfo.InvariantCulture) : "-") + " frac=" + (frac.HasValue ? Math.Round(frac.Value, 3).ToString(CultureInfo.InvariantCulture) : "-"));
             return "{\"ok\":true,\"op\":\"limit\",\"tgt\":" + tid.ToString(CultureInfo.InvariantCulture) + ",\"limit\":" + n(limit) + ",\"max_limit\":" + n(max) + ",\"last_dmg\":" + n(last) + ",\"frac\":" + n(frac) + ",\"destroyed\":" + Json.Bool(destroyed) + ",\"src\":\"dev\"}";
+        }
+
+        /// <summary>T-342 E (DEV ONLY, for the live check of the IR mark): the class view (what the window uses: the encyclopedia of the class) against the actual load of the object behind a track (ObjAmmoCounts + the seeker of each air-to-air round).
+        /// The player never sees the actual load. Answer {class_ir_only, class_seekers, actual[{ammo, seeker, n}], actual_ir_only}.</summary>
+        private string ProbeSeeker(int tid)
+        {
+            if (tid < 0) return "!bad_args|target_id";
+            var cv = FindContact(tid);
+            var obj = cv == null ? null : Get(cv, CoreSpecs.VehObject);
+            if (obj == null) return "!no_target";
+            string ini = RrClassIniName(tid);
+            var cls = ClassAamSeekers(ini);
+            var codes = new List<string>();
+            var sb = new System.Text.StringBuilder();
+            int n = 0;
+            try
+            {
+                var dict = Get(obj, StrikeSpecs.ObjAmmoCounts) as IEnumerable;
+                if (dict != null && Present(StrikeSpecs.AmmoGetShared))
+                    foreach (var kv in dict)
+                    {
+                        string name = Get(kv, CoreSpecs.PairKey) as string;
+                        int cnt = (int)(D(Get(kv, CoreSpecs.PairValue)) ?? 0);
+                        if (string.IsNullOrEmpty(name) || cnt <= 0) continue;
+                        var ap = CallStatic(StrikeSpecs.AmmoGetShared, name);
+                        if (ap == null) continue;
+                        if (RrTarget(Get(ap, StrikeSpecs.AmmoTargetType)) != RingTarget.Aaw) continue;
+                        object g = Get(ap, StrikeSpecs.AmmoGuidance), mc = Present(StrikeSpecs.AmmoMidCourse) ? Get(ap, StrikeSpecs.AmmoMidCourse) : null, sp = Present(StrikeSpecs.AmmoSecondaryPassive) ? Get(ap, StrikeSpecs.AmmoSecondaryPassive) : null;
+                        string code = StrikeEwFighterMath.SeekerCode(g == null ? null : g.ToString(), sp == null ? null : sp.ToString(), mc == null ? null : mc.ToString());
+                        if (code == null) continue;
+                        codes.Add(code);
+                        if (n++ > 0) sb.Append(',');
+                        sb.Append("{\"ammo\":" + Json.Str(name) + ",\"seeker\":" + Json.Str(code) + ",\"n\":" + cnt.ToString(CultureInfo.InvariantCulture) + "}");
+                    }
+            }
+            catch (Exception) { }
+            string clsText = cls == null ? "null" : Json.Str(StrikeEwFighterMath.SeekersText(cls));
+            StrikeLog("[Strike] strike probe seeker tgt=" + tid.ToString(CultureInfo.InvariantCulture) + " ini=" + (ini ?? "-") + " class=" + (cls == null ? "not_ready" : StrikeEwFighterMath.SeekersText(cls)) + " actual=" + StrikeEwFighterMath.SeekersText(codes));
+            return "{\"ok\":true,\"op\":\"seeker\",\"tgt\":" + tid.ToString(CultureInfo.InvariantCulture) + ",\"ini\":" + (ini == null ? "null" : Json.Str(ini)) + ",\"class_seekers\":" + clsText + ",\"class_ir_only\":" + Json.Bool(StrikeEwFighterMath.IrOnly(cls))
+                 + ",\"actual\":[" + sb + "],\"actual_ir_only\":" + Json.Bool(StrikeEwFighterMath.IrOnly(codes)) + ",\"src\":\"dev\"}";
         }
 
         private string ProbeFire(IStrikeGame g, int uid, int tid, string ammo, int salvo)

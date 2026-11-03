@@ -519,8 +519,9 @@ namespace VoiceBotBridge
             double kn = b.PatrolKn > 100 ? b.PatrolKn : 420;
             double vx = tgt.SpeedKn * Math.Sin(tgt.CourseDeg * Math.PI / 180.0), vy = tgt.SpeedKn * Math.Cos(tgt.CourseDeg * Math.PI / 180.0);
             double ixn, iyn;
-            bool lead = CapMath.LeadPoint((tgt.Lon - pos.Lon) * 60.0 * AswMath.LonK(pos.Lat, tgt.Lat), (tgt.Lat - pos.Lat) * 60.0, vx, vy, kn, out ixn, out iyn);
-            GeoPt ip = lead ? new GeoPt(pos.Lat + iyn / 60.0, pos.Lon + ixn / (60.0 * AswMath.LonK(pos.Lat, tgt.Lat))) : new GeoPt(tgt.Lat, tgt.Lon);
+            bool lead = CapMath.LeadPoint(GeoLon.DLon(pos.Lon, tgt.Lon) * 60.0 * AswMath.LonK(pos.Lat, tgt.Lat), (tgt.Lat - pos.Lat) * 60.0, vx, vy, kn, out ixn, out iyn);
+            double ipLat = pos.Lat + iyn / 60.0;   // T-362: K of the segment pos -> ip
+            GeoPt ip = lead ? new GeoPt(ipLat, pos.Lon + ixn / (60.0 * AswMath.LonK(pos.Lat, ipLat))) : new GeoPt(tgt.Lat, tgt.Lon);
             string err = _g.Patrol(m.Uid, new List<GeoPt> { ip }, (int)g.P.PatrolAltFt);
             Dbg("alert guide uid=" + m.Uid + " target=" + tgt.Id + " nm=" + F(td) + " " + (lead ? "lead" : "pursuit") + " -> " + (err ?? "ok"));
         }

@@ -238,7 +238,7 @@ namespace VoiceBotBridge
                 if (home != null && dist > 0.01)
                 {
                     double t = Math.Max(0, Math.Min(1, (dist - DropRange(m.Uid)) / dist));   // the drop point on the straight run (short legs: linear)
-                    var drop = new GeoPt(m.Lat + (c.Lat - m.Lat) * t, m.Lon + (c.Lon - m.Lon) * t);
+                    var drop = new GeoPt(m.Lat + (c.Lat - m.Lat) * t, m.Lon + GeoLon.DLon(m.Lon, c.Lon) * t);
                     extra = Math.Max(0, AswMath.DistNm(Pos(home), drop) - AswMath.DistNm(Pos(home), new GeoPt(m.Lat, m.Lon)));
                 }
                 if (!AswStrikeMath.StrikeFuelOk(m.FuelFrac, m.EnduranceS, m.TransitS, dist - DropRange(m.Uid), extra, Kn(m), out remain, out need)) { why = "fuel(remain=" + I((int)Math.Round(remain)) + " need=" + I((int)Math.Round(need)) + ")"; return null; }

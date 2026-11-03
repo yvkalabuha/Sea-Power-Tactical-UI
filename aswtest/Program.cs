@@ -56,6 +56,8 @@ namespace VoiceBotBridge
             if (args.Length > 0 && args[0] == "t255") return Report("asw t255" + (args.Length > 1 ? " " + args[1] : ""), AswT255Tests.Run(args.Length > 1 ? args[1] : null));   // T-255
             if (args.Length > 0 && args[0] == "t180-filter") return Report("asw t180 filter" + (args.Length > 1 ? " " + args[1] : ""), AswT180Filter.Run(args.Length > 1 ? args[1] : null));
             if (args.Length > 0 && args[0] == "world") return Report("asw world", AswMath.WorldTest());   // T-348
+            if (args.Length > 0 && args[0] == "t356") return Report("asw t356" + (args.Length > 1 ? " " + args[1] : ""), AswT356Tests.Run(args.Length > 1 ? args[1] : null));   // T-356
+            if (args.Length > 0 && args[0] == "t362") return Report("asw t362" + (args.Length > 1 ? " " + args[1] : ""), AswT362Tests.Run(args.Length > 1 ? args[1] : null));   // T-362
             if (args.Length > 0 && args[0] == "steer") return Report("asw steer", AirRetreatSteer.SelfTest());
             if (args.Length > 0 && args[0] == "t175") return Report("asw t175" + (args.Length > 1 ? " " + args[1] : ""), AswT175Tests.Run(args.Length > 1 ? args[1] : null));
             if (args.Length > 0 && args[0] == "t318") return Report("asw t318" + (args.Length > 1 ? " " + args[1] : ""), AswT318Tests.Run(args.Length > 1 ? args[1] : null));
@@ -126,6 +128,7 @@ namespace VoiceBotBridge
             bad += Report("asw t344", AswT344Tests.Run(null));   // T-344
             bad += Report("asw t344deck", AswT344Deck.Run(null));   // T-344
             bad += Report("asw t346", AswT346Tests.Run(null));   // T-346
+            bad += Report("asw t356", AswT356Tests.Run(null));   // T-356
             bad += Report("asw t241", AswT241Tests.Run());
             bad += Report("asw t173 math", AswT173MathTests.Run());
             bad += Report("asw t173 attack", AswT173AttackTests.Run());

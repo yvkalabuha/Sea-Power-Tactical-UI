@@ -75,10 +75,11 @@ namespace VoiceBotBridge
         {
             if (!(kn > 1)) kn = FallbackKn;
             double rad = t.CourseDeg * Math.PI / 180.0, vx = t.SpeedKn * Math.Sin(rad), vy = t.SpeedKn * Math.Cos(rad), ix, iy;
-            lead = CapMath.LeadPoint((t.Lon - bird.Lon) * 60.0 * AswMath.LonK(bird.Lat, t.Lat), (t.Lat - bird.Lat) * 60.0, vx, vy, kn, out ix, out iy);
+            lead = CapMath.LeadPoint(GeoLon.DLon(bird.Lon, t.Lon) * 60.0 * AswMath.LonK(bird.Lat, t.Lat), (t.Lat - bird.Lat) * 60.0, vx, vy, kn, out ix, out iy);
             if (lead)
             {
-                ip = new GeoPt(bird.Lat + iy / 60.0, bird.Lon + ix / (60.0 * AswMath.LonK(bird.Lat, t.Lat)));
+                double ipLat = bird.Lat + iy / 60.0;   // T-362: K of the segment bird -> ip
+                ip = new GeoPt(ipLat, bird.Lon + ix / (60.0 * AswMath.LonK(bird.Lat, ipLat)));
                 return AswMath.DistNm(bird, ip) / kn * 3600.0;
             }
             ip = new GeoPt(t.Lat, t.Lon);
@@ -104,7 +105,7 @@ namespace VoiceBotBridge
         private static GeoPt Center(CapZone z)
         {
             if (z == null || z.Rect == null || z.Rect.Length < 4) return new GeoPt(0, 0);
-            return new GeoPt((z.Rect[0] + z.Rect[2]) / 2, (z.Rect[1] + z.Rect[3]) / 2);
+            return new GeoPt((z.Rect[0] + z.Rect[2]) / 2, GeoLon.MidLon(z.Rect[1], z.Rect[3]));
         }
 
         private static double KnOf(CapIcptBird b) { return b.DashKn > 1 ? b.DashKn : FallbackKn; }

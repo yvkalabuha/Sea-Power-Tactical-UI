@@ -29,6 +29,11 @@ namespace VoiceBotBridge
 
         private static double[] RectOf(double lat0, double lon0, double lat1, double lon1)
         {
+            if (Math.Abs(lon1 - lon0) > 180.0)   // T-356: the short way across the antimeridian, the western edge first (lon1 may exceed 180)
+            {
+                double w = Math.Max(lon0, lon1);
+                return new[] { Math.Min(lat0, lat1), w, Math.Max(lat0, lat1), GeoLon.UnwrapLon(w, Math.Min(lon0, lon1)) };
+            }
             return new[] { Math.Min(lat0, lat1), Math.Min(lon0, lon1), Math.Max(lat0, lat1), Math.Max(lon0, lon1) };
         }
 
@@ -68,12 +73,14 @@ namespace VoiceBotBridge
                     for (int i = 0; i < 8; i += 2)
                     {
                         la0 = Math.Min(la0, v[i]); la1 = Math.Max(la1, v[i]);
-                        lo0 = Math.Min(lo0, v[i + 1]); lo1 = Math.Max(lo1, v[i + 1]);
+                        double vl = GeoLon.UnwrapLon(v[1], v[i + 1]);   // T-356: the corners are one box across the antimeridian
+                        lo0 = Math.Min(lo0, vl); lo1 = Math.Max(lo1, vl);
                     }
                     r.Area.Rect = new[] { la0, lo0, la1, lo1 };
                 }
                 else { err = "bad_area"; return null; }
-                if (!GeoOk(r.Area.Rect[0], r.Area.Rect[1]) || !GeoOk(r.Area.Rect[2], r.Area.Rect[3])) { err = "bad_area"; return null; }
+                if (!GeoOk(r.Area.Rect[0], GeoLon.WrapLon(r.Area.Rect[1])) || !GeoOk(r.Area.Rect[2], GeoLon.WrapLon(r.Area.Rect[3]))) { err = "bad_area"; return null; }
+                r.Area.Rect[3] = GeoLon.UnwrapLon(r.Area.Rect[1], r.Area.Rect[3]);   // T-356 (ADR-0135): lon1 the short way from lon0, width < 180 deg
                 r.Area.Kind = "rect";
                 return r;
             }

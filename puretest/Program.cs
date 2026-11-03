@@ -5,7 +5,7 @@ namespace VoiceBotBridge
 {
     internal static class Program
     {
-        private static readonly string[] Sections = { "worldgeo", "radial", "radialtext", "overview", "ntds", "coverage", "coveragejam", "coverageworker", "coveragediag", "coverageqa01", "workercrumb", "legend", "contactinfo", "uikit", "winstate", "framemath", "memory", "ovcols", "ovown", "drawguard", "watchdog", "crumb", "logstamp", "settings_model", "settings", "settings_perf", "savestore", "intercept", "framestate", "mapscan", "lightsmoke", "msgcolor", "wpq", "hitestimate", "dropdown", "slider", "segments", "toggles", "compass", "status", "uihit", "uiscale", "unitfmt", "shippick", "undo", "zoneedit", "mappick", "lint", "escguard", "loadscreen", "postload", "proc_threads", "mod_threads", "shutdown", "proc_table", "hb_loop", "hb_stuck" };
+        private static readonly string[] Sections = { "geolon", "t356world", "worldgeo", "radial", "radialtext", "overview", "ntds", "coverage", "coveragejam", "coverageworker", "coveragediag", "coverageqa01", "workercrumb", "legend", "contactinfo", "uikit", "winstate", "framemath", "memory", "ovcols", "ovown", "drawguard", "watchdog", "crumb", "logstamp", "settings_model", "settings", "settings_perf", "savestore", "intercept", "framestate", "mapscan", "lightsmoke", "msgcolor", "wpq", "hitestimate", "dropdown", "slider", "segments", "toggles", "compass", "status", "uihit", "uiscale", "unitfmt", "shippick", "undo", "zoneedit", "mappick", "lint", "escguard", "loadscreen", "postload", "proc_threads", "mod_threads", "shutdown", "proc_table", "hb_loop", "hb_stuck" };
 
         private static string Run(string s)
         {
@@ -17,6 +17,8 @@ namespace VoiceBotBridge
                 case "ntds": return NtdsIcons.SelfTest();
                 case "coverage": return CoverageMath.SelfTest();
                 case "coveragejam": return CoverageJamMath.SelfTest();
+                case "geolon": return GeoLon.SelfTest();   // T-356
+                case "t356world": return WorldOrderTests.Run();   // T-356
                 case "worldgeo": return WorldGeo.SelfTest();   // T-354
                 case "coverageworker": return CoverageWorker.SelfTest();
                 case "coveragediag": return CoverageDiag.SelfTest();   // T-320
