@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-118 K: light stand for the UI mod core (UiCore, UiContext, HotkeyBinding, ReleaseRegistry). No game, no Unity, no BepInEx.
+       GameApi and UiLinkHost are replaced by Stub.cs. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <DefineConstants>$(DefineConstants);CORETEST</DefineConstants>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Stub.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiHost.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFeature.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiPumpTimer.cs" />   <!-- T-124 -->
+    <Compile Include="../SeaPowerTacticalUI/UiContext.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiCore.cs" />
+    <Compile Include="../SeaPowerTacticalUI/MissionLifecycle.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />   <!-- T-198: SavStamp in MissionEnter -->
+    <Compile Include="../SeaPowerTacticalUI/GameMember.cs" />
+    <Compile Include="../SeaPowerTacticalUI/GameRegistry.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoreSpecs.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiDegradation.cs" />
+    <Compile Include="../SeaPowerTacticalUI/DrawGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiSettings.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SettingsDraft.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HotkeyBinding.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiConfigMigrator.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ReleaseRegistry.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UnitSteering.cs" />   <!-- T-138 -->
+    <Compile Include="../SeaPowerTacticalUI/CoverageMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Ownership.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/DiagHost.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ModInfo.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiBoot.cs" />   <!-- T-105 -->
+  </ItemGroup>
+</Project>

@@ -1,0 +1,71 @@
+[h1]Sea Power Tactical UI[/h1]
+A tactical interface layer for Sea Power that takes routine micromanagement off your hands: ASW and air-defence patrols, torpedo evasion, radar coverage, contact info and intercept courses.
+
+[h2]Features[/h2]
+[b]Anti-submarine warfare[/b]
+[list]
+[*] The "Aviation: ASW / SAR" window drives helicopter and aircraft ASW groups: search along a course, search in an area, "Corridor" (rows of buoys on both sides of the course) and "Barrier" (a sliding strip of several lines across the course); one or the other. Buoys go only ahead of the ship.
+[*] When an air threat gets close, ASW, SAR and strike aircraft retreat under cover of your ships. Air-defence fighters do not retreat: they stay in the fight.
+[*] SAR for ships, submarines and aircraft: rescue radius, one or a group, a raft is kept by one rescuer.
+[/list]
+
+[b]Air defence[/b]
+[list]
+[*] The "Air defence" (CAP) window: a group, a zone on the map, N aircraft in the zone and K ready on deck. Patrol size follows the range of the missiles. A hostile aircraft entering the zone is intercepted (targets shared out, up to two fighters each), then the fighters return to patrol; an automatic missile shot is held while a friendly aircraft is near the line of fire.
+[*] "Stand-by" mode: the group waits on deck and launches against an incoming raid. The mod orders sorties and swaps aircraft by missiles and fuel.
+[*] Search radar of an aircraft is switched on for the task and restored afterwards (never touched if you switched it off).
+[*] Only fighters with an air-to-air loadout join a group: strike, anti-ship and ASW aircraft stay out and are shown greyed with the reason; every row shows the loadout. Groups can be renamed.
+[/list]
+
+[b]Aircraft: "After launch"[/b]
+[list]
+[*] A mode for self-homing missiles (IR, active radar, anti-radiation): after the launch the aircraft does not keep guiding the missile but breaks away at once. With "Break away, next target" it then picks the next target.
+[*] Set it in the game's own Standing Orders window (all units, group or single aircraft) or in the radial menu. Missiles that need the target illuminated are left alone.
+[/list]
+
+[b]Submarine: smart attack[/b]
+[list]
+[*] Radial menu of a submarine, sector NW, then click the target on the map or in 3D. The torpedo approaches the target from the side, and neutrals near the target are checked. Cancel with sector W.
+[/list]
+
+[b]Torpedo evasion and anti-torpedo rockets[/b]
+[list]
+[*] Own evasion: anti-submarine rocket launchers (RBU) fire first at the incoming tracks, then the ship turns away. Neighbours without a threat cover the targeted ones.
+[*] Can be turned off; the game's native evasion is selectable in Settings.
+[/list]
+
+[b]Radar layer and jamming[/b]
+[list]
+[*] A map layer shows what your radars really see, with jamming taken into account and a legend on the map.
+[/list]
+
+[b]Range rings and intercept[/b]
+[list]
+[*] Range rings for the weapons you tick: for your own unit (XO menu) or for an identified enemy (Ctrl + right click). With a contact selected, the ring tells whether it is in range, too far or too close, the same check the game makes before a launch.
+[*] Intercept course: Ctrl + right click on a contact gives the time and course from the track data you have; the route avoids land.
+[/list]
+
+[b]Overview, task line, radial menu, settings[/b]
+[list]
+[*] "Overview": the "Contacts" tab and the "Own" tab (ships, submarines and aircraft in the air with task, depth/altitude, speed, loadout and group). Click a row to select the unit and centre the map.
+[*] The "Task:" line of the bottom panel shows what the mod is doing now ("ASW Barrier: to line 1/2", "Patrol: on station", "Stand-by: intercepting raid", "Torpedo evasion").
+[*] Radial command ring (hold the left mouse button on a unit): torpedo alert, break away, cease fire, return control, smart attack, return to base, return to formation. On an aircraft, "−" takes it out of its group and "+" adds or moves it to a CAP/ASW/strike/SAR group.
+[*] Hostile classifications in the game's message window are shown in red.
+[*] Contact info labels (off by default, LeftAlt+N) from your own sensors only: depth, speed, CPA/TCPA, track age, noise.
+[*] "Settings" window in a mission: keys, languages (English, Russian, Chinese — the Chinese text is a machine translation, corrections welcome), performance, all of the config without editing files.
+[/list]
+
+[b]Strike window: anti-ship missile strikes[/b]
+[list]
+[*] The "Strike" window (LeftAlt+H) plans and runs anti-ship missile strikes by fixed-wing aircraft: pick targets on the map, and the mod distributes them by air-defence strength and tonnage and sizes the missiles per target for at least one hit with 80-90 % probability.
+[*] "Launch" leads the aircraft through a waiting point over the sea so that all missiles arrive at the same time. The "Auto" flag replans and launches waves by itself (up to 3). Escort EW aircraft join the group and also jam hostile fighters that close in; civilian, unknown and neutral contacts are avoided.
+[*] The plan is an estimate from the data the game exposes and can be wrong: trust the result card. On by default; the [i][Strike][/i] config section can turn it off.
+[/list]
+
+[h2]Requirements[/h2]
+As for any DLL mod of Sea Power: install the AnchorChain loader once. Download [b]ACPreloader.zip[/b] (BepInEx is included) and extract it into the game folder, next to [i]Sea Power.exe[/i] — see the [url=https://seapower-modders.github.io/AnchorChain/install-anchor-chain.html]AnchorChain install guide[/url]. AnchorChain itself is a Required item and comes from the Workshop together with this mod.
+
+[h2]Licence, source, bugs[/h2]
+Copyright (C) 2026 yvkalabuha. GPL-3.0 with an additional permission under section 7 (see [i]LICENSE[/i]). The source code is inside the package: [i]source/SeaPowerTacticalUI-<version>-src.zip[/i].
+Full list of changes: [i]CHANGELOG.md[/i] in the package, or [url=https://steamcommunity.com/sharedfiles/filedetails/changelog/3827955062]changelog online[/url].
+Report bugs here: [url=https://steamcommunity.com/workshop/filedetails/discussions/3827955062]Discussions tab[/url].

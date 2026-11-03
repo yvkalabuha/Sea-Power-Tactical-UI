@@ -1,0 +1,96 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-341: light stand for the pure strike code (no game, no Unity). Like captest. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswStrikeMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AttackHostility.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTypes.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeCalib.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeCalibLog.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeAirMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeAdMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HitEstimateMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HitEstimateGeo.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeKillMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HitLedger.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeGeoMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTotMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeStaleMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWaitMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeLaunchBook.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeTofCache.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeExecMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeMslCache.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeEwMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeEwFighterMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.EwFighter.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikePlanMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeDeckPlanner.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeAutoMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/EngageVetoChain.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswGroupNames.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Groups.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Kill.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Replan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Auto.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Clear.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Plan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.View.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Wait.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Deck.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.DeckOrder.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Save.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Exec.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Result.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Roe.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Ew.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.AirGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirGuardShared.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Warm.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.Ring.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeController.WinView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeWindowModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsOwnership.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirDeckBroker.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirRelief.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RingGroups.cs" />
+    <Compile Include="StrikeFakeGame.cs" />
+    <Compile Include="StrikeT341CtlTests.cs" />
+    <Compile Include="StrikeT342PlanTests.cs" />
+    <Compile Include="StrikeT342ExecTests.cs" />
+    <Compile Include="StrikeT342EwTests.cs" />
+    <Compile Include="StrikeT342KillTests.cs" />
+    <Compile Include="StrikeT342DeckTests.cs" />
+    <Compile Include="StrikeT342AutoTests.cs" />
+    <Compile Include="StrikeT342EwfTests.cs" />
+    <Compile Include="StrikeT349Tests.cs" />
+    <Compile Include="StrikeT353Tests.cs" />
+    <Compile Include="StrikeT346Tests.cs" />
+    <Compile Include="StrikeT346EwfTests.cs" />
+    <Compile Include="StrikeT341BTests.cs" />
+    <Compile Include="StrikeT341ExecTests.cs" />
+    <Compile Include="StrikeT341EwTests.cs" />
+    <Compile Include="StrikeT341CalibTests.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StrikeProbe.cs" />
+  </ItemGroup>
+</Project>

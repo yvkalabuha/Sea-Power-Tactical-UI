@@ -1,0 +1,3832 @@
+[
+  {
+    "section": "AirEvade",
+    "key": "AutoCooldownS",
+    "default": "n:10.0",
+    "description": "Pause (s) before auto evasion starts again against the same missile (0..60)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "AutoMinNm",
+    "default": "n:3.0",
+    "description": "Auto missile evasion also starts when the missile is this close (nm, 1..10)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "AutoTtiS",
+    "default": "n:20.0",
+    "description": "Auto missile evasion starts when the time to impact is at most this (s, 5..60)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "BeamMaxS",
+    "default": "n:180.0",
+    "description": "The longest turn away from an air threat without a missile (s, 30..600)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every evasion tick (mode, course)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Aircraft evasion: the ring item Evade attack and the Standing Orders flag Auto missile evasion",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "OptionHint",
+    "default": "b:true",
+    "description": "Tell once per mission when the game option for aircraft missile evasion is off",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirEvade",
+    "key": "ThreatNm",
+    "default": "n:40.0",
+    "description": "The button without a missile turns away from a hostile air track within this range (nm, 10..100)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_evasion"
+  },
+  {
+    "section": "AirGuard",
+    "key": "ClearS",
+    "default": "n:60.0",
+    "description": "The stage is lifted only after the threats stayed beyond the thresholds this long (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "DefaultRadiusNm",
+    "default": "n:10.0",
+    "description": "Weapon range assumed for an unidentified track or a class with no data (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "GhostS",
+    "default": "n:180.0",
+    "description": "A lost track stays as a dead-reckoned ghost this long (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "IgnoreS",
+    "default": "n:600.0",
+    "description": "Continue tasks: the group ignores the current tracks this long (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "MinRadiusNm",
+    "default": "n:3.0",
+    "description": "Lower limit of the assumed weapon range (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "MinSamNm",
+    "default": "n:10.0",
+    "description": "A ship is a cover candidate only with an AAW ring of at least this range (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "Mode",
+    "default": "s:retreat",
+    "description": "retreat | warn | off: air asset protection - own ASW / SAR aircraft retreat under the cover of a ship with SAMs when a hostile aircraft comes close; warn = only the warning; off",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "RetreatEtaS",
+    "default": "n:360.0",
+    "description": "Retreat when the threat reaches its weapon range of the aircraft in less than this (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "RetreatEtaSHelo",
+    "default": "n:480.0",
+    "description": "The same for helicopters (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "RetreatNm",
+    "default": "n:40.0",
+    "description": "Retreat when an air threat is closer than this (nm), aircraft",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "RetreatNmHelo",
+    "default": "n:50.0",
+    "description": "Retreat when an air threat is closer than this (nm), helicopters",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "TcMinGapS",
+    "default": "n:30.0",
+    "description": "Not more often than this (real s) the time acceleration is reset because of a stage",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "TimeX1",
+    "default": "s:all",
+    "description": "all | stage2 | off: reset the time acceleration to x1 on danger (all = new raid, retreat, missile, loss; stage2 = retreat, missile, loss)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "Toast",
+    "default": "b:true",
+    "description": "Cards: air threat and aircraft lost",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "ToastS",
+    "default": "n:20.0",
+    "description": "The cards hide after this many seconds (0 = until closed)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "Unknown",
+    "default": "s:warn",
+    "description": "off | warn | retreat: unidentified fast air tracks (Unknown posture, speed at or above UnknownMinKn)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "UnknownMinKn",
+    "default": "n:350.0",
+    "description": "An unidentified track is a threat only at or above this speed (kn)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "UnloadExtraS",
+    "default": "n:120.0",
+    "description": "A SAR helicopter with people lands instead of covering when the deck is at most this much later (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "WarnNm",
+    "default": "n:60.0",
+    "description": "Warn when an air threat is closer than this (nm), aircraft",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "WarnNmHelo",
+    "default": "n:80.0",
+    "description": "Warn when an air threat is closer than this (nm), helicopters",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "AirGuard",
+    "key": "WarnUngrouped",
+    "default": "b:true",
+    "description": "Warn about aircraft outside the mod's groups as well (warning only, they are not moved)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "air_guard"
+  },
+  {
+    "section": "Asw",
+    "key": "ActiveFactor",
+    "default": "n:0.7",
+    "description": "R_eff for active buoys = active range x this factor",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "AdoptGapS",
+    "default": "n:300.0",
+    "description": "Seconds a launched deck aircraft may be missing from the lists before the group gives it up",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ApproachMaxS",
+    "default": "n:600.0",
+    "description": "A shooter that has not reached the drop point in this time (s) is changed",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "AreaSizeNm",
+    "default": "n:10.0",
+    "description": "Default side of the search area (nm) for 'area' orders given as bearing + distance",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "AreaTactic",
+    "default": "s:auto",
+    "description": "Pattern of an area order: auto | grid (buoy lattice) | dip | mad",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "AutoRadar",
+    "default": "b:true",
+    "description": "Search radar of an ASW aircraft on while it searches (the previous state comes back after it, a player's change is kept)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "AxisKeepDeg",
+    "default": "n:15.0",
+    "description": "The search axis changes only when the new one differs by more than this (degrees)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "AxisMinKn",
+    "default": "n:5.0",
+    "description": "Below this speed (kn) the search axis is the ship's heading, not the noisy track",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierActive",
+    "default": "b:false",
+    "description": "An active buoy in the middle of every barrier line (it gives the line away to the submarine)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierGapNm",
+    "default": "n:5.0",
+    "description": "Interval of the barrier rows, nm (3, 5, 8, 10)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierResetDeg",
+    "default": "n:30.0",
+    "description": "The barrier is built anew when the ship's axis differs from the barrier's by this many degrees (and holds for BarrierResetHoldS)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierResetHoldS",
+    "default": "n:60.0",
+    "description": "The turn must hold this long (s) before the barrier is built anew",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierRows",
+    "default": "n:2.0",
+    "description": "Rows of the sliding barrier ahead of the group (1..5); the first stands one interval ahead, the next every interval",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierStagger",
+    "default": "b:true",
+    "description": "Odd barrier rows are shifted half a step (their buoys stand between the buoys of the even rows)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierStandoffNm",
+    "default": "n:40.0",
+    "description": "Standoff of the barrier line ahead of the group, nm (20..100 step 10); not used by the sliding barrier (T-229)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierStepNm",
+    "default": "n:10.0",
+    "description": "obsolete (T-229): the sliding barrier adds a row when the ship reaches the nearest one",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BarrierWidthNm",
+    "default": "n:40.0",
+    "description": "Width X of the barrier line, nm (10..50 step 10)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "BuoyDepth",
+    "default": "s:auto",
+    "description": "Depth of the buoys: auto (below the layer for a corridor / barrier, alternating otherwise) | above | below | alternate",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "CorridorMaxRows",
+    "default": "n:6.0",
+    "description": "At most this many rows on each side of a corridor (more: the warning corridor_too_wide)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "CorridorStandoffNm",
+    "default": "n:20.0",
+    "description": "Standoff of the corridor ahead of the group, nm (20..100 step 10)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "CorridorWidthNm",
+    "default": "n:20.0",
+    "description": "Width X of the corridor, nm (10..50 step 10): rows on both sides of the course",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "CourseTactic",
+    "default": "s:auto",
+    "description": "Tactics of a by-course order: auto (by the group) | dip | corridor | barrier | dip+corridor | dip+barrier (corridor and barrier exclude each other)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log R_eff per sensor, group plans and every ASW step",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "DepthCharges",
+    "default": "s:mad_only",
+    "description": "Depth charges: mad_only (only on a fresh MAD fix, when no torpedo aircraft is in the group) | off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "DipStandoffNm",
+    "default": "n:20.0",
+    "description": "Standoff of the dipping sonar chain ahead of the group, nm (20..100 step 10)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "DropNm",
+    "default": "n:1.0",
+    "description": "The torpedo is dropped from this distance to the target estimate (nm; kept inside the weapon's launch range)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "DropTimeoutS",
+    "default": "n:180.0",
+    "description": "An accepted attack order must drop the torpedo within this time (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "FreshFixS",
+    "default": "n:90.0",
+    "description": "A fix counts as fresh when it is not older than this (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "GameEstimateFactor",
+    "default": "n:1.0",
+    "description": "R_eff = the game's passive range estimate x this factor (calibrate in the live run)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "HazardNm",
+    "default": "n:5.0",
+    "description": "Sonobuoys are not laid closer than this (nm) to a known hostile surface or ground object whose class is not identified; for an identified class its air defence reach is used",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+U|LeftAlt+J|F7",
+    "description": "Opens the ASW window: Unity KeyCode names joined by + (e.g. LeftAlt+U); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "IniFactor",
+    "default": "n:0.5",
+    "description": "R_eff fallback = ini passive range x this factor",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "Loadouts",
+    "default": "s:ASWHunter,ASW,ASWKiller",
+    "description": "Loadout names that make an ASW sortie, in order of preference",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "LostAfterS",
+    "default": "n:300.0",
+    "description": "Seconds without contact before the contact is reported lost",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "LostHoldS",
+    "default": "n:600.0",
+    "description": "A strike target that is not tracked is waited for this many seconds before it is given up",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MadPassFt",
+    "default": "n:100.0",
+    "description": "Altitude of the MAD pass (ft; at most 0.8 of the MAD limit)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MadVerify",
+    "default": "b:false",
+    "description": "An aircraft with a MAD flies one pass over the datum before the first drop (off by default since T-316: a live track is enough; skipped while the game gives no MAD detection reading)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MadVerifyS",
+    "default": "n:240.0",
+    "description": "The MAD pass takes at most this many game seconds",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MaxTorpedoesPerContact",
+    "default": "n:0.0",
+    "description": "Torpedoes per target, at most (0 = until the target is destroyed)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MinWaterBuoyM",
+    "default": "n:30.0",
+    "description": "A buoy is not laid in water shallower than this, m (also 3 m + 0.3 of the sensor depth)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MinWaterDipM",
+    "default": "n:30.0",
+    "description": "A dipping sonar is not lowered in water shallower than this, m (at least 15.2 m of the body + 15 m of cable)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "MissStreak",
+    "default": "n:2.0",
+    "description": "Misses in a row after which the next drop needs a fresh fix",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "OwnSubClearS",
+    "default": "n:20.0",
+    "description": "An own submarine has gone: continue the attack after this many seconds",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "OwnSubSafeNm",
+    "default": "n:4.0",
+    "description": "Hold fire when an own or allied submarine is closer to the target than this (nm)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ReanchorDeg",
+    "default": "n:30.0",
+    "description": "The pattern is moved to the new course when the escort's course differs from it by this many degrees (and holds for ReanchorHoldS)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ReanchorHoldS",
+    "default": "n:60.0",
+    "description": "The turn must hold this long (s) before the pattern is moved",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ReattackGapS",
+    "default": "n:20.0",
+    "description": "Pause after a torpedo ended before the next attack (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ReplanMinS",
+    "default": "n:15.0",
+    "description": "By-course order: the route is laid again no more often than every this many seconds",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ReseedLeadS",
+    "default": "n:600.0",
+    "description": "A node whose buoy goes out within this many seconds is laid again",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "RestoreOnLoad",
+    "default": "s:auto",
+    "description": "auto | ask | off: restore the ASW groups after a save is loaded",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "SpookMarginNm",
+    "default": "n:0.3",
+    "description": "Margin added to SubSpookNm (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "Standby",
+    "default": "n:1.0",
+    "description": "Ready spare aircraft kept for the relief (0..3)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "StrikeAirborne",
+    "default": "n:0.0",
+    "description": "Aircraft of a new strike order kept in the air while there is no target (0 = all wait on deck)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "StrikeIdleS",
+    "default": "n:600.0",
+    "description": "An aircraft without a target lands after this many seconds",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "StrikeMaxEtaS",
+    "default": "n:1800.0",
+    "description": "A target is taken when the weapon can be in the water within this many seconds",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "StrikeRadiusNm",
+    "default": "n:0.0",
+    "description": "Zone radius of a new strike order around the guarded ship (nm; 0 = no limit)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "StrikeTargets",
+    "default": "s:hostile_unknown",
+    "description": "Strike group targets: hostile_unknown (hostile and unidentified submarines; an unidentified one may be neutral) | hostile (only hostile)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "SubSpookNm",
+    "default": "n:2.0",
+    "description": "A submarine hears an active sonar closer than this (nm): the holder and the waiting aircraft keep outside",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "Toast",
+    "default": "b:true",
+    "description": "Card \"Submarine detected\"",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "ToastS",
+    "default": "n:20.0",
+    "description": "The card hides after this many seconds (0 = until closed)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Asw",
+    "key": "UnknownConfirmS",
+    "default": "n:60.0",
+    "description": "An unidentified target must be tracked live for this many seconds before it is attacked",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "asw"
+  },
+  {
+    "section": "Attack",
+    "key": "AllowAttack",
+    "default": "b:true",
+    "description": "false = the mod refuses weapon commands (attack)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "general"
+  },
+  {
+    "section": "Attack",
+    "key": "NeutralSeekerLegNm",
+    "default": "n:10.0",
+    "description": "Attack guard: how many miles before the target the missile seeker is assumed to be active; neutrals near that corridor need confirm_neutral (1..40)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedo",
+    "default": "b:true",
+    "description": "Own evasion (Mode=own) first fires anti-torpedo rockets (RBU, Bofors) at torpedo tracks by time to impact (own ship and neighbours) in range and arc, then turns away as before; also under ROE hold (self-defence)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoCover",
+    "default": "b:true",
+    "description": "Ships without their own torpedo threat fire anti-torpedo salvoes at torpedoes heading for own/allied ships nearby (no course change)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoCoverNm",
+    "default": "n:4.0",
+    "description": "Anti-torpedo cover: protect own/allied ships within this distance of the shooter (nm, 0.5..10)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoDebug",
+    "default": "b:false",
+    "description": "Log every refused anti-torpedo salvo with its reason",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoFireNm",
+    "default": "n:1.5",
+    "description": "Anti-torpedo salvo only when the torpedo track is this close to the shooter (nm); the game's AI fires RBU at torpedoes within 1 nm",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoMaxTracks",
+    "default": "n:4.0",
+    "description": "Anti-torpedo fire: how many torpedo tracks (within 4 nm, by time to impact) one ship engages, one free mount each (1..8)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoReactionS",
+    "default": "n:3.0",
+    "description": "Assumed delay order -> launch (s) for the 7 s immunity window",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "AntiTorpedoSafetyNm",
+    "default": "n:0.15",
+    "description": "No anti-torpedo salvo when an own, allied or neutral ship or submarine is this close to the torpedo (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every evasion tick (torpedo bearing, distance, course, phase)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "Mode",
+    "default": "s:own",
+    "description": "own | native: own = the mod's own torpedo evasion (stern quarter, flank speed, noisemaker); native = the game's TorpedoEvasion as before",
+    "class": "basic",
+    "apply": "restart",
+    "control": "choice",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "SubDeepDive",
+    "default": "b:true",
+    "description": "Submarine dives to 80% of crush depth when the torpedo cannot reach it",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "SubMode",
+    "default": "s:native",
+    "description": "native | own: submarine torpedo evasion; native = the game's own TorpedoEvasion wrapped by the mod (log, restore, noisemaker backup), own = the mod's own course/speed/depth evasion",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "SubNoisemakerAssist",
+    "default": "b:true",
+    "description": "Submarine: launch a noisemaker when the game has not launched one within the interval",
+    "class": "advanced",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "SubNoisemakerIntervalS",
+    "default": "n:30.0",
+    "description": "Submarine: at most one noisemaker per this many seconds (game launches count)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "AutoEvade",
+    "key": "SubRestore",
+    "default": "b:true",
+    "description": "Submarine: put the route, telegraph and depth back after the evasion",
+    "class": "advanced",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "evasion"
+  },
+  {
+    "section": "Cap",
+    "key": "AcceptAlert",
+    "default": "b:true",
+    "description": "Patrol: accept alert aircraft into a missing place after a raid",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AirOnly",
+    "default": "b:true",
+    "description": "The CAP fights air targets only: a surface target does not postpone the return, its fire task is dropped, and the way home is on weapons hold",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertAfter",
+    "default": "s:patrol",
+    "description": "Alert group: after the raid - alert (stand ready again) | patrol (help a patrol that misses an aircraft)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertCount",
+    "default": "n:2.0",
+    "description": "Alert group: machines held ready (1..4)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertFill",
+    "default": "b:false",
+    "description": "Alert group: take free machines from the deck when fewer than the ready number stand",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertHandoverMinS",
+    "default": "n:600.0",
+    "description": "Help the patrol: the lent aircraft must stay at least this long in the zone above the fuel threshold (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertLevel",
+    "default": "s:deck",
+    "description": "Alert group: readiness - deck (prepared, launch held) | hangar (preparation starts with the raid)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertNm",
+    "default": "n:80.0",
+    "description": "Alert group: reaction radius around the protected ship (nm)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertPerRaid",
+    "default": "n:2.0",
+    "description": "Alert group: machines launched for one raid (0 = every ready one)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertPursuitNm",
+    "default": "n:60.0",
+    "description": "Alert group: leash - farther than this from the protected ship (nm) the aircraft is called back",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertSpeed",
+    "default": "s:max",
+    "description": "Alert group: speed to the raid - max (the fastest step the fuel allows) | cruise",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AlertTargets",
+    "default": "s:air",
+    "description": "Alert group: targets, a list of air,helo,unknown",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "AutoRadar",
+    "default": "b:true",
+    "description": "Search radar of a CAP aircraft on while it flies its task (the previous state comes back after it, a player's change is kept)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "CircleAltStepFt",
+    "default": "n:1000.0",
+    "description": "Small CAP zone (one circle for the group): altitude step (ft) between the birds on the circle, 0 = one altitude",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "CombatHostileNm",
+    "default": "n:10.0",
+    "description": "A leaving bird in combat or with a hostile closer than this (nm) postpones its leave",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "CoverAamFrac",
+    "default": "n:0.5",
+    "description": "CAP cover: share of the longest AAM range of the group's aircraft; every point of the zone stays within it from the route",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "CoverFallbackNm",
+    "default": "n:10.0",
+    "description": "CAP cover radius (nm) while no aircraft of the group reports its AAM range",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "DashBurnFactor",
+    "default": "n:2.0",
+    "description": "Fuel burn per mile at the top step vs cruise when the game gives no data (1..6)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "DashOnMissileRtb",
+    "default": "b:true",
+    "description": "Fast return to the deck after the missiles are gone (the fastest throttle step that still leaves the fuel reserve)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every CAP step and the hidden types",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "DeckYieldMaxS",
+    "default": "n:120.0",
+    "description": "ASW and helicopter SAR groups on the same deck wait for a CAP group with a gap under an air threat at most this many seconds of game time (0 = do not wait; at most 120)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "DefaultOnStation",
+    "default": "n:2.0",
+    "description": "Default number of birds on station (N)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Air defence (CAP) window: groups of fighters in a zone with relief from the reserve",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "FuelFloorPct",
+    "default": "n:0.0",
+    "description": "Fuel floor as a share of the maximum range (0..0.5)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "FuelMarginS",
+    "default": "n:300.0",
+    "description": "Fuel: the bird leaves when it has the flight home plus this many seconds left",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+P|LeftAlt+K|F8",
+    "description": "Opens the CAP window: Unity KeyCode names joined by + (e.g. LeftAlt+P); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "LaneEndMaxNm",
+    "default": "n:5.0",
+    "description": "Racetrack: the legs stop this far (nm, at most) from the zone ends",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "LaunchDelayS",
+    "default": "n:180.0",
+    "description": "Seconds from the launch order to the take-off (relief planning)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "LaunchMissionType",
+    "default": "s:none",
+    "description": "none | cap: mission type of the launch order (none is the verified path)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "LoadoutTieBreak",
+    "default": "s:AirToAirLongRange,AirToAir,AirToAirIntercept",
+    "description": "Loadout names in the order of preference when scores are equal",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "MaxZone",
+    "default": "n:200.0",
+    "description": "The longest side of a CAP zone the map handles allow (nm, 50..400); the drawing of a new zone is not limited",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "MissilePct",
+    "default": "n:0.2",
+    "description": "A bird leaves when its missiles are at or below this share of the start count (0..1)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "NeedLongRange",
+    "default": "b:false",
+    "description": "Leave when no medium or long-range missile is left",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "NoFuelDataOnStationS",
+    "default": "n:5400.0",
+    "description": "A bird without fuel data is assumed to stay this many seconds in the air",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "OrbitBelowNm",
+    "default": "n:4.0",
+    "description": "Lane narrower than this (nm) becomes an orbit",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "PatrolAltFt",
+    "default": "n:0.0",
+    "description": "Patrol altitude, ft (0 = the game's default)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "PursuitNm",
+    "default": "n:25.0",
+    "description": "Leash: a bird farther than this from the zone (nm) is called back",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "ReorderGainS",
+    "default": "n:60.0",
+    "description": "A prepared task of the mod is ordered again with another loadout only when the new one is ready sooner by more than this (s)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "RestoreOnLoad",
+    "default": "s:auto",
+    "description": "auto | ask | off: restore the CAP groups after a save is loaded",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "RingMarginNm",
+    "default": "n:5.0",
+    "description": "Fuel: with the game's fuel share known, the bird leaves when its spare path over the way home is at or below this many nm",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "Roe",
+    "default": "s:tight",
+    "description": "tight | free | hold: weapons status of the group on patrol",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "RtbRoeHold",
+    "default": "b:true",
+    "description": "Weapons hold while the bird flies home (the group's ROE comes back with the next sortie)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "ThreatClearMarginNm",
+    "default": "n:10.0",
+    "description": "The threat is cleared only beyond ThreatNm + this margin (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "ThreatClearS",
+    "default": "n:60.0",
+    "description": "... and after this many seconds without such a contact",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "ThreatNm",
+    "default": "n:80.0",
+    "description": "Air threat radius (nm) to the zone or the deck: a CAP group with a gap then takes the deck first (ADR-0041)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "Intercept",
+    "default": "b:true",
+    "description": "Patrol: a hostile aircraft or helicopter in the zone (or within the margin) is intercepted by the patrol birds, then they return to their lanes",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "InterceptMarginNm",
+    "default": "n:10.0",
+    "description": "Intercept: a target this many nm outside the zone already counts as an intrusion (0..50)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "InterceptPerTarget",
+    "default": "n:2.0",
+    "description": "Intercept: birds given to one target, one for each target first (1..4)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "InterceptKeepOnStation",
+    "default": "n:0.0",
+    "description": "Intercept: birds that always stay on their lanes (0..50)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "InterceptTargets",
+    "default": "s:air,helo",
+    "description": "Intercept: targets, a list of air,helo,unknown",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "InterceptSpeed",
+    "default": "s:max",
+    "description": "Intercept: speed to the target - max (the fastest step the fuel allows) | cruise",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "InterceptLostS",
+    "default": "n:60.0",
+    "description": "Intercept: the bird goes back to its lane when the target track has been lost this long (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "cap"
+  },
+  {
+    "section": "Cap",
+    "key": "FriendlyFireGuard",
+    "default": "b:true",
+    "description": "Patrol aircraft hold the auto launch of an IR / active-radar missile for up to 10 s when a friendly aircraft is within 2 nm of the target in the line of fire",
+    "class": "advanced",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "cap"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "AgeShowS",
+    "default": "n:15.0",
+    "description": "The age of a contact is shown above this many seconds",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "BetterTacMap",
+    "default": "s:auto",
+    "description": "auto | on: auto = our duplicate labels are off when the Better TacMap mod is found",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "CavMarginKn",
+    "default": "n:1.0",
+    "description": "Cavitation warning margin (kn) below the onset speed",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "CpaMaxMin",
+    "default": "n:30.0",
+    "description": "CPA is shown only when it happens within this many minutes",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "CpaTarget",
+    "default": "s:selected",
+    "description": "selected | group: CPA to the selected own unit or the best one of the player's group",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Contact information on the map: depth and layer, speed, TTG, CPA, age, own noise, waypoints (needs the contact_info capability)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+N|LeftAlt+E",
+    "description": "Turns all contact labels on or off: Unity KeyCode names joined by + (e.g. LeftAlt+N); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Age",
+    "default": "s:LeftAlt+LeftShift+Keypad5",
+    "description": "Turns the Age label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad5); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Cpa",
+    "default": "s:LeftAlt+LeftShift+Keypad4",
+    "description": "Turns the Cpa label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad4); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Depth",
+    "default": "s:LeftAlt+LeftShift+Keypad1",
+    "description": "Turns the Depth label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad1); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Noise",
+    "default": "s:LeftAlt+LeftShift+Keypad6",
+    "description": "Turns the Noise label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad6); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Speed",
+    "default": "s:LeftAlt+LeftShift+Keypad2",
+    "description": "Turns the Speed label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad2); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Ttg",
+    "default": "s:LeftAlt+LeftShift+Keypad3",
+    "description": "Turns the Ttg label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad3); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Hotkey.Waypoint",
+    "default": "s:LeftAlt+LeftShift+Keypad7",
+    "description": "Turns the Waypoint label layer on or off: Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+Keypad7); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "MaxLabels",
+    "default": "n:80.0",
+    "description": "Labels on the map at most 10..300 (nearest first)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "NoiseDisplay",
+    "default": "s:auto",
+    "description": "auto | on: auto = our dB label is off when the Vessel Noise Display mod is found",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "OwnSpeedNoise",
+    "default": "b:true",
+    "description": "Own ships and submarines: speed and noise (dB) on one line next to the icon, coloured by the margin to cavitation",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "PeriodS",
+    "default": "n:1.0",
+    "description": "Period of a full snapshot of the contacts (real time)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Age",
+    "default": "b:true",
+    "description": "Label layer Age is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Cpa",
+    "default": "b:true",
+    "description": "Label layer Cpa is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Depth",
+    "default": "b:true",
+    "description": "Label layer Depth is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Noise",
+    "default": "b:true",
+    "description": "Label layer Noise is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Speed",
+    "default": "b:false",
+    "description": "Label layer Speed is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Ttg",
+    "default": "b:true",
+    "description": "Label layer Ttg is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Show.Waypoint",
+    "default": "b:true",
+    "description": "Label layer Waypoint is on",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "StaleS",
+    "default": "n:30.0",
+    "description": "A contact older than this is dimmed and its speed is marked as an estimate",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "TtgHitNm",
+    "default": "n:1.0",
+    "description": "A foreign weapon counts as heading for an own unit when its CPA is below this (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Units",
+    "default": "s:nm,kn,ft",
+    "description": "Units: nm|km, kn|kmh, ft|m joined by commas",
+    "class": "basic",
+    "apply": "live",
+    "control": "text",
+    "settings_section": "general"
+  },
+  {
+    "section": "ContactInfo",
+    "key": "Waypoint",
+    "default": "s:dist",
+    "description": "Waypoint label: dist | eta | ttg | off",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "contact_info"
+  },
+  {
+    "section": "Harmony",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Install the Harmony patches (Bot context submenu, fire veto near neutrals). false = they are never installed",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Harmony",
+    "key": "BuoyRevive",
+    "default": "b:true",
+    "description": "Launch again the sonobuoys of a loaded save whose aircraft is gone (T-094/T-296, on by default since T-299). false = as in the game. Applies after a restart",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Harmony",
+    "key": "GameVersions",
+    "default": "s:0.8.6-261014",
+    "description": "Extra game versions the patches are known to work on, comma-separated (the mod's own list is built in). Another version only produces a warning; the patches stay on",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "HitEstimate",
+    "key": "Counter",
+    "default": "b:true",
+    "description": "Count your hits from the game's weapon report: the list of hits in the expanded row and the columns hits / dmg (the patch is installed at start)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "hit_estimate"
+  },
+  {
+    "section": "HitEstimate",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Hits-to-kill estimate in the Overview: a + on the row of an identified foreign contact opens the estimate of your weapons, the list of your hits and the status (needs the hit_estimate capability)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "hit_estimate"
+  },
+  {
+    "section": "HitEstimate",
+    "key": "Installations",
+    "default": "b:true",
+    "description": "Reference for large ground objects (airbases, ports, factories, bridges) in the expanded row: zones, hits per zone and the reference line with perfect aim (no count to destruction)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "hit_estimate"
+  },
+  {
+    "section": "HitEstimate",
+    "key": "Land",
+    "default": "b:true",
+    "description": "Reference for ground units in the expanded row: what to destroy and the radius of a sure kill of your weapon (no hit count)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "hit_estimate"
+  },
+  {
+    "section": "Intercept",
+    "key": "ArriveNm",
+    "default": "n:1.0",
+    "description": "The intercept is done when the unit is this close (nm) to the target",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "AvoidEnemyRanges",
+    "default": "s:warn",
+    "description": "warn | detour | off: the route is checked against the weapon ranges of identified hostile tracks (class data, what the player knows); warn = warning only, detour = route around the circles (A*), else warning",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Intercept course in the contact context menu: the point and the time of the intercept from the track, a route on request",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "LostS",
+    "default": "n:180.0",
+    "description": "Track older than this (s): the intercept ends (track lost)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "MaxEtaH",
+    "default": "n:6.0",
+    "description": "No intercept later than this (hours)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Intercept",
+    "key": "MaxRangeNm",
+    "default": "n:150.0",
+    "description": "No intercept farther than this (nm): the flat plane is no longer exact",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Intercept",
+    "key": "MinShiftNm",
+    "default": "n:0.5",
+    "description": "Mode track: the intercept point must move this far (nm) to make a new plan",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "Mode",
+    "default": "s:track",
+    "description": "track | once: track = the route follows the target (replanned by the rules), once = one plan",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "OnZoneEntry",
+    "default": "s:warn",
+    "description": "warn | hold | abort: before the unit enters an enemy weapon zone (not the target's): warning only, stop and wait until the zone leaves the route, or stop and end the intercept",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "ProbeBudget",
+    "default": "n:500.0",
+    "description": "Land check: terrain probes per frame for the route around land",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "RefreshS",
+    "default": "n:30.0",
+    "description": "Mode track: the least seconds between two plans",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "ShowLine",
+    "default": "b:true",
+    "description": "Draw the intercept line and the intercept point on the tactical map",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "Speed",
+    "default": "s:auto",
+    "description": "auto | current: auto = the smallest telegraph step that catches the target, current = keep the telegraph",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "SpeedUncertPct",
+    "default": "n:20.0",
+    "description": "Uncertainty of the target speed (percent): the width of the ETA band",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "StaleS",
+    "default": "n:60.0",
+    "description": "Track older than this (s): the line turns grey and no new orders are given",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "ZoneLeadS",
+    "default": "n:120.0",
+    "description": "OnZoneEntry hold/abort: stop when the entry into an enemy zone is this close (seconds)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Intercept",
+    "key": "ZoneMarginNm",
+    "default": "n:2.0",
+    "description": "AvoidEnemyRanges detour: the route keeps this far (nm) outside an enemy weapon circle",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "intercept"
+  },
+  {
+    "section": "Menu",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every XO/ring action step by step: ok / skipped / error, unit before and after",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "menu"
+  },
+  {
+    "section": "Menu",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Show the Bot submenu in the unit context menu",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "menu"
+  },
+  {
+    "section": "Overview",
+    "key": "CenterSecondMap",
+    "default": "b:true",
+    "description": "Double click also centres the second-monitor map",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "ClickSelectsInGame",
+    "default": "b:true",
+    "description": "A click selects the contact in the game like a map click (may switch the 3D camera); false = mark the row only",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "ClosingDeadbandKn",
+    "default": "n:3.0",
+    "description": "Closing speed (kn) below which the arrow is a dot",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "Collapsed",
+    "default": "b:false",
+    "description": "Window is collapsed to one line",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Overview",
+    "key": "Columns",
+    "default": "s:icon,type,dist,brg,spd,alt,dep,crs,cpa,age,idn,hits,dmg",
+    "description": "Visible columns (icon and type are required): icon,type,dist,brg,spd,alt,crs,id,sensor,age,vcl,idn,dep,lyr,cpa,tcpa,ttg,hits,dmg (dep..ttg need the contact_info module, hits and dmg the hit_estimate module)",
+    "class": "basic",
+    "apply": "live",
+    "control": "multi",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every Overview contact: side and its source, posture, colour and its source, live/dormant, kind/class, icon",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Overview window: hostile and unidentified contacts (needs the overview capability)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "FastClosingKn",
+    "default": "n:300.0",
+    "description": "Closing speed (kn) that draws a double arrow",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "FitRows",
+    "default": "b:true",
+    "description": "Window height follows the number of rows (Rect height = maximum)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+O",
+    "description": "Opens the Overview window: Unity KeyCode names joined by + (e.g. LeftAlt+O); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "IconSource",
+    "default": "s:auto",
+    "description": "auto | map | resources | own: where the icons come from (auto = game vector icons, then textures, then own)",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "MaxRows",
+    "default": "n:30.0",
+    "description": "Rows shown at most 5..200",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "OwnColumns",
+    "default": "s:icon,type,name,task,alt,spd,load,grp",
+    "description": "Own tab: visible columns (icon and name are required): icon,type,name,task,alt,spd,load,grp",
+    "class": "basic",
+    "apply": "live",
+    "control": "multi",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "OwnSort",
+    "default": "s:grp:asc",
+    "description": "Own tab: column:asc|desc, columns: icon,type,name,task,alt,spd,load,grp",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Overview",
+    "key": "Rect",
+    "default": "s:0.70,0.08,0.28,0.40",
+    "description": "Window x,y,w,h as fractions of the screen (saved when you move or resize it)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Overview",
+    "key": "RefreshSeconds",
+    "default": "n:1.0",
+    "description": "Period of the contact scan (real time)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "Scale",
+    "default": "n:0.0",
+    "description": "Window size factor; 0 = automatic from the game's UI scale",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "ShowOnStart",
+    "default": "b:false",
+    "description": "Window is open right after a mission loads (updated when you toggle it with the hotkey)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "ShowWeapons",
+    "default": "b:true",
+    "description": "List enemy missiles and torpedoes too",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "overview"
+  },
+  {
+    "section": "Overview",
+    "key": "Sort",
+    "default": "s:dist:asc",
+    "description": "column:asc|desc, columns: icon,type,dist,brg,spd,alt,crs,id,sensor,age,vcl,idn,dep,lyr,cpa,tcpa,ttg,hits,dmg",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Overview",
+    "key": "Tab",
+    "default": "s:contacts",
+    "description": "Active tab: contacts | own (saved when you switch it)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Perf",
+    "key": "LightSmoke",
+    "default": "b:false",
+    "description": "Light smoke of missiles and explosions: fewer particles in new effects (missile trails, explosions, fires, splashes). Less GPU load in combat; FPS did not grow in the measurements",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "perf"
+  },
+  {
+    "section": "Perf",
+    "key": "LightSmokeFactor",
+    "default": "s:0.35",
+    "description": "0.2 | 0.35 | 0.5: share of particles light smoke keeps (emission and bursts x k, max particles x k, lifetime x sqrt k)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "perf"
+  },
+  {
+    "section": "Messages",
+    "key": "HostileRed",
+    "default": "b:true",
+    "description": "Show messages about a hostile classification of a contact (Bandit!, hostile contacts, track classified as hostile) in red in the game's message window and top alerts. false = the game's colour",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "general"
+  },
+  {
+    "section": "Messages",
+    "key": "QuietModWaypoints",
+    "default": "b:true",
+    "description": "Do not repeat the message We're on position for the aircraft that the mod controls (CAP, ASW, SAR groups): at most one message per QuietRepeatS seconds per aircraft. Aircraft you order yourself are not touched. false = as in the game",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "general"
+  },
+  {
+    "section": "Messages",
+    "key": "QuietRepeatS",
+    "default": "n:300.0",
+    "description": "Seconds of the mission time between two We're on position messages of one aircraft of the mod (0 = never for them)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "general"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Bins",
+    "default": "n:128.0",
+    "description": "Range cells per ray 32..256",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Colors",
+    "default": "s:E03030,E8C020,30C050,30B0E0,909090",
+    "description": "RRGGBB for tiers 1..4 and for off/EMCON, comma separated",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log the overlay projection (radar positions in screen pixels) every 10 s, the layer insertion (map children) and a coverage stats line every 60 s (builds, build_ms, worker_cpu_pct, poll/snapshot ms, rt redraws, fps_avg, frame_ms_p95)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Radar coverage overlay on the tactical map (needs the radar_coverage capability)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "FlipY",
+    "default": "s:auto",
+    "description": "auto|true|false: flip the texture vertically (set it if the zone is mirrored)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "FogAlpha",
+    "default": "n:0.35",
+    "description": "Darkness of the area nothing covers (0..0.9)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+V|LeftAlt+Y",
+    "description": "Turns the radar coverage overlay on or off: Unity KeyCode names joined by + (e.g. LeftAlt+V); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "IncludeTargeting",
+    "default": "b:false",
+    "description": "Also draw fire-control radars",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Jamming",
+    "default": "b:true",
+    "description": "Cut the radar zone by jamming of jammers known to you (tracks you have identified)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "LayerIndex",
+    "default": "n:-1.0",
+    "description": "Index in MapBase.Children for the noesis layer; -1 = right above the base map layer",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Legend",
+    "default": "b:true",
+    "description": "Radar coverage legend in the top-right corner of the map, under the range ring legend; off = the map menu item is inactive",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "MaxSegments",
+    "default": "n:6000.0",
+    "description": "Outline segments drawn per frame at most",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Rays",
+    "default": "n:360.0",
+    "description": "Azimuth rays per radar 36..720",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "RecomputeSeconds",
+    "default": "n:10.0",
+    "description": "Recalculation period while units move, 2..120 s (nothing moves: no recalculation)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "RenderMode",
+    "default": "s:auto",
+    "description": "auto|noesis|imgui: noesis = zone and legend inside the game map, under the game windows; imgui = drawn over everything; auto = noesis, imgui if the layer is unavailable",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "RtScale",
+    "default": "n:1.0",
+    "description": "Render texture pixels per screen pixel, 0.5..1",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "ScaleOverride",
+    "default": "n:0.0",
+    "description": "Noesis screen units per pixel; 0 = automatic (calibrated on the main view)",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "ShowOffRadars",
+    "default": "b:true",
+    "description": "Grey dashed outline for radars that are off or under EMCON",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "ShowOnStart",
+    "default": "b:false",
+    "description": "Overlay is on right after the game starts",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "SmallMapWindow",
+    "default": "b:true",
+    "description": "Also draw the zone on the main map while it is not maximised (the small Tactical Display window in the 3D view); false = only on the maximised map",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "StateCheckSeconds",
+    "default": "n:1.0",
+    "description": "Period of the cheap radar state poll (on/off, EMCON, sea state, new units), 0.2..1.0 s; a state change recalculates at once (not more often than 1 s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "TerrainShadows",
+    "default": "b:true",
+    "description": "Terrain shadows from DEM heights (approximate)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "Tiers",
+    "default": "s:15:1:air,150:1:air,3000:10:air,15:50:surface",
+    "description": "Reference targets height_m:rcs_m2:kinds (air|surface joined by +), 1..4 tiers",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "RadarCoverage",
+    "key": "VisibleHeightM",
+    "default": "n:3.0",
+    "description": "Height added to the target (game default _visibleHeight is 0.046 unity)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radar"
+  },
+  {
+    "section": "Radial",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log one line per failed ring pick (cursor, unit point, model rect, camera, ray, map)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Radial menu of the selected own unit: hold the left mouse button on it",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "HoldMs",
+    "default": "n:300.0",
+    "description": "Hold time that opens the ring (ms); a plain click selects as before",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "Hotkey",
+    "default": "s:",
+    "description": "Hold to open the ring on the selected unit (fallback): Unity KeyCode names joined by + (e.g. Q); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "Icons",
+    "default": "b:true",
+    "description": "Draw glyphs on the ring sectors (the caption stays in the hint line under the ring); false = text labels as before",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "InputPatches",
+    "default": "b:false",
+    "description": "Harmony patches that stop camera rotation / map panning while the ring is open (enable only after a live check)",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "MoveTolerancePx",
+    "default": "n:6.0",
+    "description": "Cursor travel (px at 1080p) that cancels the hold (it is a drag then)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "OnMap",
+    "default": "b:true",
+    "description": "Ring also on the tactical map (on the selected unit's icon)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "PickRadiusPx",
+    "default": "n:20.0",
+    "description": "3D: how close to the unit's screen point the cursor must be (px at 1080p)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "Scale",
+    "default": "n:0.0",
+    "description": "Ring size factor; 0 = automatic from the game's UI scale",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "ShowVoiceHint",
+    "default": "b:true",
+    "description": "Show the voice phrase of the hovered item",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radial"
+  },
+  {
+    "section": "Radial",
+    "key": "SubmenuDelayMs",
+    "default": "n:180.0",
+    "description": "Hover time on a group sector before its arc opens (ms)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "radial"
+  },
+  {
+    "section": "RangeRings",
+    "key": "AirRefreshS",
+    "default": "n:0.25",
+    "description": "Redraw period while an aircraft is in the scene (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Range rings of the checked weapons and sonar zones on the tactical map (needs the range_rings capability)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "FactsRefreshS",
+    "default": "n:2.0",
+    "description": "Period of reading the armament of a unit (s)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "RangeRings",
+    "key": "FillAlpha",
+    "default": "n:0.12",
+    "description": "Fill of the weapon rings and sectors 0..0.4 (0 = outline only); overlapping fills are capped",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+G|LeftAlt+B",
+    "description": "Turns the range rings on or off: Unity KeyCode names joined by + (e.g. LeftAlt+G); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Hotkey.Group",
+    "default": "s:LeftAlt+LeftShift+B|LeftAlt+LeftShift+H",
+    "description": "Switches the range rings between the selected unit and the whole group (turns them on when off): Unity KeyCode names joined by + (e.g. LeftAlt+LeftShift+B); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "advanced",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "LabelMinPx",
+    "default": "n:40.0",
+    "description": "Rings smaller than this many pixels get no label",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "RangeRings",
+    "key": "Labels",
+    "default": "b:true",
+    "description": "Range labels on the rings",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Legend",
+    "default": "b:true",
+    "description": "Colour legend of the range rings in the top-right corner of the map, under the time panel, above the radar legend",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "MaxRings",
+    "default": "n:24.0",
+    "description": "Rings and sectors at most per redraw",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "MaxSegments",
+    "default": "n:3000.0",
+    "description": "Line segments at most per redraw",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "MinRadiusPx",
+    "default": "n:8.0",
+    "description": "Rings smaller than this many pixels are not drawn",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "RangeRings",
+    "key": "Opacity",
+    "default": "n:0.85",
+    "description": "Opacity of the rings 0.3..1",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Own",
+    "default": "s:auto",
+    "description": "auto | on | off: own and allied rings; auto = off when the Better TacMap mod is found (it draws them)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "RefreshS",
+    "default": "n:1.0",
+    "description": "Redraw period at rest (s)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Scope",
+    "default": "s:selected",
+    "description": "selected | group: the selected own unit or its whole group (formation)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Show",
+    "default": "b:false",
+    "description": "Range rings are shown on the map (the map layer entry Range rings): the checked weapons and the sonar rings",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "Show.Sonar",
+    "default": "b:false",
+    "description": "Sonar rings of the selected units (and their group): active and passive range; the passive range of the selected or pinned foreign contact",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "ShowAllies",
+    "default": "b:false",
+    "description": "Rings of allied units as well (the selected or the group of the player only)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "range_rings"
+  },
+  {
+    "section": "RangeRings",
+    "key": "WeaponListMax",
+    "default": "n:10.0",
+    "description": "Weapons at most in the weapon list of a unit",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Sar",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every SAR step",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Search and rescue: SAR order of helicopter groups, ships and submarines in the SAR tab of the Aviation window",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ForceApproachSlow",
+    "default": "b:false",
+    "description": "Fallback: force the helicopter to slow down at the raft (use only if the very low approach does not slow it)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "LaunchMissionType",
+    "default": "s:sar",
+    "description": "sar | none: mission type of a SAR launch order (none = fallback)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "LoadoutTieBreak",
+    "default": "s:Empty,Ferry,Transport,Default",
+    "description": "Loadouts with the same seats: the first in this list wins",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "MaxCells",
+    "default": "n:40000.0",
+    "description": "Cells of the route grid",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "MaxReacquire",
+    "default": "n:3.0",
+    "description": "Helicopter approach attempts at one raft before it is marked unreachable",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "MinDepthM",
+    "default": "n:8.0",
+    "description": "Ship route: shallower than this counts as land (m)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "NextRaftNearNm",
+    "default": "n:3.0",
+    "description": "A next raft closer than this is approached at Small speed (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "NoRaftsGraceS",
+    "default": "n:60.0",
+    "description": "No rafts for this long = the unit goes home (s)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "PriorityRafts",
+    "default": "s:all_life_raft_single,all_pod_president",
+    "description": "Raft types picked first, in order, joined by commas",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ProbeBudget",
+    "default": "n:1500.0",
+    "description": "Terrain probes per frame while a ship route is planned",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ProgressMinS",
+    "default": "n:120.0",
+    "description": "Minimal time without progress before a claim is dropped (s)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "RearmMaxMin",
+    "default": "n:20.0",
+    "description": "A ready helicopter with fewer seats than the SAR loadout is re-armed on deck when that takes at most this long (game minutes, after the deck timings mode); 0 = launch it as it is",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ShipFinalNm",
+    "default": "n:1.0",
+    "description": "A ship slows to Small at this distance from the raft (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ShipOnComplete",
+    "default": "s:restore",
+    "description": "restore | stop: what a ship or submarine does when no rafts are left",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ShipTransitTelegraph",
+    "default": "s:current",
+    "description": "current | medium | full: ship speed in transit",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ShoreMarginNm",
+    "default": "n:0.4",
+    "description": "Ship route: distance kept from the shore (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "Standby",
+    "default": "n:1.0",
+    "description": "Ready spare SAR helicopters kept for the relief (0..3)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "SubSurfaceNm",
+    "default": "n:2.0",
+    "description": "A submarine surfaces at this distance from the raft (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "SubTransitDepthM",
+    "default": "n:30.0",
+    "description": "Submarine transit depth (m)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "ThreatStandoffNm",
+    "default": "n:10.0",
+    "description": "A raft closer than this to an air defense known to the player is not approached (nm)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "TransitAltFt",
+    "default": "n:500.0",
+    "description": "Helicopter transit altitude before the very low approach (ft)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Sar",
+    "key": "UnreachableS",
+    "default": "n:600.0",
+    "description": "A raft a helicopter failed to pick up 3 times is left alone for this long (s)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "sar"
+  },
+  {
+    "section": "Settings",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+Comma",
+    "description": "Opens the settings window: Unity KeyCode names joined by + (e.g. LeftAlt+Comma); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "settings"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "ConeDeg",
+    "default": "n:35.0",
+    "description": "Half-angle of the neutral check cone (deg)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "ConsumePickClick",
+    "default": "b:true",
+    "description": "While a target is being picked on the map / in 3D the click does not reach the game (no unit selection change); needs two small Harmony patches",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every step of the smart attack",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Smart torpedo attack of a submarine (ring sector NW): wire-guided approach from the side, with a veto near neutrals",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "FuelReservePct",
+    "default": "n:15.0",
+    "description": "Torpedo range reserve (percent)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "LegNm",
+    "default": "n:3.0",
+    "description": "Length of the first leg (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "OffsetDeg",
+    "default": "n:60.0",
+    "description": "Aim offset from the target's bearing (deg)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "PickTolPx",
+    "default": "n:16.0",
+    "description": "Map pick: how close to a unit icon centre the click must be when it hits a mission zone shape (px at 1080p)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "RestoreOnLoad",
+    "default": "s:auto",
+    "description": "off | ask | auto: continue the attack after a save is loaded",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "SmartAttack",
+    "key": "VetoRadiusNm",
+    "default": "n:2.0",
+    "description": "Neutral track closer than this to the path asks for confirmation (nm)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "smart_attack"
+  },
+  {
+    "section": "StandingOrders",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Add the mod's settings to the game's Standing Orders window (false = the 'Modes' submenu and in-memory settings only)",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "menu"
+  },
+  {
+    "section": "StandingOrders",
+    "key": "ForceFallback",
+    "default": "b:false",
+    "description": "true = keep the settings in memory and show the 'Modes' submenu even when the Standing Orders patches work",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "menu"
+  },
+  {
+    "section": "SubDatum",
+    "key": "AirSkipNm",
+    "default": "n:3.0",
+    "description": "A torpedo first seen this close (nm) to a hostile air track gives no sector (air-launched)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "SubDatum",
+    "key": "AirSkipS",
+    "default": "n:60.0",
+    "description": "Memory of the air tracks for that rule (seconds)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "SubDatum",
+    "key": "AreaMaxNm",
+    "default": "n:10.0",
+    "description": "The longest side of the search area in the order (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "Auto",
+    "default": "s:off",
+    "description": "off | idle: off = only the card with a button, idle = an ASW group without an order starts the search at once",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "CoreNm",
+    "default": "n:6.0",
+    "description": "Length of the core of the sector (nm from the detection point) that goes into the search order",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Likely sub launch area from the back bearing of a hostile torpedo: a sector on the map and a card with a search order for an ASW group",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "Map",
+    "default": "b:true",
+    "description": "Draw the sector (core, far sector, buffer, axis) on the tactical map",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "MaxLenNm",
+    "default": "n:15.0",
+    "description": "The longest far sector (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "MaxLive",
+    "default": "n:3.0",
+    "description": "Live sectors at once (the oldest is taken off)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "SubDatum",
+    "key": "MergeS",
+    "default": "n:600.0",
+    "description": "A new torpedo within this time and an overlapping sector is merged into the old sector (seconds)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "RefineS",
+    "default": "n:60.0",
+    "description": "The axis of a sector is refined by the track for this long (seconds)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "SubDatum",
+    "key": "SubKn",
+    "default": "n:5.0",
+    "description": "Speed of the submarine for the growth of the buffer (kn)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "TriggerNm",
+    "default": "n:12.0",
+    "description": "A torpedo first seen farther than this (nm) from every own ship or submarine gives no sector",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "TtlS",
+    "default": "n:1800.0",
+    "description": "A sector expires after this many seconds of mission time",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "SubDatum",
+    "key": "UnknownRunNm",
+    "default": "n:12.0",
+    "description": "Run of a torpedo that is not identified (nm)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "sub_datum"
+  },
+  {
+    "section": "Ui",
+    "key": "ConfigVersion",
+    "default": "n:5.0",
+    "description": "Config schema version, written by the mod (do not edit)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Ui",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log the map menu wiring",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "Density",
+    "default": "s:compact",
+    "description": "compact | normal: density of the mod windows (compact = dense rows and paddings)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "ForceMapMenuFallback",
+    "default": "b:false",
+    "description": "true = do not insert the Overview / ASW items into the map menu; use the map layer list instead",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "Heartbeat",
+    "default": "b:false",
+    "description": "Test diagnostics: write a short line every 2 s to BepInEx/voicebot_ui_heartbeat.log (the last line before a crash; rotates at 256 KB), the minute memory line and the stall thread table. Off by default",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "Language",
+    "default": "s:auto",
+    "description": "auto | <language code>: language of the mod's own texts (auto = the game's language; any lang/language_xx folder works; fallback en)",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "MapMenuMaxTries",
+    "default": "n:6.0",
+    "description": "Failed tries to insert the Overview / ASW items into the map menu before the layer list fallback takes over",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "MemWarnGb",
+    "default": "n:2.0",
+    "description": "[Mem] WARN in the BepInEx log when the process private memory grows by more than this many GiB in 10 minutes (or passes 60% of RAM); the minute line is in BepInEx/voicebot_ui_memory.log",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "PumpTiming",
+    "default": "b:true",
+    "description": "Heartbeat: add ms=<avg>/<max> top=<module>:<avg>/<max> (time of the mod's modules per frame)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "Scale",
+    "default": "n:0.0",
+    "description": "Scale of the mod windows (0 = auto: game UI scale x screen height / 1080)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "ToolbarButtons",
+    "default": "b:true",
+    "description": "true = ASW and CAP buttons on the game's bottom panel; false = take them off (the map menu items and the hotkeys stay)",
+    "class": "basic",
+    "apply": "live",
+    "control": "check",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "ToolbarMaxTries",
+    "default": "n:6.0",
+    "description": "Failed tries to insert the ASW / CAP buttons into the game panel before the module gives up until the next mission",
+    "class": "advanced",
+    "apply": "restart",
+    "control": "auto",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "UnitActionText",
+    "default": "s:smart",
+    "description": "smart | replace | off: what the Orders field of a unit shows while the mod drives it. smart = the mod label, plus the game text after a dot when the game text says more than moving or waiting; replace = the mod label only; off = the game text only",
+    "class": "basic",
+    "apply": "live",
+    "control": "choice",
+    "settings_section": "general"
+  },
+  {
+    "section": "Ui",
+    "key": "WindowState",
+    "default": "s:",
+    "description": "Positions, widths and collapsed sections of the mod windows (written by the mod)",
+    "class": "internal",
+    "apply": "none",
+    "control": "",
+    "settings_section": ""
+  },
+  {
+    "section": "Strike",
+    "key": "AutoWaves",
+    "default": "n:3.0",
+    "description": "How many waves (issued stages) Auto makes against one target or set of targets, then stops (1..3)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "ClearTimeoutS",
+    "default": "n:900.0",
+    "description": "How many seconds the stage-2 aircraft of a clearing wait for the neighbour to sink (120..1800)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "Debug",
+    "default": "b:false",
+    "description": "Log every step of the Strike module",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "DeckLateS",
+    "default": "n:600.0",
+    "description": "A deck order counts as failed when the aircraft is not in the air this many seconds after its ready time (60..3600)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "Enabled",
+    "default": "b:true",
+    "description": "Strike window: groups of aircraft with anti-ship missiles, plans of a missile strike, the wait point",
+    "class": "basic",
+    "apply": "restart",
+    "control": "check",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "EwHoldS",
+    "default": "n:15.0",
+    "description": "The jammer stays on this many seconds after the last arrival (0..60)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "EwFighterEtaS",
+    "default": "n:600.0",
+    "description": "Seconds before the strike group enters the missile radius of a hostile fighter at which a jammer starts to jam it (0..1800, 0 = do not jam fighters)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "EwReturnClearS",
+    "default": "n:60.0",
+    "description": "A jammer that left an air threat returns to its station after this many seconds without a threat (0..600)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "FighterStandoffNm",
+    "default": "n:10.0",
+    "description": "Margin in nm over the missile radius of a hostile fighter that a jammer keeps from it (0..30)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "FuelMarginNm",
+    "default": "n:5.0",
+    "description": "An aircraft goes home when its spare path over the way home is at or below this many nm (0..100)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "HoldS",
+    "default": "n:60.0",
+    "description": "How long a launch waits for a lost contact before it is skipped, s (0..600)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "Hotkey",
+    "default": "s:LeftAlt+H|LeftAlt+Q|LeftAlt+X|F6",
+    "description": "Opens the Strike window: Unity KeyCode names joined by + (e.g. LeftAlt+H); several candidates joined by | - the first one no game binding and no other hotkey of the mod uses wins; empty = off",
+    "class": "basic",
+    "apply": "live",
+    "control": "hotkey",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "KillThreshold",
+    "default": "n:0.8",
+    "description": "Odds of sinking that a plan with the goal Sink aims at for the main target (0.8..0.9)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "MixShiftMaxS",
+    "default": "n:120.0",
+    "description": "The most T of the second missile type of one aircraft may be moved later; over this the missile is left out of the plan, s (0..300)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "PkThreshold",
+    "default": "n:0.9",
+    "description": "Odds of a breakthrough that the plan aims at for every target (0.8..0.9)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "RoeMode",
+    "default": "s:veto",
+    "description": "veto | hold: how the aircraft of a group are kept from firing on their own (veto holds only anti-ship missiles; hold puts weapons on hold while they are in the group; without the engage veto patch the mode is hold)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "choice",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "StaleNm",
+    "default": "n:3.0",
+    "description": "A target that left its planned position by more than this many nm makes the plan stale (0.5..20)",
+    "class": "advanced",
+    "apply": "live",
+    "control": "auto",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "StandoffNm",
+    "default": "n:10.0",
+    "description": "Margin outside the SAM zones for the wait point and the launch points, nm (0..50)",
+    "class": "basic",
+    "apply": "live",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "TotToleranceS",
+    "default": "n:10.0",
+    "description": "Allowed spread of the arrival of the missiles at one target, s (5..30)",
+    "class": "basic",
+    "apply": "next_order",
+    "control": "number",
+    "settings_section": "strike"
+  },
+  {
+    "section": "Strike",
+    "key": "TurnLeadS",
+    "default": "n:2.0",
+    "description": "Reserve on top of the turn time (4 s + turn angle / 8 deg per s) between the order and the missile launch, s (0..30)",
+    "class": "advanced",
+    "apply": "next_order",
+    "control": "auto",
+    "settings_section": "strike"
+  }
+]

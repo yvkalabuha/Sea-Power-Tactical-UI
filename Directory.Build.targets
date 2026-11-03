@@ -1,0 +1,16 @@
+<Project>
+  <!-- T-178 K0 (ADR-0077): the new UiKit files (partial class UiKit, pure models) join only the offline stands that already compile UiKit.cs.
+       The mod itself takes them with its glob, the dev mod and VoiceBotBridge are untouched. T-176 and T-173 must NOT list these files in their csproj (CS2002). -->
+  <ItemGroup>
+    <UiKitWidgetFile Include="../SeaPowerTacticalUI/UiKit.Dropdown.cs;../SeaPowerTacticalUI/UiKit.Slider.cs;../SeaPowerTacticalUI/UiKit.Segments.cs;../SeaPowerTacticalUI/UiKit.Toggles.cs;../SeaPowerTacticalUI/UiKit.Compass.cs;../SeaPowerTacticalUI/UiKit.Status.cs;../SeaPowerTacticalUI/UiKit.ShipPick.cs" />
+    <UiKitWidgetFile Include="../SeaPowerTacticalUI/UiDropdownModel.cs;../SeaPowerTacticalUI/ToggleSet.cs;../SeaPowerTacticalUI/CompassMath.cs;../SeaPowerTacticalUI/UiHit.cs;../SeaPowerTacticalUI/UiScale.cs;../SeaPowerTacticalUI/UnitFmt.cs;../SeaPowerTacticalUI/ShipPickModel.cs;../SeaPowerTacticalUI/UiUndoSlot.cs;../SeaPowerTacticalUI/UiUndoCard.cs;../SeaPowerTacticalUI/ZoneEditMath.cs;../SeaPowerTacticalUI/UiMapPick.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'puretest' Or '$(MSBuildProjectName)' == 'datumtest' Or '$(MSBuildProjectName)' == 'capwintest' Or '$(MSBuildProjectName)' == 'aswwintest' Or '$(MSBuildProjectName)' == 'strikewintest' Or '$(MSBuildProjectName)' == 'aswtest' Or '$(MSBuildProjectName)' == 'sartest' Or '$(MSBuildProjectName)' == 'airlosstest' Or '$(MSBuildProjectName)' == 'airtest' Or '$(MSBuildProjectName)' == 'lifecycletest' Or ('$(MSBuildProjectName)' == 'selfcheck' And '$(Flavor)' == 'ui')">
+    <Compile Include="@(UiKitWidgetFile)" />
+  </ItemGroup>
+  <!-- T-271: stands (OutputType Exe) get the source lang/ path as AssemblyMetadata LangDir; UiText.LoadForTests falls back to it when the DLL was built outside the tree.
+       Mod, dev mod and VoiceBotBridge are Library projects and stay byte-identical. -->
+  <ItemGroup Condition="'$(OutputType)' == 'Exe'">
+    <AssemblyMetadata Include="LangDir" Value="$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)SeaPowerTacticalUI/lang'))" />
+  </ItemGroup>
+</Project>

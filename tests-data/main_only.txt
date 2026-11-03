@@ -1,0 +1,34 @@
+# Tests of the main (beta 0.31.x) tree that do not apply to the stable 0.30.x branch; read by run_pytest.sh (one node id per line).
+# Beta map/projector work T-307..T-311 (MapProjector, MapPx, GridHeading, layers, icon thickness): files absent here
+tests/test_sea_power_map_projector.py
+tests/test_sea_power_t307_layers.py
+tests/test_sea_power_t307_overview.py
+tests/test_sea_power_t307_asw_ring_save.py
+tests/test_sea_power_t308_grid_heading.py
+tests/test_sea_power_t308_grid_guard.py
+tests/test_sea_power_t310_thickness.py
+tests/test_sea_power_mission_refs.py::test_registry_has_no_stale_rows   # rows for beta fields (_fbMap, _gridMission, _viewArgs)
+tests/test_sea_power_range_rings.py::test_stand_selftests   # ringtest stand compiles MapPx.cs (main only)
+tests/test_sea_power_intercept.py::test_overlay_is_an_rt_overlay_consumer_with_gl_safety   # DrawGeo(MapPx ...)
+tests/test_sea_power_ui_rt_overlay.py::test_extra_drawn_after_cap_guarded   # MapPx draw path
+tests/test_sea_power_legend_radar.py::test_overlay_and_layer_skip_the_legend   # DrawJamTexts(frame, px, rw)
+tests/test_sea_power_asw_t180_window.py::test_overlay_arrow   # DrawRetreatArrows(g, px); stable: (g, aff)
+tests/test_sea_power_asw_t322_overlay.py::test_draw_line_uses_alpha_and_exits_when_gone   # GeoLine/GeoDashed(px ...) text; stable fades Line/Dashed(P(aff ...)) the same way (aswtest t322 runs)
+tests/test_sea_power_asw_t322_overlay.py::test_draw_line_fades_both_colours   # same
+tests/test_sea_power_air_evasion_game.py::test_postlaunch_guard   # Common/Tactics.cs GridHeadingTrueOf (T-308)
+tests/test_sea_power_ui_menu_keys.py::test_map_layer_uses_constructor_and_refreshes_labels   # 0.31 MapLayerToggle constructor
+tests/test_sea_power_radial_refusal.py   # RadialRefusalLog (T-312, 0.31.0)
+# Loader / 0.31 packaging and scripts (T-314): the branch has its own build.sh, package.sh, workshop_check.py
+tests/test_sea_power_ui_core.py::test_core_selftests_pass   # expects LoaderInstall selftest
+tests/test_sea_power_ui_selfcheck_coverage.py::test_unity_only_entries_exist   # LoaderEntry.cs, MapProjector*
+tests/test_sea_power_ui_selfcheck_coverage.py::test_unity_only_files_use_unity_api
+tests/test_sea_power_ui_selfcheck_coverage.py::test_unity_dependent_files_use_unity_only_types
+tests/test_sea_power_workshop_entry.py::test_loader_entry_shape
+tests/test_sea_power_workshop_entry.py::test_non_bepinex_entries_pass_owner_metadata
+tests/test_sea_power_workshop_package.py   # main workshop_check (loader/ allowed)
+tests/test_sea_power_build_script.py   # main build.sh (dev, loader, voice mod)
+tests/test_sea_power_install_sh.py   # main install.sh / package.sh
+tests/test_sea_power_ui_docs.py   # 0.31 README/CHANGELOG/docs
+# T-344: compare main with branch copy (the mirror root is the branch itself)
+tests/test_sea_power_asw_t344.py::test_branch_copy_is_identical
+tests/test_sea_power_asw_t344.py::test_entry_sets_loadout_asw   # reads branches/stable-0.30 path

@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-109: light stand for the pure SAR code (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <DefineConstants>$(DefineConstants);SAR_WIP</DefineConstants>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarRouteMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarShipPanel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarController.cs" />
+    <Compile Include="SarFakeGame.cs" />
+    <Compile Include="SarControllerTests.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,95 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-133: light stand for pure math classes (no game, no Unity). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Stub.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiEscGuard.cs;../SeaPowerTacticalUI/LoadScreenMath.cs" />   <!-- T-199 -->
+    <Compile Include="../SeaPowerTacticalUI/PostLoadGate.cs" />   <!-- T-211 -->
+    <Compile Include="../SeaPowerTacticalUI/RadialMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RadialText.cs" />
+    <Compile Include="../SeaPowerTacticalUI/NtdsIcons.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoverageMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoverageDiag.cs" />   <!-- T-320 -->
+    <Compile Include="../SeaPowerTacticalUI/CoverageJam.cs" />   <!-- T-182 -->
+    <Compile Include="../SeaPowerTacticalUI/WorldGeo.cs" />   <!-- T-354 -->
+    <Compile Include="../SeaPowerTacticalUI/CoverageWorker.cs;../SeaPowerTacticalUI/WorkerCrumb.cs;../SeaPowerTacticalUI/CoverageTerrainBroker.cs" />   <!-- T-202 -->
+    <Compile Include="CoverageQa01Live.cs" />   <!-- T-216 -->
+    <Compile Include="../SeaPowerTacticalUI/ProcThreads.cs;../SeaPowerTacticalUI/ModThreads.cs" />   <!-- T-212 -->
+    <Compile Include="../SeaPowerTacticalUI/ModShutdown.cs" />   <!-- T-220 -->
+    <Compile Include="../SeaPowerTacticalUI/StatGatedText.cs" />   <!-- T-227 -->
+    <Compile Include="../SeaPowerTacticalUI/BuoyReviveMath.cs" />   <!-- T-094 -->
+    <Compile Include="../Common/OverviewMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/MemoryMonitor.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/OverviewColumns.cs" />
+    <Compile Include="../SeaPowerTacticalUI/OverviewOwnModel.cs" />   <!-- T-242 -->
+    <Compile Include="../SeaPowerTacticalUI/MapLayerMath.cs" />   <!-- T-305: Heartbeat writer -->
+    <!-- T-148: UiKit core -->
+    <Compile Include="RecordPainter.cs" />
+    <Compile Include="UiKitTests.cs" />
+    <!-- T-178: tests of the widgets (the widget files themselves come from ../Directory.Build.targets) -->
+    <Compile Include="UiKitDropdownTests.cs;UiKitTogglesTests.cs;UiKitCompassTests.cs;UiKitStatusTests.cs;UiKitShipPickTests.cs;UiUndoTests.cs;UiLintTests.cs;UiKitIdScopeTests.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFrameMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiMapDrawInput.cs" />   <!-- T-178 Z -->
+    <Compile Include="../SeaPowerTacticalUI/DrawGuard.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StageCrumb.cs" />   <!-- hang triage breadcrumb -->
+    <Compile Include="../SeaPowerTacticalUI/UiLogStamp.cs" />
+    <Compile Include="../SeaPowerTacticalUI/StallDetector.cs" />
+    <Compile Include="ProcDiagTests.cs;HbDiagTests.cs" />   <!-- T-303 -->
+    <Compile Include="../SeaPowerTacticalUI/StartupGate.cs" />   <!-- T-336 -->
+    <Compile Include="../SeaPowerTacticalUI/ProcTable.cs;../SeaPowerTacticalUI/HeartbeatThread.cs" />   <!-- T-302 -->
+    <!-- T-144: settings window model and body (registry from the core) -->
+    <Compile Include="SettingsTests.cs;SettingsPerfTests.cs;NullPainter.cs" />   <!-- T-239 -->
+    <Compile Include="SettingsFixture.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SettingsDraft.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SettingsWindowBody.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiHost.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFeature.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiPumpTimer.cs" />   <!-- T-124 -->
+    <Compile Include="../SeaPowerTacticalUI/GameMember.cs" />   <!-- T-120: UiFeature.cs names SpecSet -->
+    <Compile Include="../SeaPowerTacticalUI/UiContext.cs" />
+    <Compile Include="../SeaPowerTacticalUI/MissionLifecycle.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiSettings.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HotkeyBinding.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ReleaseRegistry.cs" />
+    <Compile Include="../SeaPowerTacticalUI/InterceptMath.cs" />   <!-- T-138 -->
+    <Compile Include="../SeaPowerTacticalUI/UnitSteering.cs" />   <!-- T-138: UiContext.Steering -->
+    <Compile Include="../SeaPowerTacticalUI/DiagHost.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ModInfo.cs" />
+    <Compile Include="../Common/Ownership.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SaveSlotStore.cs" />   <!-- T-122 -->
+    <Compile Include="../SeaPowerTacticalUI/FrameState.cs" />   <!-- T-125 -->
+    <Compile Include="../SeaPowerTacticalUI/MapScan.cs" />   <!-- T-127 -->
+    <Compile Include="../SeaPowerTacticalUI/MessageColorMath.cs" />   <!-- T-329 -->
+    <Compile Include="../SeaPowerTacticalUI/WaypointQuietMath.cs" />   <!-- T-331 -->
+    <Compile Include="../SeaPowerTacticalUI/LightSmokeMath.cs" />   <!-- T-165 -->
+    <Compile Include="../SeaPowerTacticalUI/LightSmokeRegistry.cs" />
+    <Compile Include="../SeaPowerTacticalUI/LightSmokeService.cs" />
+    <!-- T-168: hit estimate model, ledger, expanded rows -->
+    <Compile Include="../SeaPowerTacticalUI/HitEstimateMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HitEstimateGeo.cs" />   <!-- T-170 -->
+    <Compile Include="../SeaPowerTacticalUI/HitEstimateModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/HitEstimateInst.cs" />   <!-- T-170 -->
+    <Compile Include="../SeaPowerTacticalUI/HitLedger.cs" />
+    <Compile Include="../SeaPowerTacticalUI/OverviewExpand.cs" />
+  </ItemGroup>
+</Project>

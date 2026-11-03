@@ -1,0 +1,21 @@
+Sea Power Tactical UI — Copyright (C) 2026 yvkalabuha
+Licence: GNU GPL v3 with an additional permission under section 7 (see LICENSE).
+Source code: source/SeaPowerTacticalUI-<version>-src.zip in this mod folder.
+
+Required by this mod, NOT included in it. The player installs them separately:
+
+  BepInEx 5.4.x          LGPL-2.1   https://github.com/BepInEx/BepInEx
+  HarmonyX (0Harmony)    MIT        shipped inside BepInEx; patches the game methods at run time
+  MonoMod                MIT        used by HarmonyX inside BepInEx
+  AnchorChain 1.1.0      MIT        Copyright (c) 2025 SeaPower-Modders
+                                    Steam Workshop item 3380210757, https://github.com/SeaPower-Modders/AnchorChain
+                                    (licence checked 2026-10-21: MIT, LICENSE.md in the repository, Workshop page says "MIT license")
+
+Not included and not affected by this licence:
+
+  Sea Power               (c) MicroProse / Triassic Games; the game and its assemblies belong to their owners
+  Unity engine            (c) Unity Technologies
+  NoesisGUI               (c) Noesis Technologies
+
+This mod contains no code or data taken from the game files. It reads the game only at run time, by reflection.
+It uses no network: no sockets, no HTTP.

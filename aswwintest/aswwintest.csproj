@@ -1,0 +1,78 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- T-148: light stand for the ASW/SAR window model and body (draft + layout + clicks). No game, no Unity. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <RootNamespace>VoiceBotBridge</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj/</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS0414;CS0067</NoWarn>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="PanelTests.cs" />
+    <Compile Include="WindowTests.cs" />
+    <Compile Include="AswT174Tests.cs" />   <!-- T-174 -->
+    <Compile Include="../SeaPowerTacticalUI/UiText.cs" />
+    <Compile Include="../Common/Json.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswStrikeMath.cs" />   <!-- T-173 -->
+    <Compile Include="../SeaPowerTacticalUI/AswLaneMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AttackHostility.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswView.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.cs" />   <!-- T-176 -->
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Area.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Course.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswPatternMath.Plan.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswDrawPlan.cs" />   <!-- T-174 -->
+    <Compile Include="../SeaPowerTacticalUI/AswDrawPlan.Prefs.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AirOpsMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarRouteMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarSave.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarCommands.cs" />
+    <Compile Include="../SeaPowerTacticalUI/SarWindow.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiOrderTypes.cs" />
+    <!-- written by the A stream (A2, A4, A5); the stand is red until AswOrderPanel.cs exists -->
+    <Compile Include="../SeaPowerTacticalUI/AswOrderPanel.cs" Condition="Exists('../SeaPowerTacticalUI/AswOrderPanel.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.cs" Condition="Exists('../SeaPowerTacticalUI/AswWindowBody.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Sar.cs" Condition="Exists('../SeaPowerTacticalUI/AswWindowBody.Sar.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/AswStrikePanel.cs" />   <!-- T-173 -->
+    <Compile Include="../SeaPowerTacticalUI/AswToastBody.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiToastStackModel.cs" />
+    <Compile Include="AswT173Tests.cs" />
+    <Compile Include="AswT176Tests.cs" />   <!-- T-176 -->
+    <Compile Include="AswT229WinTests.cs" />   <!-- T-229 -->
+    <Compile Include="AswT288WinTests.cs" />   <!-- T-288 -->
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Datum.cs" />   <!-- T-288 -->
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Strike.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Course.cs" Condition="Exists('../SeaPowerTacticalUI/AswWindowBody.Course.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Order.cs" />   <!-- T-176 -->
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.T178.cs" />   <!-- T-178 A -->
+    <Compile Include="AswT178Tests.cs" />
+    <Compile Include="AswT180WinTests.cs" />   <!-- T-180 -->
+    <Compile Include="AswT334WinTests.cs" />   <!-- T-334 -->
+    <Compile Include="../SeaPowerTacticalUI/AswRetreatToast.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Contacts.cs" Condition="Exists('../SeaPowerTacticalUI/AswWindowBody.Contacts.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/SarShipPanel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.SarShips.cs" Condition="Exists('../SeaPowerTacticalUI/AswWindowBody.SarShips.cs')" />
+    <Compile Include="../SeaPowerTacticalUI/AswWindowBody.Deck.cs" Condition="Exists('../SeaPowerTacticalUI/AswWindowBody.Deck.cs')" />
+    <!-- the shared control set (T-148 U) and the recording painter -->
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoModel.cs" />
+    <Compile Include="../SeaPowerTacticalUI/ContactInfoMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/CoverageMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/RadialMath.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiKit.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiTheme.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiWindowState.cs" />
+    <Compile Include="../SeaPowerTacticalUI/UiFrameMath.cs" />
+    <Compile Include="../puretest/RecordPainter.cs" />
+  </ItemGroup>
+</Project>
